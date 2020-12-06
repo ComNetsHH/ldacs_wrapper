@@ -1,0 +1,74 @@
+file 3632 1607267137                                            
+version 2
+run General-0-20201206-16:04:55-60746
+attr configname General
+attr datetime 20201206-16:04:55
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network NW
+attr processid 60746
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.numNodes 2
+param **.constraintAreaMinX 0m
+param **.constraintAreaMinY 0m
+param **.constraintAreaMinZ 0m
+param **.constraintAreaMaxX 600m
+param **.constraintAreaMaxY 400m
+param **.constraintAreaMaxZ 0m
+param **.nodes[*].mobility.typename "\"StationaryMobility\""
+param **.nodes[*].mobility.initFromDisplayString false
+param **.arp.typename "\"GlobalArp\""
+param **.numApps 1
+param **.nodes[0].app[0].typename "\"UdpEchoApp\""
+param **.nodes[*].app[0].typename "\"UdpBasicApp\""
+param **.nodes[*].app[0].destAddresses "\"nodes[0]\""
+param **.nodes[*].app[0].startTime 0s
+param **.nodes[*].app[0].stopTime 9s
+param **.nodes[*].app[0].sendInterval 1s
+param **.nodes[*].app[0].messageLength 1000B
+param **.nodes[*].app[0].destPort 3000
+param **.nodes[0].app[0].localPort 3000
+param **.wlan[*].typename "\"IntAirNetInterface\""
+param **.wlan[*].bitrate 0.25Mbps
+param **.wlan[*].mac.headerLength 23B
+param **.wlan[*].radio.transmitter.headerLength 96b
+param **.wlan[*].radio.transmitter.interferenceRange 0m
+param **.wlan[*].radio.transmitter.detectionRange 1000000000000m
+param **.wlan[*].radio.receiver.ignoreInterference true
+param **.wlan[*].radio.transmitter.communicationRange 10000000000m
+
+vector 0 NW.nodes[0].wlan[0].radio radioMode:vector ETV
+attr interpolationmode sample-hold
+attr source radioModeChanged
+attr title "Radio mode, vector"
+vector 1 NW.nodes[1].wlan[0].radio radioMode:vector ETV
+attr interpolationmode sample-hold
+attr source radioModeChanged
+attr title "Radio mode, vector"
+vector 2 NW.nodes[1].app[0] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+vector 3 NW.nodes[1].udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr source packetSent
+attr title "packets sent, vector(packetBytes)"
+0	2171 16 0 0 0 0 2 0 0 0 0
+1	2187 16 0 0 0 0 2 0 0 0 0
+2	2203 70 2 28 0 5 6 1000 1000 6000 6000000
+3	2273 58 4 24 0 4 5 1008 1008 5040 5080320
+vector 4 NW.nodes[1].app[0] throughput:vector ETV
+attr source throughput(packetReceived)
+attr title "throughput, vector"
+attr unit bps
+2	2466 36 33 43 6 8 3 1000 1000 3000 3000000
+3	2502 48 29 44 5 8 4 1008 1008 4032 4064256
+4	2550 1081 51 51 0.1 10 100 0 0 0 0
+
