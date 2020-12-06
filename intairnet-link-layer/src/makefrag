@@ -1,0 +1,2 @@
+LIBS += -L /Users/fu/TUHH/Projects/intairnet-linklayer-glue/cmake-build-debug -l intairnet_linklayer_glue
+EXTRA_OBJS += --verbose

@@ -87,7 +87,15 @@
   ../../inet/src/inet/common/packet/chunk/cPacketChunk.h \
   ../../inet/src/inet/common/packet/chunk/SequenceChunk.h \
   ../../inet/src/inet/common/packet/chunk/SliceChunk.h \
-  ../../inet/src/inet/common/packet/chunk/FieldsChunk.h
+  ../../inet/src/inet/common/packet/chunk/FieldsChunk.h \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IRlc.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/MacId.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/L2Packet.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/L2Header.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/CPRPosition.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/SequenceNumber.hpp \
+  ../../glue-lib-headers/PassThroughRlc.h \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IOmnetPluggable.h
 
 IntAirNetLinkLayer.h:
 
@@ -270,3 +278,19 @@ IntAirNetLinkLayer.h:
 ../../inet/src/inet/common/packet/chunk/SliceChunk.h:
 
 ../../inet/src/inet/common/packet/chunk/FieldsChunk.h:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IRlc.hpp:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/MacId.hpp:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/L2Packet.hpp:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/L2Header.hpp:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/CPRPosition.hpp:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/SequenceNumber.hpp:
+
+../../glue-lib-headers/PassThroughRlc.h:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IOmnetPluggable.h:

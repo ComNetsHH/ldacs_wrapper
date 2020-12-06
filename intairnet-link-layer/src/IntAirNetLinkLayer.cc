@@ -5,7 +5,9 @@
  *      Author: fu
  */
 
+#include <functional>
 #include "IntAirNetLinkLayer.h"
+#include "../../glue-lib-headers/PassThroughRlc.h"
 
 Define_Module(IntAirNetLinkLayer);
 
@@ -20,6 +22,21 @@ void IntAirNetLinkLayer::initialize(int stage)
         upperLayerOutGateId = findGate("upperLayerOut");
         lowerLayerInGateId = findGate("lowerLayerIn");
         lowerLayerOutGateId = findGate("lowerLayerOut");
+
+        //std::function get_time_callback = std::bind(simTime, this);
+
+        rlcSubLayer = new PassThroughRlc();
+        ((PassThroughRlc*)rlcSubLayer)->registerGetTimeCallback([this]{
+            return simTime().dbl();
+        });
+
+        ((PassThroughRlc*)rlcSubLayer)->registerDebugMessageCallback([this](string message){
+            EV << "TEST " << message << endl;
+        });
+
+        ((PassThroughRlc*)rlcSubLayer)->init();
+        ((PassThroughRlc*)rlcSubLayer)->init();
+
     }
 }
 

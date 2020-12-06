@@ -10,8 +10,12 @@
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/common/packet/Packet.h"
 
+#include "IRlc.hpp"
+
 using namespace inet;
 using namespace std;
+
+using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 
 /** @brief
@@ -22,6 +26,8 @@ using namespace std;
  */
 class IntAirNetLinkLayer: public LayeredProtocolBase {
 protected:
+
+    IRlc* rlcSubLayer;
     ~IntAirNetLinkLayer();
 
     int upperLayerInGateId = -1;
