@@ -8,6 +8,7 @@
 #include <functional>
 #include "IntAirNetLinkLayer.h"
 #include "../../glue-lib-headers/PassThroughRlc.h"
+#include "../../glue-lib-headers/L3Packet.h"
 
 Define_Module(IntAirNetLinkLayer);
 
@@ -33,9 +34,13 @@ void IntAirNetLinkLayer::initialize(int stage)
         ((PassThroughRlc*)rlcSubLayer)->registerDebugMessageCallback([this](string message){
             EV << "TEST " << message << endl;
         });
+        ((PassThroughRlc*)rlcSubLayer)->registerEmitEventCallback([this](string message, double value){
+                    EV << "TEST " << message << " " << value << endl;
+        });
 
         ((PassThroughRlc*)rlcSubLayer)->init();
         ((PassThroughRlc*)rlcSubLayer)->init();
+
 
     }
 }
@@ -47,11 +52,14 @@ void IntAirNetLinkLayer::sendUp(cMessage *message)
 
 void IntAirNetLinkLayer::sendDown(cMessage *message)
 {
-    send(message, lowerLayerOutGateId);
+    //send(message, lowerLayerOutGateId);
+
 }
 
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
-    sendDown(packet);
+    auto int_air_net_packet = new L3Packet();
+    EV <<  "HELLO" << endl;
+    rlcSubLayer->receiveFromUpper(int_air_net_packet, MacId(10));
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
