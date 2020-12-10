@@ -10,7 +10,12 @@
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/common/packet/Packet.h"
 
-#include "IRlc.hpp"
+#include "../../glue-lib-headers/IRlc.hpp"
+#include "../../glue-lib-headers/IMac.hpp"
+#include "../../glue-lib-headers/IArq.hpp"
+#include "../../glue-lib-headers/IPhy.hpp"
+#include "../../glue-lib-headers/INet.hpp"
+#include "../../glue-lib-headers/IOmnetPluggable.hpp"
 
 using namespace inet;
 using namespace std;
@@ -23,11 +28,18 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
  *
  *    @author Konrad Fuger, TUHH ComNets
  *    @date August 2020
+ *
  */
-class IntAirNetLinkLayer: public LayeredProtocolBase {
+// public INet
+class IntAirNetLinkLayer: public LayeredProtocolBase, public IPhy {
 protected:
 
     IRlc* rlcSubLayer;
+    IArq* arqSublayer;
+    IMac* macSublayer;
+
+    cMessage* subLayerTimerMessage = nullptr;
+
     ~IntAirNetLinkLayer();
 
     int upperLayerInGateId = -1;
@@ -54,6 +66,15 @@ protected:
     void handleUpperPacket(Packet *packet) override;
     void handleLowerPacket(Packet *packet) override;
     void handleSelfMessage(cMessage *message) override;
+
+    void addCallback(IOmnetPluggable *layer, double time);
+
+
+public:
+    void receiveFromUpper(L2Packet* data, unsigned int center_frequency) override;
+    unsigned long getCurrentDatarate() const override;
+
+
 };
 
 #endif //__INET_INT_AIR_NET_LL_H
