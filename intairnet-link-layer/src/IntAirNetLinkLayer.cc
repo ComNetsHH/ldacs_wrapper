@@ -149,8 +149,9 @@ void IntAirNetLinkLayer::configureInterfaceEntry()
 }
 
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
-    auto tags = packet->getTags();
 
+    // LOG ALL TAGS
+    auto tags = packet->getTags();
     for(int i = 0; i< packet->getNumTags(); i++) {
         EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
     }
@@ -159,9 +160,6 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
     MacAddress address = macAddressReq->getDestAddress();
-
-    EV << "ADDRESS: " << address << " " << endl;
-
     rlcSubLayer->receiveFromUpper(int_air_net_packet, MacId(address.getInt()));
 
     // DONE
@@ -183,14 +181,27 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
-    sendUp(packet);
+    EV << "GOT IT, THANKS " << *packet << endl;
+    IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
+    L2Packet* containedPacket = pkt->getContainedPacket();
+
+    auto tags = packet->getTags();
+    for(int i = 0; i< packet->getNumTags(); i++) {
+        EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
+    }
+
+
+    auto macAddressReq = packet->getTag<MacAddressReq>();
+    MacAddress address = macAddressReq->getSrcAddress();
+    macSublayer->receiveFromLower(containedPacket, MacId(address.getInt()));
+    //sendUp(packet);
 }
 
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
 
     if(message == subLayerTimerMessage) {
         EV <<  "My time has come" << endl;
-        ((DelayMac*)macSublayer)->onEvent(0);
+        ((DelayMac*)macSublayer)->onEvent(simTime().dbl());
     }
 
 }
@@ -229,9 +240,11 @@ void IntAirNetLinkLayer::addCallback(IOmnetPluggable * layer, double time) {
 }
 
 
+// Pretend to be PHY and get packet from MAC
 void IntAirNetLinkLayer::receiveFromUpper(L2Packet* data, unsigned int center_frequency)  {
     auto pkt = PacketFactory::fromL2Packet(data);
     // SET TAGS
+    pkt->addTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
     EV << "send down" << endl;
 
     sendDown(pkt);
