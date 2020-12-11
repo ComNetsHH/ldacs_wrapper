@@ -88,6 +88,14 @@
   ../../inet/src/inet/common/packet/chunk/SequenceChunk.h \
   ../../inet/src/inet/common/packet/chunk/SliceChunk.h \
   ../../inet/src/inet/common/packet/chunk/FieldsChunk.h \
+  ../../inet/src/inet/networklayer/common/InterfaceEntry.h \
+  ../../inet/src/inet/common/Simsignals.h \
+  ../../inet/src/inet/common/Simsignals_m.h \
+  ../../inet/src/inet/networklayer/common/InterfaceToken.h \
+  ../../inet/src/inet/networklayer/common/L3Address.h \
+  ../../inet/src/inet/networklayer/common/ModuleIdAddress.h \
+  ../../inet/src/inet/networklayer/common/ModulePathAddress.h \
+  ../../inet/src/inet/networklayer/contract/clns/ClnsAddress.h \
   ../../glue-lib-headers/IRlc.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/MacId.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/L2Packet.hpp \
@@ -102,6 +110,8 @@
   ../../glue-lib-headers/IOmnetPluggable.hpp IntAirNetLinkLayerPacket.h \
   ../../glue-lib-headers/L2Packet.hpp PacketFactory.h \
   ../../glue-lib-headers/L3Packet.hpp \
+  ../../inet/src/inet/common/ModuleAccess.h \
+  ../../inet/src/inet/networklayer/contract/IInterfaceTable.h \
   ../../glue-lib-headers/PassThroughRlc.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IOmnetPluggable.hpp \
   ../../glue-lib-headers/DelayMac.hpp \
@@ -291,6 +301,22 @@ IntAirNetLinkLayer.h:
 
 ../../inet/src/inet/common/packet/chunk/FieldsChunk.h:
 
+../../inet/src/inet/networklayer/common/InterfaceEntry.h:
+
+../../inet/src/inet/common/Simsignals.h:
+
+../../inet/src/inet/common/Simsignals_m.h:
+
+../../inet/src/inet/networklayer/common/InterfaceToken.h:
+
+../../inet/src/inet/networklayer/common/L3Address.h:
+
+../../inet/src/inet/networklayer/common/ModuleIdAddress.h:
+
+../../inet/src/inet/networklayer/common/ModulePathAddress.h:
+
+../../inet/src/inet/networklayer/contract/clns/ClnsAddress.h:
+
 ../../glue-lib-headers/IRlc.hpp:
 
 /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/MacId.hpp:
@@ -326,6 +352,10 @@ IntAirNetLinkLayerPacket.h:
 PacketFactory.h:
 
 ../../glue-lib-headers/L3Packet.hpp:
+
+../../inet/src/inet/common/ModuleAccess.h:
+
+../../inet/src/inet/networklayer/contract/IInterfaceTable.h:
 
 ../../glue-lib-headers/PassThroughRlc.hpp:
 

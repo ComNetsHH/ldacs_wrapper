@@ -9,6 +9,7 @@
 #include "inet/linklayer/common/MacAddressTag_m.h"
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/common/packet/Packet.h"
+#include "inet/networklayer/common/InterfaceEntry.h"
 
 #include "../../glue-lib-headers/IRlc.hpp"
 #include "../../glue-lib-headers/IMac.hpp"
@@ -40,6 +41,8 @@ protected:
 
     cMessage* subLayerTimerMessage = nullptr;
 
+    InterfaceEntry *interfaceEntry = nullptr;
+
     ~IntAirNetLinkLayer();
 
     int upperLayerInGateId = -1;
@@ -68,6 +71,7 @@ protected:
     void handleSelfMessage(cMessage *message) override;
 
     void addCallback(IOmnetPluggable *layer, double time);
+    void configureInterfaceEntry();
 
 
 public:

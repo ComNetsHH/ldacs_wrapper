@@ -9,6 +9,7 @@
 #include "IntAirNetLinkLayer.h"
 #include "IntAirNetLinkLayerPacket.h"
 #include "PacketFactory.h"
+#include "inet/common/ModuleAccess.h"
 #include "inet/physicallayer/contract/packetlevel/IRadio.h"
 #include "../../glue-lib-headers/PassThroughRlc.hpp"
 #include "../../glue-lib-headers/DelayMac.hpp"
@@ -27,7 +28,6 @@ void IntAirNetLinkLayer::initialize(int stage)
 {
     LayeredProtocolBase::initialize(stage);
     if (stage == INITSTAGE_LOCAL) {
-
 
         subLayerTimerMessage = new cMessage("subLayerTimer");
 
@@ -108,6 +108,10 @@ void IntAirNetLinkLayer::initialize(int stage)
         cModule *radioModule = gate("lowerLayerOut")->getPathEndGate()->getOwnerModule();
         auto radio = check_and_cast<IRadio *>(radioModule);
         radio->setRadioMode(IRadio::RADIO_MODE_TRANSCEIVER);
+
+    } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
+        configureInterfaceEntry();
+
     }
 
 }
@@ -123,22 +127,52 @@ void IntAirNetLinkLayer::sendDown(cMessage *message)
 
 }
 
+void IntAirNetLinkLayer::configureInterfaceEntry()
+{
+    interfaceEntry = getContainingNicModule(this);
+    MacAddress address = MacAddress::generateAutoAddress();
+
+    // data rate
+    interfaceEntry->setDatarate(10);
+
+    // generate a link-layer address to be used as interface token for IPv6
+    interfaceEntry->setMacAddress(address);
+    interfaceEntry->setInterfaceToken(address.formInterfaceIdentifier());
+
+    // MTU: typical values are 576 (Internet de facto), 1500 (Ethernet-friendly),
+    // 4000 (on some point-to-point links), 4470 (Cisco routers default, FDDI compatible)
+    interfaceEntry->setMtu(1500);
+
+    // capabilities
+    interfaceEntry->setMulticast(true);
+    interfaceEntry->setBroadcast(true);
+}
+
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
-    L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
-    rlcSubLayer->receiveFromUpper(int_air_net_packet, MacId(10));
-    auto pkt = new IntAirNetLinkLayerPacket();
     auto tags = packet->getTags();
 
     for(int i = 0; i< packet->getNumTags(); i++) {
         EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
     }
-    pkt->copyTags(*packet);
+
+
+    L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
+    auto macAddressReq = packet->getTag<MacAddressReq>();
+    MacAddress address = macAddressReq->getDestAddress();
+
+    EV << "ADDRESS: " << address << " " << endl;
+
+    rlcSubLayer->receiveFromUpper(int_air_net_packet, MacId(address.getInt()));
+
+    // DONE
+    //auto pkt = new IntAirNetLinkLayerPacket();
+    //pkt->copyTags(*packet);
 
     //auto macAddressInd = packet->addTagIfAbsent<MacAddressInd>();
     //macAddressInd->setSrcAddress(Mac);
     //macAddressInd->setDestAddress(macHeader->getDest());
 
-    pkt->getTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
+    //pkt->getTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
 
     //pkt->addTag<PacketProtocolTag>()->setProtocol(protocol);
     //packet->addTag<DispatchProtocolReq>()->setProtocol(addressType->getNetworkProtocol());
