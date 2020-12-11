@@ -19,6 +19,7 @@ private:
     L2Packet* containedPacket = nullptr;
 
 public:
+    IntAirNetLinkLayerPacket(const char *name, const Ptr<const Chunk>& content);
     void attachPacket(L2Packet* packet);
     L2Packet* getContainedPacket();
 };

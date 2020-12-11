@@ -7,9 +7,16 @@
 
 #include "PacketFactory.h"
 
+#include "inet/common/packet/chunk/ByteCountChunk.h"
+#include "inet/common/packet/Packet.h"
+#include <cmath>
+
 
 IntAirNetLinkLayerPacket* PacketFactory::fromL2Packet(L2Packet* source) {
-    IntAirNetLinkLayerPacket* pkt = new IntAirNetLinkLayerPacket();
+    unsigned int size_bits = source->getBits();
+    unsigned int size_bytes = std::ceil(size_bits / 8) + 100;
+    auto data = makeShared<ByteCountChunk>(B(size_bytes));
+    IntAirNetLinkLayerPacket* pkt = new IntAirNetLinkLayerPacket("IntAirNetLinkLayerPacket", data);
     pkt->attachPacket(source);
 
     return pkt;

@@ -7,6 +7,10 @@
 
 #include "IntAirNetLinkLayerPacket.h"
 
+IntAirNetLinkLayerPacket::IntAirNetLinkLayerPacket(const char *name, const Ptr<const Chunk>& content) :Packet(name, content) {
+
+}
+
 void IntAirNetLinkLayerPacket::attachPacket(L2Packet* packet) {
     containedPacket = packet;
     // we may set some field like size, attach a dummy header etc...

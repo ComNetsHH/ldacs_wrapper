@@ -182,6 +182,7 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     EV << "GOT IT, THANKS " << *packet << endl;
+    EV << "SIZE " << packet->getTotalLength() << endl;
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
 
