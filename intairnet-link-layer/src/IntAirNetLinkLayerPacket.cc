@@ -16,8 +16,15 @@ void IntAirNetLinkLayerPacket::attachPacket(L2Packet* packet) {
     // we may set some field like size, attach a dummy header etc...
 }
 
-L2Packet* IntAirNetLinkLayerPacket::getContainedPacket() {
+L2Packet* IntAirNetLinkLayerPacket::getContainedPacket() const {
     return containedPacket;
+}
+
+Packet* IntAirNetLinkLayerPacket::dup() const {
+    auto pkt = new IntAirNetLinkLayerPacket(*this);
+    pkt->x = this->x;
+    pkt->attachPacket(this->getContainedPacket());
+    return (Packet*)pkt;
 }
 
 

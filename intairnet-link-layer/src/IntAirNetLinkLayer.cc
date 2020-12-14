@@ -11,13 +11,18 @@
 #include "PacketFactory.h"
 #include "inet/common/ModuleAccess.h"
 #include "inet/physicallayer/contract/packetlevel/IRadio.h"
-#include "../../glue-lib-headers/PassThroughRlc.hpp"
+#include "inet/linklayer/common/InterfaceTag_m.h"
+#include "inet/linklayer/common/MacAddressTag_m.h"
+#include "inet/networklayer/contract/IInterfaceTable.h"
+#include "inet/common/ProtocolGroup.h"
+#include "../../avionic-rlc-headers/Rlc.hpp"
 #include "../../glue-lib-headers/DelayMac.hpp"
 #include "../../glue-lib-headers/PassThroughArq.hpp"
 #include "../../glue-lib-headers/L3Packet.hpp"
 #include "../../glue-lib-headers/IOmnetPluggable.hpp"
 
 using namespace inet::physicallayer;
+using namespace TUHH_INTAIRNET_RLC;
 
 Define_Module(IntAirNetLinkLayer);
 
@@ -39,11 +44,12 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         //std::function get_time_callback = std::bind(simTime, this);
 
-        rlcSubLayer = new PassThroughRlc();
+        rlcSubLayer = new Rlc();
         arqSublayer = new PassThroughArq();
         macSublayer = new DelayMac(MacId(1));
 
         rlcSubLayer->setLowerLayer(arqSublayer);
+        rlcSubLayer->setUpperLayer((INet*)this);
         arqSublayer->setUpperLayer(rlcSubLayer);
         arqSublayer->setLowerLayer(macSublayer);
         macSublayer->setUpperLayer(arqSublayer);
@@ -55,7 +61,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         /** Register callback functions **/
         // GetTime
-        ((PassThroughRlc*)rlcSubLayer)->registerGetTimeCallback([this]{
+        ((Rlc*)rlcSubLayer)->registerGetTimeCallback([this]{
             return simTime().dbl();
         });
         ((PassThroughArq*)arqSublayer)->registerGetTimeCallback([this]{
@@ -66,7 +72,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         });
 
         // Debug Messages
-        ((PassThroughRlc*)rlcSubLayer)->registerDebugMessageCallback([this](string message){
+        ((Rlc*)rlcSubLayer)->registerDebugMessageCallback([this](string message){
             EV << "DEBUG: " << message << endl;
         });
         ((PassThroughArq*)arqSublayer)->registerDebugMessageCallback([this](string message){
@@ -77,7 +83,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         });
 
         // Debug Messages
-        ((PassThroughRlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
+        ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
             EV << "Schedule AT: " << time << endl;
             this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
         });
@@ -94,7 +100,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
 
         // Emit statistic
-        ((PassThroughRlc*)rlcSubLayer)->registerEmitEventCallback([this](string message, double value){
+        ((Rlc*)rlcSubLayer)->registerEmitEventCallback([this](string message, double value){
                     EV << "TEST " << message << " " << value << endl;
         });
 
@@ -156,6 +162,8 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
         EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
     }
 
+    tmp = packet;
+
 
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
@@ -186,15 +194,19 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
 
+    EV << "### "<< containedPacket << endl;
+    EV << "### "<< pkt->x << endl;
+
+    // EV << containedPacket->getBits() << endl;
+    EV << containedPacket->print() << endl;
+
     auto tags = packet->getTags();
     for(int i = 0; i< packet->getNumTags(); i++) {
         EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
     }
 
-
-    auto macAddressReq = packet->getTag<MacAddressReq>();
-    MacAddress address = macAddressReq->getSrcAddress();
-    macSublayer->receiveFromLower(containedPacket, MacId(address.getInt()));
+    // resolve MAc ID
+    macSublayer->receiveFromLower(containedPacket, MacId(2));
     //sendUp(packet);
 }
 
@@ -246,6 +258,10 @@ void IntAirNetLinkLayer::receiveFromUpper(L2Packet* data, unsigned int center_fr
     auto pkt = PacketFactory::fromL2Packet(data);
     // SET TAGS
     pkt->addTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
+
+    pkt->copyTags(*tmp);
+    auto tst = pkt->getContainedPacket();
+    EV << tst->print() << endl;
     EV << "send down" << endl;
 
     sendDown(pkt);
@@ -254,6 +270,24 @@ void IntAirNetLinkLayer::receiveFromUpper(L2Packet* data, unsigned int center_fr
 
 unsigned long IntAirNetLinkLayer::getCurrentDatarate() const {
     return 1;
+}
+
+void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
+    Packet* original = packet->original;
+    if(original) {
+        take(original);
+
+        auto macAddressReq = original->getTag<MacAddressReq>();
+
+        auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
+        macAddressInd->setSrcAddress(macAddressReq->getSrcAddress());
+        macAddressInd->setDestAddress(macAddressReq->getDestAddress());
+        original->addTagIfAbsent<InterfaceInd>()->setInterfaceId(interfaceEntry->getInterfaceId());
+        auto payloadProtocol = ProtocolGroup::ethertype.getProtocol(ProtocolGroup::ethertype.getProtocolNumber(original->getTag<PacketProtocolTag>()->getProtocol()));
+        original->addTagIfAbsent<DispatchProtocolReq>()->setProtocol(payloadProtocol);
+        original->addTagIfAbsent<PacketProtocolTag>()->setProtocol(payloadProtocol);
+        sendUp(original);
+    }
 }
 
 

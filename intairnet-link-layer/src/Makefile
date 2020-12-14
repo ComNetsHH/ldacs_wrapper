@@ -30,7 +30,7 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/InetPacketPayload.o $O/IntAirNetLinkLayer.o $O/IntAirNetLinkLayerPacket.o $O/PacketFactory.o
+OBJS = $O/IntAirNetLinkLayer.o $O/IntAirNetLinkLayerPacket.o $O/PacketFactory.o
 
 # Message files
 MSGFILES =
@@ -84,6 +84,7 @@ endif
 # >>>
 # inserted from file 'makefrag':
 LIBS += -L /Users/fu/TUHH/Projects/intairnet-linklayer-glue/cmake-build-debug -l intairnet_linklayer_glue
+LIBS += -L /Users/fu/TUHH/Projects/avionic-rlc/cmake-build-debug -l tuhh_intairnet_rlc
 EXTRA_OBJS += --verbose
 
 # <<<

@@ -32,7 +32,7 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
  *
  */
 // public INet
-class IntAirNetLinkLayer: public LayeredProtocolBase, public IPhy {
+class IntAirNetLinkLayer: public LayeredProtocolBase, public IPhy, public INet {
 protected:
 
     IRlc* rlcSubLayer;
@@ -40,6 +40,7 @@ protected:
     IMac* macSublayer;
 
     cMessage* subLayerTimerMessage = nullptr;
+    Packet *tmp;
 
     InterfaceEntry *interfaceEntry = nullptr;
 
@@ -77,6 +78,9 @@ protected:
 public:
     void receiveFromUpper(L2Packet* data, unsigned int center_frequency) override;
     unsigned long getCurrentDatarate() const override;
+    unsigned int getNumHopsToGroundStation() const { return 0;};
+    void reportNumHopsToGS(const MacId& id, unsigned int num_hops) {};
+    void receiveFromLower(L3Packet* packet);
 
 
 };

@@ -14,10 +14,13 @@
 
 IntAirNetLinkLayerPacket* PacketFactory::fromL2Packet(L2Packet* source) {
     unsigned int size_bits = source->getBits();
-    unsigned int size_bytes = std::ceil(size_bits / 8) + 100;
+
+    EV << "CONVERSION " << size_bits << endl;
+    unsigned int size_bytes = std::ceil(size_bits / 8);
     auto data = makeShared<ByteCountChunk>(B(size_bytes));
     IntAirNetLinkLayerPacket* pkt = new IntAirNetLinkLayerPacket("IntAirNetLinkLayerPacket", data);
     pkt->attachPacket(source);
+    pkt->x = 99;
 
     return pkt;
     // TODO: translate all relevant fields
@@ -26,6 +29,9 @@ IntAirNetLinkLayerPacket* PacketFactory::fromL2Packet(L2Packet* source) {
 L3Packet* PacketFactory::fromInetPacket(Packet* source) {
     L3Packet* pkt = new L3Packet();
     pkt->original = source;
+
+    B size = source->getTotalLength();
+    pkt->size = (size.get() * 8);
 
     return pkt;
     // TODO: translate all relevant fields

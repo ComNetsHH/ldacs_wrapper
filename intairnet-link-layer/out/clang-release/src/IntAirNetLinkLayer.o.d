@@ -105,15 +105,20 @@
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/L3Packet.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IRlc.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/INet.hpp \
-  ../../glue-lib-headers/IMac.hpp ../../glue-lib-headers/IArq.hpp \
-  ../../glue-lib-headers/IPhy.hpp ../../glue-lib-headers/INet.hpp \
+  ../../glue-lib-headers/IMac.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/Timestamp.hpp \
+  ../../glue-lib-headers/IArq.hpp ../../glue-lib-headers/IPhy.hpp \
+  ../../glue-lib-headers/INet.hpp \
   ../../glue-lib-headers/IOmnetPluggable.hpp IntAirNetLinkLayerPacket.h \
   ../../glue-lib-headers/L2Packet.hpp PacketFactory.h \
   ../../glue-lib-headers/L3Packet.hpp \
   ../../inet/src/inet/common/ModuleAccess.h \
   ../../inet/src/inet/networklayer/contract/IInterfaceTable.h \
-  ../../glue-lib-headers/PassThroughRlc.hpp \
+  ../../inet/src/inet/linklayer/common/InterfaceTag_m.h \
+  ../../inet/src/inet/common/ProtocolGroup.h \
+  ../../avionic-rlc-headers/Rlc.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IOmnetPluggable.hpp \
+  ../../avionic-rlc-headers/RlcProcess.hpp \
   ../../glue-lib-headers/DelayMac.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IMac.hpp \
   ../../glue-lib-headers/PassThroughArq.hpp \
@@ -337,6 +342,8 @@ IntAirNetLinkLayer.h:
 
 ../../glue-lib-headers/IMac.hpp:
 
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/Timestamp.hpp:
+
 ../../glue-lib-headers/IArq.hpp:
 
 ../../glue-lib-headers/IPhy.hpp:
@@ -357,9 +364,15 @@ PacketFactory.h:
 
 ../../inet/src/inet/networklayer/contract/IInterfaceTable.h:
 
-../../glue-lib-headers/PassThroughRlc.hpp:
+../../inet/src/inet/linklayer/common/InterfaceTag_m.h:
+
+../../inet/src/inet/common/ProtocolGroup.h:
+
+../../avionic-rlc-headers/Rlc.hpp:
 
 /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IOmnetPluggable.hpp:
+
+../../avionic-rlc-headers/RlcProcess.hpp:
 
 ../../glue-lib-headers/DelayMac.hpp:
 
