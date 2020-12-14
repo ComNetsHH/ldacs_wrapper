@@ -38,7 +38,10 @@ network IntAirNetInterface extends InterfaceEntry like IWirelessInterface
         output upperLayerOut;
         input radioIn @labels(Signal);
     submodules:
-        linkLayer: IntAirNetLinkLayer {}
+        linkLayer: IntAirNetLinkLayer {
+			parameters:
+                @display("p=100,150");
+        }
         radio: <default("UnitDiskRadio")> like IRadio {
             parameters:
                 @display("p=100,300");

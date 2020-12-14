@@ -1,0 +1,1182 @@
+{
+    "General-0-20201214-14:51:00-21309" : {
+        "attributes" : {
+            "configname" : "General",
+            "datetime" : "20201214-14:51:00",
+            "experiment" : "General",
+            "inifile" : "omnetpp.ini",
+            "iterationvars" : "",
+            "iterationvarsf" : "",
+            "measurement" : "",
+            "network" : "NW",
+            "processid" : "21309",
+            "repetition" : "0",
+            "replication" : "#0",
+            "resultdir" : "results",
+            "runnumber" : "0",
+            "seedset" : "0"
+        },
+        "itervars" : {
+        },
+        "moduleparams" : [
+            { "**.numNodes" : "2" },
+            { "**.constraintAreaMinX" : "0m" },
+            { "**.constraintAreaMinY" : "0m" },
+            { "**.constraintAreaMinZ" : "0m" },
+            { "**.constraintAreaMaxX" : "600m" },
+            { "**.constraintAreaMaxY" : "400m" },
+            { "**.constraintAreaMaxZ" : "0m" },
+            { "**.nodes[*].mobility.typename" : "\"StationaryMobility\"" },
+            { "**.nodes[*].mobility.initFromDisplayString" : "false" },
+            { "**.arp.typename" : "\"GlobalArp\"" },
+            { "**.numApps" : "1" },
+            { "**.nodes[0].app[0].typename" : "\"UdpEchoApp\"" },
+            { "**.nodes[*].app[0].typename" : "\"UdpBasicApp\"" },
+            { "**.nodes[*].app[0].destAddresses" : "\"nodes[0]\"" },
+            { "**.nodes[*].app[0].startTime" : "0s" },
+            { "**.nodes[*].app[0].stopTime" : "9s" },
+            { "**.nodes[*].app[0].sendInterval" : "1s" },
+            { "**.nodes[*].app[0].messageLength" : "1B" },
+            { "**.nodes[*].app[0].destPort" : "3000" },
+            { "**.nodes[0].app[0].localPort" : "3000" },
+            { "**.wlan[*].typename" : "\"IntAirNetInterface\"" },
+            { "**.wlan[*].bitrate" : "0.25Mbps" },
+            { "**.wlan[*].mac.headerLength" : "23B" },
+            { "**.wlan[*].radio.transmitter.headerLength" : "96b" },
+            { "**.wlan[*].radio.transmitter.interferenceRange" : "0m" },
+            { "**.wlan[*].radio.transmitter.detectionRange" : "1000000000000m" },
+            { "**.wlan[*].radio.receiver.ignoreInterference" : "true" },
+            { "**.wlan[*].radio.transmitter.communicationRange" : "10000000000m" }
+        ],
+        "scalars" : [
+            {
+                "module" : "NW.nodes[0].lo[0].lo",
+                "name" : "rcvdPkFromHl:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceivedFromUpper",
+                    "title" : "packets received from higher layer, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].lo[0].lo",
+                "name" : "rcvdPkFromHl:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceivedFromUpper",
+                    "title" : "packets received from higher layer, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].lo[0].lo",
+                "name" : "passedUpPk:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed to higher layer, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].lo[0].lo",
+                "name" : "passedUpPk:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed to higher layer, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "radioMode:count",
+                "value" : 3,
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "radioModeChanged",
+                    "title" : "Radio mode, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "receptionState:count",
+                "value" : 17,
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "receptionStateChanged",
+                    "title" : "Radio reception state, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "transmissionState:count",
+                "value" : 13,
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "transmissionStateChanged",
+                    "title" : "Radio transmission state, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropAddressResolutionFailed:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsAddressResolutionFailed(packetDropped)",
+                    "title" : "packet drop: address resolution failed, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropAddressResolutionFailed:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsAddressResolutionFailed(packetDropped)",
+                    "title" : "packet drop: address resolution failed, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropHopLimitReached:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsHopLimitReached(packetDropped)",
+                    "title" : "packet drop: hop limit reached, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropHopLimitReached:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsHopLimitReached(packetDropped)",
+                    "title" : "packet drop: hop limit reached, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropForwardingDisabled:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsForwardingDisabled(packetDropped)",
+                    "title" : "packet drop: forwarding disabled, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropForwardingDisabled:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsForwardingDisabled(packetDropped)",
+                    "title" : "packet drop: forwarding disabled, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropNoInterfaceFound:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoInterfaceFound(packetDropped)",
+                    "title" : "packet drop: no interface found, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropNoInterfaceFound:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoInterfaceFound(packetDropped)",
+                    "title" : "packet drop: no interface found, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropNoRouteFound:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoRouteFound(packetDropped)",
+                    "title" : "packet drop: no route found, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropNoRouteFound:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoRouteFound(packetDropped)",
+                    "title" : "packet drop: no route found, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropUndefined:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsUndefined(packetDropped)",
+                    "title" : "packet drop: undefined, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].ipv4.ip",
+                "name" : "packetDropUndefined:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsUndefined(packetDropped)",
+                    "title" : "packet drop: undefined, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "packetReceived:count",
+                "value" : 8,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "packetReceived:sum(packetBytes)",
+                "value" : 72,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "packetSent:count",
+                "value" : 8,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "packetSent:sum(packetBytes)",
+                "value" : 72,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "passedUpPk:count",
+                "value" : 8,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed up, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "droppedPkWrongPort:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoPortFound(packetDropped)",
+                    "title" : "packets dropped (wrong port), count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "droppedPkBadChecksum:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsIncorrectlyReceived(packetDropped)",
+                    "title" : "packets dropped (checksum error), count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].app[0]",
+                "name" : "echoedPk:count",
+                "value" : 8,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets echoed, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[0].app[0]",
+                "name" : "echoedPk:sum(packetBytes)",
+                "value" : 8,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets echoed, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].lo[0].lo",
+                "name" : "rcvdPkFromHl:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceivedFromUpper",
+                    "title" : "packets received from higher layer, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].lo[0].lo",
+                "name" : "rcvdPkFromHl:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceivedFromUpper",
+                    "title" : "packets received from higher layer, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].lo[0].lo",
+                "name" : "passedUpPk:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed to higher layer, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].lo[0].lo",
+                "name" : "passedUpPk:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed to higher layer, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "radioMode:count",
+                "value" : 3,
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "radioModeChanged",
+                    "title" : "Radio mode, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "receptionState:count",
+                "value" : 13,
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "receptionStateChanged",
+                    "title" : "Radio reception state, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "transmissionState:count",
+                "value" : 18,
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "transmissionStateChanged",
+                    "title" : "Radio transmission state, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropAddressResolutionFailed:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsAddressResolutionFailed(packetDropped)",
+                    "title" : "packet drop: address resolution failed, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropAddressResolutionFailed:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsAddressResolutionFailed(packetDropped)",
+                    "title" : "packet drop: address resolution failed, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropHopLimitReached:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsHopLimitReached(packetDropped)",
+                    "title" : "packet drop: hop limit reached, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropHopLimitReached:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsHopLimitReached(packetDropped)",
+                    "title" : "packet drop: hop limit reached, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropForwardingDisabled:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsForwardingDisabled(packetDropped)",
+                    "title" : "packet drop: forwarding disabled, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropForwardingDisabled:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsForwardingDisabled(packetDropped)",
+                    "title" : "packet drop: forwarding disabled, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropNoInterfaceFound:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoInterfaceFound(packetDropped)",
+                    "title" : "packet drop: no interface found, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropNoInterfaceFound:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoInterfaceFound(packetDropped)",
+                    "title" : "packet drop: no interface found, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropNoRouteFound:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoRouteFound(packetDropped)",
+                    "title" : "packet drop: no route found, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropNoRouteFound:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoRouteFound(packetDropped)",
+                    "title" : "packet drop: no route found, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropUndefined:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsUndefined(packetDropped)",
+                    "title" : "packet drop: undefined, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].ipv4.ip",
+                "name" : "packetDropUndefined:sum(packetBytes)",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsUndefined(packetDropped)",
+                    "title" : "packet drop: undefined, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "packetReceived:count",
+                "value" : 6,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "packetReceived:sum(packetBytes)",
+                "value" : 54,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "packetSent:count",
+                "value" : 9,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "packetSent:sum(packetBytes)",
+                "value" : 81,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "passedUpPk:count",
+                "value" : 5,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed up, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "droppedPkWrongPort:count",
+                "value" : 1,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoPortFound(packetDropped)",
+                    "title" : "packets dropped (wrong port), count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "droppedPkBadChecksum:count",
+                "value" : 0,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsIncorrectlyReceived(packetDropped)",
+                    "title" : "packets dropped (checksum error), count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packets sent",
+                "value" : 9
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packets received",
+                "value" : 5
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packetReceived:count",
+                "value" : 5,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packetReceived:sum(packetBytes)",
+                "value" : 5,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packetSent:count",
+                "value" : 9,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, count"
+                }
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packetSent:sum(packetBytes)",
+                "value" : 9,
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, sum(packetBytes)"
+                }
+            },
+            {
+                "module" : "NW.radioMedium.propagation",
+                "name" : "Arrival computation count",
+                "value" : 15
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "transmission count",
+                "value" : 15
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "signal send count",
+                "value" : 15
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "reception computation count",
+                "value" : 14
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "interference computation count",
+                "value" : 73
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "reception decision computation count",
+                "value" : 14
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "listening decision computation count",
+                "value" : 45
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "reception cache hit",
+                "value" : 85.714285714286,
+                "attributes" : {
+                    "unit" : "%"
+                }
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "interference cache hit",
+                "value" : 66.666666666667,
+                "attributes" : {
+                    "unit" : "%"
+                }
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "noise cache hit",
+                "value" : 0,
+                "attributes" : {
+                    "unit" : "%"
+                }
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "snir cache hit",
+                "value" : 50,
+                "attributes" : {
+                    "unit" : "%"
+                }
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "reception decision cache hit",
+                "value" : 50,
+                "attributes" : {
+                    "unit" : "%"
+                }
+            },
+            {
+                "module" : "NW.radioMedium",
+                "name" : "reception result cache hit",
+                "value" : 0,
+                "attributes" : {
+                    "unit" : "%"
+                }
+            }
+        ],
+        "statistics" : [
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "rcvdPkLifetime:stats",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "dataAge(packetReceived)",
+                    "title" : "received packet lifetime, stats",
+                    "unit" : "s"
+                },
+                "count" : 5,
+                "mean" : 4.009921182924,
+                "stddev" : 0,
+                "min" : 4.009921182924,
+                "max" : 4.009921182924,
+                "sum" : 20.04960591462,
+                "sqrsum" : 80.397339466313
+            }
+        ],
+        "histograms" : [
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "minSnir:histogram",
+                "attributes" : {
+                    "source" : "minimumSnir(packetSentToUpper)",
+                    "title" : "Min SNIR, histogram"
+                },
+                "count" : 0,
+                "mean" : null,
+                "stddev" : null,
+                "min" : null,
+                "max" : null,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", 0, 1],
+                "binvalues" : [0, 0, 0]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "packetErrorRate:histogram",
+                "attributes" : {
+                    "source" : "packetErrorRate(packetSentToUpper)",
+                    "title" : "Packet error rate, histogram"
+                },
+                "count" : 8,
+                "mean" : 0,
+                "stddev" : 0,
+                "min" : 0,
+                "max" : 0,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", -0.5, -0.48, -0.46, -0.44, -0.42, -0.4, -0.38, -0.36, -0.34, 
+                    -0.32, -0.3, -0.28, -0.26, -0.24, -0.22, -0.2, -0.18, -0.16, -0.14, 
+                    -0.12, -0.1, -0.08, -0.06, -0.04, -0.02, 0, 0.02, 0.04, 0.06, 
+                    0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 
+                    0.28, 0.3, 0.32, 0.34, 0.36, 0.38, 0.4, 0.42, 0.44, 0.46, 
+                    0.48, 0.5],
+                "binvalues" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "bitErrorRate:histogram",
+                "attributes" : {
+                    "source" : "bitErrorRate(packetSentToUpper)",
+                    "title" : "Bit error rate, histogram"
+                },
+                "count" : 8,
+                "mean" : 0,
+                "stddev" : 0,
+                "min" : 0,
+                "max" : 0,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", -0.5, -0.48, -0.46, -0.44, -0.42, -0.4, -0.38, -0.36, -0.34, 
+                    -0.32, -0.3, -0.28, -0.26, -0.24, -0.22, -0.2, -0.18, -0.16, -0.14, 
+                    -0.12, -0.1, -0.08, -0.06, -0.04, -0.02, 0, 0.02, 0.04, 0.06, 
+                    0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 
+                    0.28, 0.3, 0.32, 0.34, 0.36, 0.38, 0.4, 0.42, 0.44, 0.46, 
+                    0.48, 0.5],
+                "binvalues" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "symbolErrorRate:histogram",
+                "attributes" : {
+                    "source" : "symbolErrorRate(packetSentToUpper)",
+                    "title" : "Symbol error rate, histogram"
+                },
+                "count" : 8,
+                "mean" : 0,
+                "stddev" : 0,
+                "min" : 0,
+                "max" : 0,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", -0.5, -0.48, -0.46, -0.44, -0.42, -0.4, -0.38, -0.36, -0.34, 
+                    -0.32, -0.3, -0.28, -0.26, -0.24, -0.22, -0.2, -0.18, -0.16, -0.14, 
+                    -0.12, -0.1, -0.08, -0.06, -0.04, -0.02, 0, 0.02, 0.04, 0.06, 
+                    0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 
+                    0.28, 0.3, 0.32, 0.34, 0.36, 0.38, 0.4, 0.42, 0.44, 0.46, 
+                    0.48, 0.5],
+                "binvalues" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "minSnir:histogram",
+                "attributes" : {
+                    "source" : "minimumSnir(packetSentToUpper)",
+                    "title" : "Min SNIR, histogram"
+                },
+                "count" : 0,
+                "mean" : null,
+                "stddev" : null,
+                "min" : null,
+                "max" : null,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", 0, 1],
+                "binvalues" : [0, 0, 0]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "packetErrorRate:histogram",
+                "attributes" : {
+                    "source" : "packetErrorRate(packetSentToUpper)",
+                    "title" : "Packet error rate, histogram"
+                },
+                "count" : 6,
+                "mean" : 0,
+                "stddev" : 0,
+                "min" : 0,
+                "max" : 0,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", -0.5, -0.48, -0.46, -0.44, -0.42, -0.4, -0.38, -0.36, -0.34, 
+                    -0.32, -0.3, -0.28, -0.26, -0.24, -0.22, -0.2, -0.18, -0.16, -0.14, 
+                    -0.12, -0.1, -0.08, -0.06, -0.04, -0.02, 0, 0.02, 0.04, 0.06, 
+                    0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 
+                    0.28, 0.3, 0.32, 0.34, 0.36, 0.38, 0.4, 0.42, 0.44, 0.46, 
+                    0.48, 0.5],
+                "binvalues" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "bitErrorRate:histogram",
+                "attributes" : {
+                    "source" : "bitErrorRate(packetSentToUpper)",
+                    "title" : "Bit error rate, histogram"
+                },
+                "count" : 6,
+                "mean" : 0,
+                "stddev" : 0,
+                "min" : 0,
+                "max" : 0,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", -0.5, -0.48, -0.46, -0.44, -0.42, -0.4, -0.38, -0.36, -0.34, 
+                    -0.32, -0.3, -0.28, -0.26, -0.24, -0.22, -0.2, -0.18, -0.16, -0.14, 
+                    -0.12, -0.1, -0.08, -0.06, -0.04, -0.02, 0, 0.02, 0.04, 0.06, 
+                    0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 
+                    0.28, 0.3, 0.32, 0.34, 0.36, 0.38, 0.4, 0.42, 0.44, 0.46, 
+                    0.48, 0.5],
+                "binvalues" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "symbolErrorRate:histogram",
+                "attributes" : {
+                    "source" : "symbolErrorRate(packetSentToUpper)",
+                    "title" : "Symbol error rate, histogram"
+                },
+                "count" : 6,
+                "mean" : 0,
+                "stddev" : 0,
+                "min" : 0,
+                "max" : 0,
+                "sum" : 0,
+                "sqrsum" : 0,
+                "binedges" : ["-inf", -0.5, -0.48, -0.46, -0.44, -0.42, -0.4, -0.38, -0.36, -0.34, 
+                    -0.32, -0.3, -0.28, -0.26, -0.24, -0.22, -0.2, -0.18, -0.16, -0.14, 
+                    -0.12, -0.1, -0.08, -0.06, -0.04, -0.02, 0, 0.02, 0.04, 0.06, 
+                    0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 
+                    0.28, 0.3, 0.32, 0.34, 0.36, 0.38, 0.4, 0.42, 0.44, 0.46, 
+                    0.48, 0.5],
+                "binvalues" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0]
+            }
+        ],
+        "vectors" : [
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "radioMode:vector",
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "radioModeChanged",
+                    "title" : "Radio mode, vector"
+                },
+                "time" : [0, 0, 0],
+                "value" : [0, 0, 4]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "radioMode:vector",
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "radioModeChanged",
+                    "title" : "Radio mode, vector"
+                },
+                "time" : [0, 0, 0],
+                "value" : [0, 0, 4]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "receptionState:vector",
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "receptionStateChanged",
+                    "title" : "Radio reception state, vector"
+                },
+                "time" : [0, 2.000000591462, 2.004960591462, 3.000000591462, 3.004960591462, 4.000000591462, 4.004960591462, 5.000000591462, 5.004960591462, 6.000000591462, 
+                    6.004960591462, 7.000000591462, 7.004960591462, 8.000000591462, 8.004960591462, 9.000000591462, 9.004960591462],
+                "value" : [1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 
+                    1, 3, 1, 3, 1, 3, 1]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].radio",
+                "name" : "transmissionState:vector",
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "transmissionStateChanged",
+                    "title" : "Radio transmission state, vector"
+                },
+                "time" : [0, 4.004960591462, 4.009920591462, 5.004960591462, 5.009920591462, 6.004960591462, 6.009920591462, 7.004960591462, 7.009920591462, 8.004960591462, 
+                    8.009920591462, 9.004960591462, 9.009920591462],
+                "value" : [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 
+                    1, 2, 1]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "receptionState:vector",
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "receptionStateChanged",
+                    "title" : "Radio reception state, vector"
+                },
+                "time" : [0, 4.004961182924, 4.009921182924, 5.004961182924, 5.009921182924, 6.004961182924, 6.009921182924, 7.004961182924, 7.009921182924, 8.004961182924, 
+                    8.009921182924, 9.004961182924, 9.009921182924],
+                "value" : [1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 
+                    1, 3, 1]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].radio",
+                "name" : "transmissionState:vector",
+                "attributes" : {
+                    "interpolationmode" : "sample-hold",
+                    "source" : "transmissionStateChanged",
+                    "title" : "Radio transmission state, vector"
+                },
+                "time" : [0, 2, 2.00496, 3, 3.00496, 4, 4.00496, 5, 5.00496, 6, 
+                    6.00496, 7, 7.00496, 8, 8.00496, 9, 9.00496, 10],
+                "value" : [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 
+                    1, 2, 1, 2, 1, 2, 1, 2]
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packetSent:vector(packetBytes)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, vector(packetBytes)"
+                },
+                "time" : [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                "value" : [1, 1, 1, 1, 1, 1, 1, 1, 1]
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "packetSent:vector(packetBytes)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, vector(packetBytes)"
+                },
+                "time" : [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                "value" : [9, 9, 9, 9, 9, 9, 9, 9, 9]
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "packetReceived:vector(packetBytes)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, vector(packetBytes)"
+                },
+                "time" : [2.004960591462, 3.004960591462, 4.004960591462, 5.004960591462, 6.004960591462, 7.004960591462, 8.004960591462, 9.004960591462],
+                "value" : [9, 9, 9, 9, 9, 9, 9, 9]
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "passedUpPk:vector(count)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed up, vector(count)"
+                },
+                "time" : [2.004960591462, 3.004960591462, 4.004960591462, 5.004960591462, 6.004960591462, 7.004960591462, 8.004960591462, 9.004960591462],
+                "value" : [1, 2, 3, 4, 5, 6, 7, 8]
+            },
+            {
+                "module" : "NW.nodes[0].app[0]",
+                "name" : "echoedPk:vector(packetBytes)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets echoed, vector(packetBytes)"
+                },
+                "time" : [2.004960591462, 3.004960591462, 4.004960591462, 5.004960591462, 6.004960591462, 7.004960591462, 8.004960591462, 9.004960591462],
+                "value" : [1, 1, 1, 1, 1, 1, 1, 1]
+            },
+            {
+                "module" : "NW.nodes[0].udp",
+                "name" : "packetSent:vector(packetBytes)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSent",
+                    "title" : "packets sent, vector(packetBytes)"
+                },
+                "time" : [2.004960591462, 3.004960591462, 4.004960591462, 5.004960591462, 6.004960591462, 7.004960591462, 8.004960591462, 9.004960591462],
+                "value" : [9, 9, 9, 9, 9, 9, 9, 9]
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "packetReceived:vector(packetBytes)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, vector(packetBytes)"
+                },
+                "time" : [4.009921182924, 5.009921182924, 6.009921182924, 7.009921182924, 8.009921182924, 9.009921182924],
+                "value" : [9, 9, 9, 9, 9, 9]
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "passedUpPk:vector(count)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetSentToUpper",
+                    "title" : "packets passed up, vector(count)"
+                },
+                "time" : [4.009921182924, 5.009921182924, 6.009921182924, 7.009921182924, 8.009921182924],
+                "value" : [1, 2, 3, 4, 5]
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "packetReceived:vector(packetBytes)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetReceived",
+                    "title" : "packets received, vector(packetBytes)"
+                },
+                "time" : [4.009921182924, 5.009921182924, 6.009921182924, 7.009921182924, 8.009921182924],
+                "value" : [1, 1, 1, 1, 1]
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "throughput:vector",
+                "attributes" : {
+                    "source" : "throughput(packetReceived)",
+                    "title" : "throughput, vector",
+                    "unit" : "bps"
+                },
+                "time" : [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 
+                    1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 
+                    2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3, 
+                    3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4, 
+                    4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5, 
+                    5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 5.9, 6, 
+                    6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, 7, 
+                    7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 8, 
+                    8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 9, 
+                    9.1, 9.2, 9.3, 9.4, 9.5, 9.6, 9.7, 9.8, 9.9, 10],
+                "value" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "rcvdPkLifetime:vector",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "dataAge(packetReceived)",
+                    "title" : "received packet lifetime, vector",
+                    "unit" : "s"
+                },
+                "time" : [4.009921182924, 5.009921182924, 6.009921182924, 7.009921182924, 8.009921182924],
+                "value" : [4.009921182924, 4.009921182924, 4.009921182924, 4.009921182924, 4.009921182924]
+            },
+            {
+                "module" : "NW.nodes[1].app[0]",
+                "name" : "rcvdPkSeqNo:vector",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "appPkSeqNo(packetReceived)",
+                    "title" : "received packet sequence number, vector"
+                },
+                "time" : [4.009921182924, 5.009921182924, 6.009921182924, 7.009921182924, 8.009921182924],
+                "value" : [0, 1, 2, 3, 4]
+            },
+            {
+                "module" : "NW.nodes[1].udp",
+                "name" : "droppedPkWrongPort:vector(count)",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "source" : "packetDropReasonIsNoPortFound(packetDropped)",
+                    "title" : "packets dropped (wrong port), vector(count)"
+                },
+                "time" : [9.009921182924],
+                "value" : [1]
+            }
+        ]
+    }
+}

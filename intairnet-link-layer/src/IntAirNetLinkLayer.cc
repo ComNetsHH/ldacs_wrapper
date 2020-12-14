@@ -42,8 +42,6 @@ void IntAirNetLinkLayer::initialize(int stage)
         lowerLayerInGateId = findGate("lowerLayerIn");
         lowerLayerOutGateId = findGate("lowerLayerOut");
 
-        //std::function get_time_callback = std::bind(simTime, this);
-
         rlcSubLayer = new Rlc();
         arqSublayer = new PassThroughArq();
         macSublayer = new DelayMac(MacId(1));
@@ -55,34 +53,24 @@ void IntAirNetLinkLayer::initialize(int stage)
         macSublayer->setUpperLayer(arqSublayer);
         macSublayer->setLowerLayer((IPhy*)this);
 
-
-
-
-
         /** Register callback functions **/
         // GetTime
-        ((Rlc*)rlcSubLayer)->registerGetTimeCallback([this]{
+        function<double()> getTimeFkt= [this]{
             return simTime().dbl();
-        });
-        ((PassThroughArq*)arqSublayer)->registerGetTimeCallback([this]{
-            return simTime().dbl();
-        });
-        ((DelayMac*)macSublayer)->registerGetTimeCallback([this]{
-            return simTime().dbl();
-        });
+        };
+        ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
+        ((PassThroughArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
+        ((DelayMac*)macSublayer)->registerGetTimeCallback(getTimeFkt);
 
         // Debug Messages
-        ((Rlc*)rlcSubLayer)->registerDebugMessageCallback([this](string message){
+        function<void(string)> debugFkt = [this](string message){
             EV << "DEBUG: " << message << endl;
-        });
-        ((PassThroughArq*)arqSublayer)->registerDebugMessageCallback([this](string message){
-            EV << "DEBUG: " << message << endl;
-        });
-        ((DelayMac*)macSublayer)->registerDebugMessageCallback([this](string message){
-            EV << "DEBUG: " << message << endl;
-        });
+        };
+        ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
+        ((PassThroughArq*)arqSublayer)->registerDebugMessageCallback(debugFkt);
+        ((DelayMac*)macSublayer)->registerDebugMessageCallback(debugFkt);
 
-        // Debug Messages
+        // Schedule At
         ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
             EV << "Schedule AT: " << time << endl;
             this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
@@ -100,12 +88,12 @@ void IntAirNetLinkLayer::initialize(int stage)
 
 
         // Emit statistic
-        ((Rlc*)rlcSubLayer)->registerEmitEventCallback([this](string message, double value){
-                    EV << "TEST " << message << " " << value << endl;
-        });
-
-        //((PassThroughRlc*)rlcSubLayer)->init();
-        //((PassThroughRlc*)rlcSubLayer)->init();
+        function<void(string, double)> emitFkt = [this](string message, double value){
+            this->emitStatistic(message, value);
+        };
+        ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
+        ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
+        ((DelayMac*)macSublayer)->registerEmitEventCallback(emitFkt);
 
 
 
@@ -145,8 +133,7 @@ void IntAirNetLinkLayer::configureInterfaceEntry()
     interfaceEntry->setMacAddress(address);
     interfaceEntry->setInterfaceToken(address.formInterfaceIdentifier());
 
-    // MTU: typical values are 576 (Internet de facto), 1500 (Ethernet-friendly),
-    // 4000 (on some point-to-point links), 4470 (Cisco routers default, FDDI compatible)
+    //TODO: set high enough so that IP does not fragment
     interfaceEntry->setMtu(1500);
 
     // capabilities
@@ -162,6 +149,7 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
         EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
     }
 
+    // TODO: handle tags better
     tmp = packet;
 
 
@@ -169,52 +157,47 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
     auto macAddressReq = packet->getTag<MacAddressReq>();
     MacAddress address = macAddressReq->getDestAddress();
     rlcSubLayer->receiveFromUpper(int_air_net_packet, MacId(address.getInt()));
-
-    // DONE
-    //auto pkt = new IntAirNetLinkLayerPacket();
-    //pkt->copyTags(*packet);
-
-    //auto macAddressInd = packet->addTagIfAbsent<MacAddressInd>();
-    //macAddressInd->setSrcAddress(Mac);
-    //macAddressInd->setDestAddress(macHeader->getDest());
-
-    //pkt->getTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
-
-    //pkt->addTag<PacketProtocolTag>()->setProtocol(protocol);
-    //packet->addTag<DispatchProtocolReq>()->setProtocol(addressType->getNetworkProtocol());
-    //packet->addTag<L3AddressReq>()->setDestAddress(destAddr);
-
-    // referr from sending down now
-    //sendDown(pkt);
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
-    EV << "GOT IT, THANKS " << *packet << endl;
-    EV << "SIZE " << packet->getTotalLength() << endl;
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
-
-    EV << "### "<< containedPacket << endl;
-    EV << "### "<< pkt->x << endl;
-
-    // EV << containedPacket->getBits() << endl;
-    EV << containedPacket->print() << endl;
 
     auto tags = packet->getTags();
     for(int i = 0; i< packet->getNumTags(); i++) {
         EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
     }
 
-    // resolve MAc ID
+    //TODO: resolve MAc ID
     macSublayer->receiveFromLower(containedPacket, MacId(2));
-    //sendUp(packet);
+    delete packet;
 }
 
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
 
     if(message == subLayerTimerMessage) {
-        EV <<  "My time has come" << endl;
-        ((DelayMac*)macSublayer)->onEvent(simTime().dbl());
+        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
+            double time = it->first;
+            if(time == simTime().dbl()) {
+
+                EV << "TIME" << endl;
+
+                ((DelayMac*)macSublayer)->onEvent(time);
+                callbackTimes.erase(it);
+            }
+        }
+        double min_time = -1;
+        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
+            double time = it->first;
+            if(min_time < 0) {
+                min_time = time;
+            } else if(time < min_time) {
+                min_time = time;
+            }
+        }
+        if(!subLayerTimerMessage->isScheduled()) {
+            scheduleAt(min_time, subLayerTimerMessage);
+        }
     }
 
 }
@@ -245,10 +228,19 @@ bool IntAirNetLinkLayer::isLowerMessage(cMessage *message)
     return message->getArrivalGateId() == lowerLayerInGateId;
 }
 
-void IntAirNetLinkLayer::addCallback(IOmnetPluggable * layer, double time) {
-    EV << "HELLO" << time;
+void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {
+    callbackTimes.push_back(make_pair(time, layer));
+    double min_time = -1;
+    for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
+        double time = it->first;
+        if(min_time < 0) {
+            min_time = time;
+        } else if(time < min_time) {
+            min_time = time;
+        }
+    }
     if(!subLayerTimerMessage->isScheduled()) {
-        scheduleAt(SimTime(time), subLayerTimerMessage);
+        scheduleAt(min_time, subLayerTimerMessage);
     }
 }
 
@@ -256,13 +248,10 @@ void IntAirNetLinkLayer::addCallback(IOmnetPluggable * layer, double time) {
 // Pretend to be PHY and get packet from MAC
 void IntAirNetLinkLayer::receiveFromUpper(L2Packet* data, unsigned int center_frequency)  {
     auto pkt = PacketFactory::fromL2Packet(data);
-    // SET TAGS
     pkt->addTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
 
+    // TODO: remove quickfix for copying tags
     pkt->copyTags(*tmp);
-    auto tst = pkt->getContainedPacket();
-    EV << tst->print() << endl;
-    EV << "send down" << endl;
 
     sendDown(pkt);
 
@@ -288,6 +277,10 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
         original->addTagIfAbsent<PacketProtocolTag>()->setProtocol(payloadProtocol);
         sendUp(original);
     }
+}
+
+void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
+    EV << statistic_name << ": " << value << endl;
 }
 
 
