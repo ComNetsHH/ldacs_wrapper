@@ -23,6 +23,11 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
+        @signal[rlc_bits_received_from_upper](type=double);
+        @signal[rlc_bits_received_from_lower](type=double);
+        @statistic[rlc_bits_received_from_upper](title="Rlc:packet_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
+        @statistic[rlc_bits_received_from_lower](title="Rlc:packet_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
+        
     gates:
         input upperLayerIn @labels(INetworkHeader/down);
         output upperLayerOut @labels(INetworkHeader/up);

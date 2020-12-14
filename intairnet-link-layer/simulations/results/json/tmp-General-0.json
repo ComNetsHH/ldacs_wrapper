@@ -1,15 +1,15 @@
 {
-    "General-0-20201214-14:51:00-21309" : {
+    "General-0-20201214-15:19:17-22436" : {
         "attributes" : {
             "configname" : "General",
-            "datetime" : "20201214-14:51:00",
+            "datetime" : "20201214-15:19:17",
             "experiment" : "General",
             "inifile" : "omnetpp.ini",
             "iterationvars" : "",
             "iterationvarsf" : "",
             "measurement" : "",
             "network" : "NW",
-            "processid" : "21309",
+            "processid" : "22436",
             "repetition" : "0",
             "replication" : "#0",
             "resultdir" : "results",
@@ -744,6 +744,40 @@
         ],
         "histograms" : [
             {
+                "module" : "NW.nodes[0].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_lower:histogram",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_lower(bits), histogram"
+                },
+                "count" : 8,
+                "mean" : 1147,
+                "stddev" : 0,
+                "min" : 1147,
+                "max" : 1147,
+                "sum" : 9176,
+                "sqrsum" : 10524872,
+                "binedges" : ["-inf", 1146, 1147, 1148],
+                "binvalues" : [0, 0, 8, 0]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_upper:histogram",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_upper(bits), histogram"
+                },
+                "count" : 8,
+                "mean" : 232,
+                "stddev" : 0,
+                "min" : 232,
+                "max" : 232,
+                "sum" : 1856,
+                "sqrsum" : 430592,
+                "binedges" : ["-inf", 231, 232, 233],
+                "binvalues" : [0, 0, 8, 0]
+            },
+            {
                 "module" : "NW.nodes[0].wlan[0].radio",
                 "name" : "minSnir:histogram",
                 "attributes" : {
@@ -840,6 +874,52 @@
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                     0, 0]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_lower:histogram",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_lower(bits), histogram"
+                },
+                "count" : 6,
+                "mean" : 1147,
+                "stddev" : 0,
+                "min" : 1147,
+                "max" : 1147,
+                "sum" : 6882,
+                "sqrsum" : 7893654,
+                "binedges" : ["-inf", 1146, 1147, 1148],
+                "binvalues" : [0, 0, 6, 0]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_upper:histogram",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_upper(bits), histogram"
+                },
+                "count" : 10,
+                "mean" : 253.6,
+                "stddev" : 68.305197459637,
+                "min" : 232,
+                "max" : 448,
+                "sum" : 2536,
+                "sqrsum" : 685120,
+                "binedges" : ["-inf", 175, 180, 185, 190, 195, 200, 205, 210, 215, 
+                    220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 
+                    270, 275, 280, 285, 290, 295, 300, 305, 310, 315, 
+                    320, 325, 330, 335, 340, 345, 350, 355, 360, 365, 
+                    370, 375, 380, 385, 390, 395, 400, 405, 410, 415, 
+                    420, 425, 430, 435, 440, 445, 450, 455, 460, 465, 
+                    470, 475, 480, 485, 490, 495, 500, 505],
+                "binvalues" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+                    0, 0, 0, 0, 0, 0, 0, 0]
             },
             {
                 "module" : "NW.nodes[1].wlan[0].radio",
@@ -1038,6 +1118,26 @@
                 "value" : [9, 9, 9, 9, 9, 9, 9, 9, 9]
             },
             {
+                "module" : "NW.nodes[1].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_upper:vector",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_upper(bits), vector"
+                },
+                "time" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9.009921182924],
+                "value" : [232, 232, 232, 232, 232, 232, 232, 232, 232, 448]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_lower:vector",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_lower(bits), vector"
+                },
+                "time" : [2.004960591462, 3.004960591462, 4.004960591462, 5.004960591462, 6.004960591462, 7.004960591462, 8.004960591462, 9.004960591462],
+                "value" : [1147, 1147, 1147, 1147, 1147, 1147, 1147, 1147]
+            },
+            {
                 "module" : "NW.nodes[0].udp",
                 "name" : "packetReceived:vector(packetBytes)",
                 "attributes" : {
@@ -1080,6 +1180,26 @@
                 },
                 "time" : [2.004960591462, 3.004960591462, 4.004960591462, 5.004960591462, 6.004960591462, 7.004960591462, 8.004960591462, 9.004960591462],
                 "value" : [9, 9, 9, 9, 9, 9, 9, 9]
+            },
+            {
+                "module" : "NW.nodes[0].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_upper:vector",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_upper(bits), vector"
+                },
+                "time" : [2.004960591462, 3.004960591462, 4.004960591462, 5.004960591462, 6.004960591462, 7.004960591462, 8.004960591462, 9.004960591462],
+                "value" : [232, 232, 232, 232, 232, 232, 232, 232]
+            },
+            {
+                "module" : "NW.nodes[1].wlan[0].linkLayer",
+                "name" : "rlc_bits_received_from_lower:vector",
+                "attributes" : {
+                    "interpolationmode" : "none",
+                    "title" : "Rlc:packet_received_from_lower(bits), vector"
+                },
+                "time" : [4.009921182924, 5.009921182924, 6.009921182924, 7.009921182924, 8.009921182924, 9.009921182924],
+                "value" : [1147, 1147, 1147, 1147, 1147, 1147]
             },
             {
                 "module" : "NW.nodes[1].udp",

@@ -26,6 +26,7 @@ using namespace TUHH_INTAIRNET_RLC;
 
 Define_Module(IntAirNetLinkLayer);
 
+
 IntAirNetLinkLayer::~IntAirNetLinkLayer() {
 }
 
@@ -33,6 +34,9 @@ void IntAirNetLinkLayer::initialize(int stage)
 {
     LayeredProtocolBase::initialize(stage);
     if (stage == INITSTAGE_LOCAL) {
+
+        rlc_bits_received_from_upper_signal = registerSignal("rlc_bits_received_from_upper");
+        rlc_bits_received_from_lower_signal = registerSignal("rlc_bits_received_from_lower");
 
         subLayerTimerMessage = new cMessage("subLayerTimer");
 
@@ -281,6 +285,12 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
 
 void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     EV << statistic_name << ": " << value << endl;
+    if(statistic_name == "Rlc:packet_received_from_upper(bits)") {
+        emit(rlc_bits_received_from_upper_signal, value);
+    }
+    if(statistic_name == "Rlc:packet_received_from_lower(bits)") {
+        emit(rlc_bits_received_from_lower_signal, value);
+    }
 }
 
 

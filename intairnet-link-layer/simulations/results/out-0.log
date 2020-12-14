@@ -1,7 +1,7 @@
-** Event #0   t=0   Elapsed: 5e-05s (0m 00s)  0% completed  (0% total)
+** Event #0   t=0   Elapsed: 6.7e-05s (0m 00s)  0% completed  (0% total)
      Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
      Messages:  created: 46   present: 46   in FES: 4
-** Event #210   t=10   Elapsed: 0.003287s (0m 00s)  100% completed  (100% total)
+** Event #210   t=10   Elapsed: 0.004672s (0m 00s)  100% completed  (100% total)
      Speed:     ev/sec=0   simsec/sec=0   ev/simsec=0
      Messages:  created: 161   present: 52   in FES: 5
 

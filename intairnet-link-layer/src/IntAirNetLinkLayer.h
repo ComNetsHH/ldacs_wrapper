@@ -37,6 +37,9 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 class IntAirNetLinkLayer: public LayeredProtocolBase, public IPhy, public INet {
 protected:
 
+    simsignal_t rlc_bits_received_from_upper_signal;
+    simsignal_t rlc_bits_received_from_lower_signal;
+
     vector<pair<double, IOmnetPluggable*>> callbackTimes;
 
     IRlc* rlcSubLayer;
