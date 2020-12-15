@@ -16,6 +16,7 @@
 #include "../../glue-lib-headers/IArq.hpp"
 #include "../../glue-lib-headers/IPhy.hpp"
 #include "../../glue-lib-headers/INet.hpp"
+#include "../../glue-lib-headers/IRadio.hpp"
 #include "../../glue-lib-headers/IOmnetPluggable.hpp"
 
 #include <map>
@@ -34,19 +35,22 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
  *
  */
 // public INet
-class IntAirNetLinkLayer: public LayeredProtocolBase, public IPhy, public INet {
+class IntAirNetLinkLayer: public LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTDMA::IRadio, public INet {
 protected:
 
     simsignal_t rlc_bits_received_from_upper_signal;
     simsignal_t rlc_bits_received_from_lower_signal;
+    double slotDuration;
 
     vector<pair<double, IOmnetPluggable*>> callbackTimes;
 
     IRlc* rlcSubLayer;
     IArq* arqSublayer;
     IMac* macSublayer;
+    IPhy* phySubLayer;
 
     cMessage* subLayerTimerMessage = nullptr;
+    cMessage* slotTimerMessage = nullptr;
     Packet *tmp;
 
     InterfaceEntry *interfaceEntry = nullptr;
@@ -85,8 +89,8 @@ protected:
 
 
 public:
-    void receiveFromUpper(L2Packet* data, unsigned int center_frequency) override;
-    unsigned long getCurrentDatarate() const override;
+    void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
+    void receiveFromChannel(L2Packet *packet, uint64_t center_frequency) override { };
     unsigned int getNumHopsToGroundStation() const override { return 0;};
     void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
     void receiveFromLower(L3Packet* packet) override;

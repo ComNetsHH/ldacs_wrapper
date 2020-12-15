@@ -22,7 +22,7 @@ L2Packet* IntAirNetLinkLayerPacket::getContainedPacket() const {
 
 Packet* IntAirNetLinkLayerPacket::dup() const {
     auto pkt = new IntAirNetLinkLayerPacket(*this);
-    pkt->x = this->x;
+    pkt->center_frequency = this->center_frequency;
     pkt->attachPacket(this->getContainedPacket());
     return (Packet*)pkt;
 }

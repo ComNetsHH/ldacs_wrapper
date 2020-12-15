@@ -17,7 +17,7 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 class PacketFactory {
 public:
-    static IntAirNetLinkLayerPacket* fromL2Packet(L2Packet* source);
+    static IntAirNetLinkLayerPacket* fromL2Packet(L2Packet* source, uint64_t center_frequency);
     static L3Packet* fromInetPacket(Packet* source);
 };
 

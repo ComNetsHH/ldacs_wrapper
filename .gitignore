@@ -1,6 +1,10 @@
 /.metadata/
 glue-lib
 glue-lib-headers
+mc-sotdma
+mc-sotdma-headers
+avionic-rlc
+avionic-rlc-headers
 *.sca
 *.vec
 *.vci

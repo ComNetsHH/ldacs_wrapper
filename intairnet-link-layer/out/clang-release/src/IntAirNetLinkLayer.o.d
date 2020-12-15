@@ -108,7 +108,8 @@
   ../../glue-lib-headers/IMac.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/Timestamp.hpp \
   ../../glue-lib-headers/IArq.hpp ../../glue-lib-headers/IPhy.hpp \
-  ../../glue-lib-headers/INet.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IRadio.hpp \
+  ../../glue-lib-headers/INet.hpp ../../glue-lib-headers/IRadio.hpp \
   ../../glue-lib-headers/IOmnetPluggable.hpp IntAirNetLinkLayerPacket.h \
   ../../glue-lib-headers/L2Packet.hpp PacketFactory.h \
   ../../glue-lib-headers/L3Packet.hpp \
@@ -119,10 +120,19 @@
   ../../avionic-rlc-headers/Rlc.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IOmnetPluggable.hpp \
   ../../avionic-rlc-headers/RlcProcess.hpp \
-  ../../glue-lib-headers/DelayMac.hpp \
-  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IMac.hpp \
   ../../glue-lib-headers/PassThroughArq.hpp \
-  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IArq.hpp
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IArq.hpp \
+  MacLayer.h ../../mc-sotdma-headers/MCSOTDMA_Mac.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IMac.hpp \
+  ../../mc-sotdma-headers/ReservationManager.hpp \
+  ../../mc-sotdma-headers/ReservationTable.hpp \
+  ../../mc-sotdma-headers/Reservation.hpp \
+  ../../mc-sotdma-headers/FrequencyChannel.hpp \
+  ../../mc-sotdma-headers/LinkManager.hpp \
+  ../../mc-sotdma-headers/BeaconPayload.hpp \
+  ../../mc-sotdma-headers/MovingAverage.hpp PhyLayer.h \
+  ../../mc-sotdma-headers/MCSOTDMA_Phy.hpp \
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IPhy.hpp
 
 IntAirNetLinkLayer.h:
 
@@ -348,7 +358,11 @@ IntAirNetLinkLayer.h:
 
 ../../glue-lib-headers/IPhy.hpp:
 
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IRadio.hpp:
+
 ../../glue-lib-headers/INet.hpp:
+
+../../glue-lib-headers/IRadio.hpp:
 
 ../../glue-lib-headers/IOmnetPluggable.hpp:
 
@@ -374,10 +388,32 @@ PacketFactory.h:
 
 ../../avionic-rlc-headers/RlcProcess.hpp:
 
-../../glue-lib-headers/DelayMac.hpp:
-
-/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IMac.hpp:
-
 ../../glue-lib-headers/PassThroughArq.hpp:
 
 /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IArq.hpp:
+
+MacLayer.h:
+
+../../mc-sotdma-headers/MCSOTDMA_Mac.hpp:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IMac.hpp:
+
+../../mc-sotdma-headers/ReservationManager.hpp:
+
+../../mc-sotdma-headers/ReservationTable.hpp:
+
+../../mc-sotdma-headers/Reservation.hpp:
+
+../../mc-sotdma-headers/FrequencyChannel.hpp:
+
+../../mc-sotdma-headers/LinkManager.hpp:
+
+../../mc-sotdma-headers/BeaconPayload.hpp:
+
+../../mc-sotdma-headers/MovingAverage.hpp:
+
+PhyLayer.h:
+
+../../mc-sotdma-headers/MCSOTDMA_Phy.hpp:
+
+/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IPhy.hpp:

@@ -12,15 +12,14 @@
 #include <cmath>
 
 
-IntAirNetLinkLayerPacket* PacketFactory::fromL2Packet(L2Packet* source) {
+IntAirNetLinkLayerPacket* PacketFactory::fromL2Packet(L2Packet* source, uint64_t center_frequency) {
     unsigned int size_bits = source->getBits();
 
-    EV << "CONVERSION " << size_bits << endl;
     unsigned int size_bytes = std::ceil(size_bits / 8);
     auto data = makeShared<ByteCountChunk>(B(size_bytes));
     IntAirNetLinkLayerPacket* pkt = new IntAirNetLinkLayerPacket("IntAirNetLinkLayerPacket", data);
     pkt->attachPacket(source);
-    pkt->x = 99;
+    pkt->center_frequency = center_frequency;
 
     return pkt;
     // TODO: translate all relevant fields
