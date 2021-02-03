@@ -68,12 +68,17 @@ void IntAirNetLinkLayer::initialize(int stage)
                 macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
                 phySubLayer = new PhyLayer(planning_horizon);
 
+                auto reservation_manager = ((MacLayer*)macSublayer)->getReservationManager();
 
-                ((MacLayer*)macSublayer)->getReservationManager()->setPhyTransmitterTable(((PhyLayer*)phySubLayer)->getTransmitterReservationTable());
-                ((MacLayer*)macSublayer)->getReservationManager()->addFrequencyChannel(false, bc_frequency, bandwidth);
-                ((MacLayer*)macSublayer)->getReservationManager()->addFrequencyChannel(true, center_frequency1, bandwidth);
-                ((MacLayer*)macSublayer)->getReservationManager()->addFrequencyChannel(true, center_frequency2, bandwidth);
-                ((MacLayer*)macSublayer)->getReservationManager()->addFrequencyChannel(true, center_frequency3, bandwidth);
+
+                reservation_manager->setTransmitterReservationTable(((PhyLayer*)phySubLayer)->getTransmitterReservationTable());
+                for (ReservationTable*& table : ((PhyLayer*)phySubLayer)->getReceiverReservationTables()) {
+                    reservation_manager->addReceiverReservationTable(table);
+                }
+                reservation_manager->addFrequencyChannel(false, bc_frequency, bandwidth);
+                reservation_manager->addFrequencyChannel(true, center_frequency1, bandwidth);
+                reservation_manager->addFrequencyChannel(true, center_frequency2, bandwidth);
+                reservation_manager->addFrequencyChannel(true, center_frequency3, bandwidth);
 
 
                 rlcSubLayer->setLowerLayer(arqSublayer);

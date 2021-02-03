@@ -27,9 +27,9 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
             void onEvent(double time) override {};
 
         protected:
-            void onReceptionSlot(const FrequencyChannel* channel) override {
+            //void onReceptionSlot(const FrequencyChannel* channel) override {
                 // do nothing.
-            }
+            //}
     };
 
 #endif /* MACLAYER_H_ */
