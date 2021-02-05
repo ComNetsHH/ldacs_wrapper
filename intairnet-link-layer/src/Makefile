@@ -30,7 +30,13 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/IntAirNetLinkLayer.o $O/IntAirNetLinkLayerPacket.o $O/MacLayer.o $O/PacketFactory.o $O/PhyLayer.o
+OBJS = \
+    $O/IntAirNetLinkLayer.o \
+    $O/IntAirNetLinkLayerPacket.o \
+    $O/LinkLayerLifecycleManager.o \
+    $O/MacLayer.o \
+    $O/PacketFactory.o \
+    $O/PhyLayer.o
 
 # Message files
 MSGFILES =

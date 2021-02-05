@@ -19,6 +19,7 @@ import inet.physicallayer.unitdisk.UnitDiskRadioMedium;
 import inet.visualizer.contract.IIntegratedVisualizer;
 import inet.node.inet.AdhocHost;
 import inet.physicallayer.unitdisk.UnitDiskRadioMedium;
+import intairnet_link_layer.LinkLayerLifecycleManager;
 
 
 package intairnet_link_layer.simulations;
@@ -29,6 +30,7 @@ network NW
     parameters:
         int numNodes = default(2);
     submodules:
+        lifecycleManager: LinkLayerLifecycleManager {}
     	nodes[numNodes]: AdhocHost {}
         configurator: Ipv4NetworkConfigurator {
             parameters:

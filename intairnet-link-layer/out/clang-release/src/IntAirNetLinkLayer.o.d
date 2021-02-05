@@ -132,7 +132,10 @@
   ../../mc-sotdma-headers/BeaconPayload.hpp \
   ../../mc-sotdma-headers/MovingAverage.hpp PhyLayer.h \
   ../../mc-sotdma-headers/MCSOTDMA_Phy.hpp \
-  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IPhy.hpp
+  /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IPhy.hpp \
+  LinkLayerLifecycleManager.h \
+  ../../inet/src/inet/linklayer/base/MacProtocolBase.h \
+  ../../inet/src/inet/linklayer/acking/AckingMac.h
 
 IntAirNetLinkLayer.h:
 
@@ -417,3 +420,9 @@ PhyLayer.h:
 ../../mc-sotdma-headers/MCSOTDMA_Phy.hpp:
 
 /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IPhy.hpp:
+
+LinkLayerLifecycleManager.h:
+
+../../inet/src/inet/linklayer/base/MacProtocolBase.h:
+
+../../inet/src/inet/linklayer/acking/AckingMac.h:
