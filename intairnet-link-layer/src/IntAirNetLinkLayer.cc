@@ -66,7 +66,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint32_t planning_horizon = 256;
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
-                rlcSubLayer = new Rlc();
+                rlcSubLayer = new Rlc(200);
                 arqSublayer = new PassThroughArq();
                 macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
                 phySubLayer = new PhyLayer(planning_horizon);
