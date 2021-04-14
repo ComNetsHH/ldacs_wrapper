@@ -18,6 +18,7 @@
 #include "inet/common/ProtocolGroup.h"
 #include "../../avionic-rlc-headers/Rlc.hpp"
 #include "../../glue-lib-headers/PassThroughArq.hpp"
+#include "../../avionic-arq-headers/SelectiveRepeatArq.hpp"
 #include "../../glue-lib-headers/L3Packet.hpp"
 #include "../../glue-lib-headers/IOmnetPluggable.hpp"
 #include "MacLayer.h"
@@ -26,6 +27,7 @@
 
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;
+using namespace TUHH_INTAIRNET_ARQ;
 
 Define_Module(IntAirNetLinkLayer);
 
@@ -67,7 +69,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
                 rlcSubLayer = new Rlc(200);
-                arqSublayer = new PassThroughArq();
+                arqSublayer = new SelectiveRepeatArq(100, 100);
                 macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
                 phySubLayer = new PhyLayer(planning_horizon);
 
@@ -99,15 +101,16 @@ void IntAirNetLinkLayer::initialize(int stage)
                     return simTime().dbl();
                 };
                 ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
-                ((PassThroughArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
+                ((SelectiveRepeatArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
                 ((MacLayer*)macSublayer)->registerGetTimeCallback(getTimeFkt);
 
                 // Debug Messages
                 function<void(string)> debugFkt = [this](string message){
+
                     EV << "DEBUG: " << message << endl;
                 };
                 ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
-                ((PassThroughArq*)arqSublayer)->registerDebugMessageCallback(debugFkt);
+                ((SelectiveRepeatArq*)arqSublayer)->registerDebugMessageCallback(debugFkt);
                 ((MacLayer*)macSublayer)->registerDebugMessageCallback(debugFkt);
                 ((PhyLayer*)phySubLayer)->registerDebugMessageCallback(debugFkt);
 
@@ -116,7 +119,7 @@ void IntAirNetLinkLayer::initialize(int stage)
                     EV << "Schedule AT: " << time << endl;
                     this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
                 });
-                ((PassThroughArq*)arqSublayer)->registerScheduleAtCallback([this](double time){
+                ((SelectiveRepeatArq*)arqSublayer)->registerScheduleAtCallback([this](double time){
                     EV << "Schedule AT: " << time << endl;
                     this->addCallback((IOmnetPluggable*)this->arqSublayer, time);
                     //EV << "DEBUG: " << message << endl;
@@ -127,13 +130,12 @@ void IntAirNetLinkLayer::initialize(int stage)
                     //EV << "DEBUG: " << message << endl;
                 });
 
-
                 // Emit statistic
                 function<void(string, double)> emitFkt = [this](string message, double value){
                     this->emitStatistic(message, value);
                 };
                 ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
-                ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
+                ((SelectiveRepeatArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
                 ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
 
 
