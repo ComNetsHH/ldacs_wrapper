@@ -15,3 +15,5 @@ intairnet-link-layer/out
 cmake-build-debug
 intairnet-link-layer/.cproject
 intairnet-link-layer/.settings/language.settings.xml
+intairnet-link-layer/src/intairnet-link-layer
+intairnet-link-layer/src/intairnet-link-layer_dbg
