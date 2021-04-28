@@ -12,3 +12,6 @@ avionic-arq-headers
 *.vci
 out/
 intairnet-link-layer/out
+cmake-build-debug
+intairnet-link-layer/.cproject
+intairnet-link-layer/.settings/language.settings.xml
