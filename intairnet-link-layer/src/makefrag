@@ -1,4 +1,2 @@
-LIBS += -L /Users/fu/TUHH/Projects/intairnet-linklayer-glue/cmake-build-debug -l intairnet_linklayer_glue
-LIBS += -L /Users/fu/TUHH/Projects/avionic-rlc/cmake-build-debug -l tuhh_intairnet_rlc
-LIBS += -L /Users/fu/TUHH/Projects/mc-sotdma/cmake-build-debug -l tuhh_intairnet_mc-sotdma
+LIBS += -L /usr/lib -l intairnet_linklayer_glue -l tuhh_intairnet_rlc -l tuhh_intairnet_mc-sotdma
 EXTRA_OBJS += --verbose

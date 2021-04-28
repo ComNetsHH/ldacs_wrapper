@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for intairnet-link-layer
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KINET_PROJ=../../inet -DINET_IMPORT -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/ -I$$\(INET_PROJ\)/src -L$$\(INET_PROJ\)/src -lINET$$\(D\)
+#  opp_makemake -f --deep -O out -KINET_PROJ=../../../inet -DINET_IMPORT -I/home/seba/TUHH/dev/omnetpp-5.6.2/workspace/intairnet-omnet-wrapper/mc-sotdma-headers/ -I/home/seba/TUHH/dev/omnetpp-5.6.2/workspace/intairnet-omnet-wrapper/avionic-rlc-headers/ -I/home/seba/TUHH/dev/omnetpp-5.6.2/workspace/intairnet-omnet-wrapper/glue-lib-headers/ -I. -I$$\(INET_PROJ\)/src -L$$\(INET_PROJ\)/src -lINET$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -16,7 +16,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/ -I$(INET_PROJ)/src
+INCLUDE_PATH = -I/home/seba/TUHH/dev/omnetpp-5.6.2/workspace/intairnet-omnet-wrapper/mc-sotdma-headers/ -I/home/seba/TUHH/dev/omnetpp-5.6.2/workspace/intairnet-omnet-wrapper/avionic-rlc-headers/ -I/home/seba/TUHH/dev/omnetpp-5.6.2/workspace/intairnet-omnet-wrapper/glue-lib-headers/ -I. -I$(INET_PROJ)/src
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -45,7 +45,7 @@ MSGFILES =
 SMFILES =
 
 # Other makefile variables (-K)
-INET_PROJ=../../inet
+INET_PROJ=../../../inet
 
 #------------------------------------------------------------------------------
 
@@ -89,9 +89,7 @@ endif
 # User-supplied makefile fragment(s)
 # >>>
 # inserted from file 'makefrag':
-LIBS += -L /Users/fu/TUHH/Projects/intairnet-linklayer-glue/cmake-build-debug -l intairnet_linklayer_glue
-LIBS += -L /Users/fu/TUHH/Projects/avionic-rlc/cmake-build-debug -l tuhh_intairnet_rlc
-LIBS += -L /Users/fu/TUHH/Projects/mc-sotdma/cmake-build-debug -l tuhh_intairnet_mc-sotdma
+LIBS += -L /usr/lib -l intairnet_linklayer_glue -l tuhh_intairnet_rlc -l tuhh_intairnet_mc-sotdma
 EXTRA_OBJS += --verbose
 
 # <<<
