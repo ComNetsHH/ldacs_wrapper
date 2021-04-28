@@ -129,11 +129,12 @@
   ../../mc-sotdma-headers/Reservation.hpp \
   ../../mc-sotdma-headers/FrequencyChannel.hpp \
   ../../mc-sotdma-headers/LinkManager.hpp \
-  ../../mc-sotdma-headers/BeaconPayload.hpp \
-  ../../mc-sotdma-headers/MovingAverage.hpp PhyLayer.h \
+  ../../mc-sotdma-headers/coutdebug.hpp \
+  ../../mc-sotdma-headers/LinkInfoPayload.hpp \
+  ../../mc-sotdma-headers/LinkInfo.hpp \
   ../../mc-sotdma-headers/MCSOTDMA_Phy.hpp \
   /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IPhy.hpp \
-  LinkLayerLifecycleManager.h \
+  PhyLayer.h LinkLayerLifecycleManager.h \
   ../../inet/src/inet/linklayer/base/MacProtocolBase.h \
   ../../inet/src/inet/linklayer/acking/AckingMac.h
 
@@ -411,15 +412,17 @@ MacLayer.h:
 
 ../../mc-sotdma-headers/LinkManager.hpp:
 
-../../mc-sotdma-headers/BeaconPayload.hpp:
+../../mc-sotdma-headers/coutdebug.hpp:
 
-../../mc-sotdma-headers/MovingAverage.hpp:
+../../mc-sotdma-headers/LinkInfoPayload.hpp:
 
-PhyLayer.h:
+../../mc-sotdma-headers/LinkInfo.hpp:
 
 ../../mc-sotdma-headers/MCSOTDMA_Phy.hpp:
 
 /Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers/IPhy.hpp:
+
+PhyLayer.h:
 
 LinkLayerLifecycleManager.h:
 

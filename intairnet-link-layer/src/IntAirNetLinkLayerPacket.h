@@ -22,6 +22,7 @@ public:
     IntAirNetLinkLayerPacket(const char *name, const Ptr<const Chunk>& content);
     void attachPacket(L2Packet* packet);
     L2Packet* getContainedPacket() const;
+    int destId = 2;
     uint64_t center_frequency = 0;
 
     Packet *dup() const override;

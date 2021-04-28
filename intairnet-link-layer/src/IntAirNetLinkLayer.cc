@@ -66,7 +66,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint32_t planning_horizon = 256;
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
-                rlcSubLayer = new Rlc(200);
+                rlcSubLayer = new Rlc(1600);
                 arqSublayer = new PassThroughArq();
                 macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
                 phySubLayer = new PhyLayer(planning_horizon);
@@ -104,6 +104,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
                 // Debug Messages
                 function<void(string)> debugFkt = [this](string message){
+                    cout << endl << message << endl;
                     EV << "DEBUG: " << message << endl;
                 };
                 ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
@@ -196,6 +197,14 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
+    MacAddress address = interfaceEntry->getMacAddress();
+    // EV << "### LOOK " << containedPacket->getDestination().getId() << endl;
+    // EV << MacId(address.getInt()).getId() << endl;
+    auto id = pkt->destId;
+    EV << "### LOOK " << id << " " << MacId(address.getInt()).getId() << endl;
+    if(  id > 0 && id != MacId(address.getInt()).getId()) {
+        return;
+    }
 
     auto tags = packet->getTags();
     for(int i = 0; i< packet->getNumTags(); i++) {
