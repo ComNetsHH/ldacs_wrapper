@@ -1,2 +1,0 @@
-LIBS += -L /usr/lib -l intairnet_linklayer_glue -l tuhh_intairnet_rlc -l tuhh_intairnet_mc-sotdma
-EXTRA_OBJS += --verbose
