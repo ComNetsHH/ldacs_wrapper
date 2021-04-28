@@ -1,4 +1,5 @@
 /.metadata/
+inet
 glue-lib
 glue-lib-headers
 mc-sotdma
@@ -7,13 +8,18 @@ avionic-rlc
 avionic-rlc-headers
 avionic-arq
 avionic-arq-headers
+.DS_Store
 *.sca
 *.vec
 *.vci
 out/
 intairnet-link-layer/out
 cmake-build-debug
-intairnet-link-layer/.cproject
 intairnet-link-layer/.settings/language.settings.xml
 intairnet-link-layer/src/intairnet-link-layer
 intairnet-link-layer/src/intairnet-link-layer_dbg
+intairnet-link-layer/src/Makefile
+
+intairnet-link-layer/Makefile
+intairnet-link-layer/.oppbuildspec
+intairnet-link-layer/src/makefrag
