@@ -20,6 +20,7 @@ IntAirNetLinkLayerPacket* PacketFactory::fromL2Packet(L2Packet* source, uint64_t
     IntAirNetLinkLayerPacket* pkt = new IntAirNetLinkLayerPacket("IntAirNetLinkLayerPacket", data);
     pkt->attachPacket(source);
     pkt->center_frequency = center_frequency;
+    pkt->destId = source->getDestination().getId();
 
     return pkt;
     // TODO: translate all relevant fields

@@ -10,6 +10,7 @@
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/common/packet/Packet.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
+//#include "LinkLayerLifecycleManager.h"
 
 #include "../../glue-lib-headers/IRlc.hpp"
 #include "../../glue-lib-headers/IMac.hpp"
@@ -26,6 +27,8 @@ using namespace std;
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
+class LinkLayerLifecycleManager;
+
 
 /** @brief
  * Interface implementation of the RLC layer. It defines all common function needed to implement a RLC
@@ -41,6 +44,9 @@ protected:
     simsignal_t rlc_bits_received_from_upper_signal;
     simsignal_t rlc_bits_received_from_lower_signal;
     double slotDuration;
+
+    /** Reference to the scheduler instance */
+    LinkLayerLifecycleManager* lifecycleManager = nullptr;
 
     vector<pair<double, IOmnetPluggable*>> callbackTimes;
 
@@ -87,13 +93,18 @@ protected:
 
     void emitStatistic(string statistic_name, double value);
 
-
 public:
     void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
     void receiveFromChannel(L2Packet *packet, uint64_t center_frequency) override { };
     unsigned int getNumHopsToGroundStation() const override { return 0;};
     void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
     void receiveFromLower(L3Packet* packet) override;
+
+
+    void beforeSlotStart();
+    void onSlotStart();
+    void onSlotEnd();
+
 
 
 };

@@ -22,6 +22,7 @@ package intairnet_link_layer;
 simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
         double slotDuration @unit(s) = default(12ms);
+        string lifecycleManager = "^.^.^.lifecycleManager";
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
         @signal[rlc_bits_received_from_upper](type=double);

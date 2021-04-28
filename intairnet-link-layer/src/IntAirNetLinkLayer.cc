@@ -6,6 +6,7 @@
  */
 
 #include <functional>
+#include <cxxabi.h>
 #include "IntAirNetLinkLayer.h"
 #include "IntAirNetLinkLayerPacket.h"
 #include "PacketFactory.h"
@@ -21,6 +22,7 @@
 #include "../../glue-lib-headers/IOmnetPluggable.hpp"
 #include "MacLayer.h"
 #include "PhyLayer.h"
+#include "LinkLayerLifecycleManager.h"
 
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;
@@ -58,12 +60,13 @@ void IntAirNetLinkLayer::initialize(int stage)
         radio->setRadioMode(inet::physicallayer::IRadio::RADIO_MODE_TRANSCEIVER);
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
+        lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
         configureInterfaceEntry();
         MacAddress address = interfaceEntry->getMacAddress();
         uint32_t planning_horizon = 256;
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
-                rlcSubLayer = new Rlc();
+                rlcSubLayer = new Rlc(1600);
                 arqSublayer = new PassThroughArq();
                 macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
                 phySubLayer = new PhyLayer(planning_horizon);
@@ -101,6 +104,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
                 // Debug Messages
                 function<void(string)> debugFkt = [this](string message){
+                    cout << endl << message << endl;
                     EV << "DEBUG: " << message << endl;
                 };
                 ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
@@ -132,6 +136,9 @@ void IntAirNetLinkLayer::initialize(int stage)
                 ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
                 ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
                 ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
+
+
+                lifecycleManager->registerClient(this);
 
     }
 
@@ -190,6 +197,14 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
+    MacAddress address = interfaceEntry->getMacAddress();
+    // EV << "### LOOK " << containedPacket->getDestination().getId() << endl;
+    // EV << MacId(address.getInt()).getId() << endl;
+    auto id = pkt->destId;
+    EV << "### LOOK " << id << " " << MacId(address.getInt()).getId() << endl;
+    if(  id > 0 && id != MacId(address.getInt()).getId()) {
+        return;
+    }
 
     auto tags = packet->getTags();
     for(int i = 0; i< packet->getNumTags(); i++) {
@@ -205,8 +220,19 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
 
     if(message == slotTimerMessage) {
-        ((MacLayer*)macSublayer)->update(1);
-        ((MacLayer*)macSublayer)->execute();
+        std::exception_ptr eptr;
+        try {
+            //((MacLayer*)macSublayer)->update(1);
+            //((MacLayer*)macSublayer)->execute();
+        } catch (const std::exception& e){
+            throw cRuntimeError(e.what());
+        } catch(...) {
+            //throw;
+            //throw cRuntimeError(typeid(current_exception()).name());
+            int status;
+            throw cRuntimeError(abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, &status));
+        }
+
         scheduleAt(simTime() + slotDuration, slotTimerMessage);
     }
 
@@ -217,7 +243,7 @@ void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
 
                 EV << "TIME" << endl;
 
-                ((MacLayer*)macSublayer)->onEvent(time);
+                //((MacLayer*)macSublayer)->onEvent(time);
                 callbackTimes.erase(it);
             }
         }
@@ -321,6 +347,22 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
         emit(rlc_bits_received_from_lower_signal, value);
     }
 }
+
+void IntAirNetLinkLayer::beforeSlotStart() {
+    Enter_Method_Silent();
+    ((MacLayer*)macSublayer)->update(1);
+}
+
+void IntAirNetLinkLayer::onSlotStart() {
+    Enter_Method_Silent();
+    ((MacLayer*)macSublayer)->execute();
+}
+
+void IntAirNetLinkLayer::onSlotEnd() {
+    Enter_Method_Silent();
+    ((MacLayer*)macSublayer)->onSlotEnd();
+}
+
 
 
 
