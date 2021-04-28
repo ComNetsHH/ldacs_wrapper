@@ -190,7 +190,13 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
     MacAddress address = macAddressReq->getDestAddress();
-    rlcSubLayer->receiveFromUpper(int_air_net_packet, MacId(address.getInt()));
+    auto destination_mac_id = MacId(address.getInt());
+
+    if(address.isBroadcast()) {
+        destination_mac_id = SYMBOLIC_LINK_ID_BROADCAST;
+    }
+
+    rlcSubLayer->receiveFromUpper(int_air_net_packet, destination_mac_id);
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
