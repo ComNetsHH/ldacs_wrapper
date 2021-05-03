@@ -18,7 +18,7 @@ ln -s ../mc-sotdma ./mc-sotdma-headers
 - Set `Build` to `Makemake`
 - enter its options
   - Under `Compile` add the three library header locations
-    - `../glue-libheaders` `../avionic-rlc-headers` `../mc-sotdma-headers`    
+    - `../glue-lib-headers` `../avionic-rlc-headers` `../mc-sotdma-headers`    
 
 ## Install shared libraries
 ln /Users/fu/TUHH/Projects/intairnet-linklayer-glue/cmake-build-debug/libintairnet_linklayer_glue.dylib /usr/local/lib/libintairnet_linklayer_glue.dylib
