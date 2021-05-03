@@ -15,10 +15,20 @@ ln -s ../mc-sotdma ./mc-sotdma-headers
 
 ## Set project to compile using `makemake`
 - Rightlick project -> OMNeT++ -> Makemake 
-- Set `Build` to `Makemake`
-- enter its options
-  - Under `Compile` add the three library header locations
-    - `../glue-lib-headers` `../avionic-rlc-headers` `../mc-sotdma-headers`    
+- Set `Build` of root project to `Custom Makefile`
+- Set `Build` of `src/` folder to `Makemake`
+  - enter its options
+    - Under `Compile` add the three library header locations
+      - `../glue-lib-headers` `../avionic-rlc-headers` `../mc-sotdma-headers`    
+    - Under `Custom` set the "Code fragment to be inserted into Makefile" to:
+```
+LIBS += -L ../../glue-lib -l intairnet_linklayer_glue
+LIBS += -L ../../avionic-rlc -l tuhh_intairnet_rlc
+LIBS += -L ../../mc-sotdma -l tuhh_intairnet_mc-sotdma
+EXTRA_OBJS += --verbose
+```
+- Your run configuration should then attemp to execute the executable created by building the project 
+  - i.e. in the settings above `Rightclick->OMNeT++->Makemake->Options->Target`
 
 ## Install shared libraries
 ln /Users/fu/TUHH/Projects/intairnet-linklayer-glue/cmake-build-debug/libintairnet_linklayer_glue.dylib /usr/local/lib/libintairnet_linklayer_glue.dylib
