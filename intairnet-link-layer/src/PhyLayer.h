@@ -14,7 +14,7 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-class PhyLayer : public MCSOTDMA_Phy, public IOmnetPluggable {
+class PhyLayer : public MCSOTDMA_Phy {
         public:
             explicit PhyLayer(uint32_t planning_horizon) : MCSOTDMA_Phy(planning_horizon) {}
 
@@ -29,7 +29,6 @@ class PhyLayer : public MCSOTDMA_Phy, public IOmnetPluggable {
             ~PhyLayer() override {
             }
 
-            void onEvent(double time) override {};
     };
 
 #endif /* PHYLAYER_H_ */

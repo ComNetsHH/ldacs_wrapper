@@ -327,9 +327,9 @@ void IntAirNetLinkLayer::sendToChannel(L2Packet* data, uint64_t center_frequency
 }
 
 void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
-    Packet* original = packet->original;
+    Packet* original = packet->original->dup();
     if(original) {
-        take(original);
+        // take(original);
 
         auto macAddressReq = original->getTag<MacAddressReq>();
 

@@ -15,7 +15,7 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-    class MacLayer : public MCSOTDMA_Mac, public IOmnetPluggable {
+    class MacLayer : public MCSOTDMA_Mac {
 
             friend class LinkManagerTests;
             friend class BCLinkManagerTests;
@@ -23,8 +23,6 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 
         public:
             explicit MacLayer(const MacId& id, uint32_t planning_horizon) : MCSOTDMA_Mac(id, planning_horizon) {}
-
-            void onEvent(double time) override {};
 
         protected:
             //void onReceptionSlot(const FrequencyChannel* channel) override {
