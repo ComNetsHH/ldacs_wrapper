@@ -42,6 +42,9 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         rlc_bits_received_from_upper_signal = registerSignal("rlc_bits_received_from_upper");
         rlc_bits_received_from_lower_signal = registerSignal("rlc_bits_received_from_lower");
+        mcsotdma_statistic_num_packets_received_signal = registerSignal("mcsotdma_statistic_num_packets_received");
+        mcsotdma_statistic_num_packet_collisions_signal = registerSignal("mcsotdma_statistic_num_packet_collisions");
+        mcsotdma_statistic_num_packet_decoded_signal = registerSignal("mcsotdma_statistic_num_packet_decoded");
 
         subLayerTimerMessage = new cMessage("subLayerTimer");
         slotTimerMessage = new cMessage("slotTimer");
@@ -352,6 +355,18 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     if(statistic_name == "Rlc:packet_received_from_lower(bits)") {
         emit(rlc_bits_received_from_lower_signal, value);
     }
+    if(statistic_name == "MCSOTDMA:statistic_num_packets_received(num)") {
+        emit(mcsotdma_statistic_num_packets_received_signal, (int)value);
+    }
+    if(statistic_name == "MCSOTDMA:statistic_num_packet_collisions(num)") {
+        emit(mcsotdma_statistic_num_packet_collisions_signal, (int)value);
+
+    }
+    if(statistic_name == "MCSOTDMA:statistic_num_packet_decoded(num)") {
+        emit(mcsotdma_statistic_num_packet_decoded_signal, (int)value);
+
+    }
+
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {

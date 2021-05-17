@@ -27,8 +27,17 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @class(IntAirNetLinkLayer);
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
+        
+        @signal[mcsotdma_statistic_num_packets_received](type=int);
+        @signal[mcsotdma_statistic_num_packet_collisions](type=int);
+        @signal[mcsotdma_statistic_num_packet_decoded](type=int);
+        
         @statistic[rlc_bits_received_from_upper](title="Rlc:packet_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_bits_received_from_lower](title="Rlc:packet_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
+        
+        @statistic[mcsotdma_statistic_num_packets_received](title="MCSOTDMA:statistic_num_packets_received(num)"; record=vector,histogram; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_packet_collisions](title="MCSOTDMA:statistic_num_packet_collisions(num)"; record=vector,histogram; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_packet_decoded](title="MCSOTDMA:statistic_num_packet_decoded(num)"; record=vector,histogram; interpolationmode=none);
         
     gates:
         input upperLayerIn @labels(INetworkHeader/down);

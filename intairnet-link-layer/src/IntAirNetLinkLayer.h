@@ -43,6 +43,11 @@ protected:
 
     simsignal_t rlc_bits_received_from_upper_signal;
     simsignal_t rlc_bits_received_from_lower_signal;
+
+    simsignal_t mcsotdma_statistic_num_packets_received_signal;
+    simsignal_t mcsotdma_statistic_num_packet_collisions_signal;
+    simsignal_t mcsotdma_statistic_num_packet_decoded_signal;
+
     double slotDuration;
 
     /** Reference to the scheduler instance */
