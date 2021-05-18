@@ -330,6 +330,9 @@ void IntAirNetLinkLayer::sendToChannel(L2Packet* data, uint64_t center_frequency
 }
 
 void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
+    if(packet->original == nullptr) {
+        return;
+    }
     Packet* original = packet->original->dup();
     if(original) {
         // take(original);
