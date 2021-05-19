@@ -74,6 +74,7 @@ protected:
     int lowerLayerOutGateId = -1;
 
     void initialize(int stage) override;
+    void finish() override;
     void sendUp(cMessage *message);
     void sendDown(cMessage *message);
 

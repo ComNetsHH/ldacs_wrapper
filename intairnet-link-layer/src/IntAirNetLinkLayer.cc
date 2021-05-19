@@ -33,6 +33,10 @@ Define_Module(IntAirNetLinkLayer);
 IntAirNetLinkLayer::~IntAirNetLinkLayer() {
 }
 
+void IntAirNetLinkLayer::finish() {
+    cancelAndDelete(subLayerTimerMessage);
+}
+
 void IntAirNetLinkLayer::initialize(int stage)
 {
     LayeredProtocolBase::initialize(stage);
@@ -47,9 +51,6 @@ void IntAirNetLinkLayer::initialize(int stage)
         mcsotdma_statistic_num_packet_decoded_signal = registerSignal("mcsotdma_statistic_num_packet_decoded");
 
         subLayerTimerMessage = new cMessage("subLayerTimer");
-        slotTimerMessage = new cMessage("slotTimer");
-        scheduleAt(slotDuration, slotTimerMessage);
-
 
         upperLayerInGateId = findGate("upperLayerIn");
         upperLayerOutGateId = findGate("upperLayerOut");
@@ -117,18 +118,13 @@ void IntAirNetLinkLayer::initialize(int stage)
 
                 // Schedule At
                 ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
-                    EV << "Schedule AT: " << time << endl;
                     this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
                 });
                 ((PassThroughArq*)arqSublayer)->registerScheduleAtCallback([this](double time){
-                    EV << "Schedule AT: " << time << endl;
                     this->addCallback((IOmnetPluggable*)this->arqSublayer, time);
-                    //EV << "DEBUG: " << message << endl;
                 });
                 ((MacLayer*)macSublayer)->registerScheduleAtCallback([this](double time){
-                    EV << "Schedule AT: " << time << endl;
                     this->addCallback((IOmnetPluggable*)this->macSublayer, time);
-                    //EV << "DEBUG: " << message << endl;
                 });
 
 
@@ -140,9 +136,7 @@ void IntAirNetLinkLayer::initialize(int stage)
                 ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
                 ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
 
-
                 lifecycleManager->registerClient(this);
-
     }
 
 }
@@ -179,16 +173,8 @@ void IntAirNetLinkLayer::configureInterfaceEntry()
 }
 
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
-
-    // LOG ALL TAGS
-    auto tags = packet->getTags();
-    for(int i = 0; i< packet->getNumTags(); i++) {
-        EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
-    }
-
     // TODO: handle tags better
     tmp = packet;
-
 
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
@@ -207,51 +193,22 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
     MacAddress address = interfaceEntry->getMacAddress();
-    // EV << "### LOOK " << containedPacket->getDestination().getId() << endl;
-    // EV << MacId(address.getInt()).getId() << endl;
     auto id = pkt->destId;
-    EV << "### LOOK " << id << " " << MacId(address.getInt()).getId() << endl;
-    if(  id > 0 && id != MacId(address.getInt()).getId()) {
+    if(id > 0 && id != MacId(address.getInt()).getId()) {
         return;
     }
 
-    auto tags = packet->getTags();
-    for(int i = 0; i< packet->getNumTags(); i++) {
-        EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
-    }
-
-    //TODO: resolve MAc ID
-    //phySubLayer->receive(containedPacket, MacId(2));
     phySubLayer->onReception(containedPacket, center_frequency);
     delete packet;
 }
 
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
-
-    if(message == slotTimerMessage) {
-        std::exception_ptr eptr;
-        try {
-            //((MacLayer*)macSublayer)->update(1);
-            //((MacLayer*)macSublayer)->execute();
-        } catch (const std::exception& e){
-            throw cRuntimeError(e.what());
-        } catch(...) {
-            //throw;
-            //throw cRuntimeError(typeid(current_exception()).name());
-            int status;
-            throw cRuntimeError(abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, &status));
-        }
-
-        scheduleAt(simTime() + slotDuration, slotTimerMessage);
-    }
+    throw cRuntimeError("Unused");
 
     if(message == subLayerTimerMessage) {
         for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
             double time = it->first;
             if(time == simTime().dbl()) {
-
-                EV << "TIME" << endl;
-
                 //((MacLayer*)macSublayer)->onEvent(time);
                 callbackTimes.erase(it);
             }
@@ -319,12 +276,6 @@ void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {
 void IntAirNetLinkLayer::sendToChannel(L2Packet* data, uint64_t center_frequency)  {
     auto pkt = PacketFactory::fromL2Packet(data, center_frequency);
     pkt->addTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
-
-    // TODO: remove quickfix for copying tags
-    if(tmp != nullptr) {
-        // pkt->copyTags(*tmp);
-    }
-
     sendDown(pkt);
 
 }
@@ -335,10 +286,7 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
     }
     Packet* original = packet->original->dup();
     if(original) {
-        // take(original);
-
         auto macAddressReq = original->getTag<MacAddressReq>();
-
         auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
         macAddressInd->setSrcAddress(macAddressReq->getSrcAddress());
         macAddressInd->setDestAddress(macAddressReq->getDestAddress());
@@ -363,7 +311,6 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     }
     if(statistic_name == "MCSOTDMA:statistic_num_packet_collisions(num)") {
         emit(mcsotdma_statistic_num_packet_collisions_signal, (int)value);
-
     }
     if(statistic_name == "MCSOTDMA:statistic_num_packet_decoded(num)") {
         emit(mcsotdma_statistic_num_packet_decoded_signal, (int)value);
