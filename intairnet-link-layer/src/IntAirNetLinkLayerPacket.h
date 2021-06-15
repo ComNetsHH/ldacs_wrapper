@@ -26,6 +26,8 @@ public:
     uint64_t center_frequency = 0;
 
     Packet *dup() const override;
+
+    ~IntAirNetLinkLayerPacket();
 };
 
 

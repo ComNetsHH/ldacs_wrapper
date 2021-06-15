@@ -23,9 +23,11 @@
 #include "MacLayer.h"
 #include "PhyLayer.h"
 #include "LinkLayerLifecycleManager.h"
+//#include "../../mc-sotdma-headers/coutdebug.hpp"
 
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;
+//coutd.setVerbose(false);
 
 Define_Module(IntAirNetLinkLayer);
 
@@ -199,6 +201,7 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     }
 
     phySubLayer->onReception(containedPacket, center_frequency);
+    pkt->attachPacket(nullptr);
     delete packet;
 }
 
@@ -284,7 +287,14 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
     if(packet->original == nullptr) {
         return;
     }
-    Packet* original = packet->original->dup();
+    EV << packet->original->getName() << endl;
+    take(packet->original);
+    Packet* original = (Packet*)packet->original;//->dup();
+    //packet->original->setName("TEST");
+    EV << original->getName() << endl;
+    EV << original << endl;
+
+    //delete packet->original;
     if(original) {
         auto macAddressReq = original->getTag<MacAddressReq>();
         auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
@@ -307,13 +317,13 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
         emit(rlc_bits_received_from_lower_signal, value);
     }
     if(statistic_name == "MCSOTDMA:statistic_num_packets_received(num)") {
-        emit(mcsotdma_statistic_num_packets_received_signal, (int)value);
+        emit(mcsotdma_statistic_num_packets_received_signal, value);
     }
     if(statistic_name == "MCSOTDMA:statistic_num_packet_collisions(num)") {
-        emit(mcsotdma_statistic_num_packet_collisions_signal, (int)value);
+        emit(mcsotdma_statistic_num_packet_collisions_signal, value);
     }
     if(statistic_name == "MCSOTDMA:statistic_num_packet_decoded(num)") {
-        emit(mcsotdma_statistic_num_packet_decoded_signal, (int)value);
+        emit(mcsotdma_statistic_num_packet_decoded_signal, value);
 
     }
 
