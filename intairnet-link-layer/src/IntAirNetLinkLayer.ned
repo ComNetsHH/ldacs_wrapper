@@ -28,9 +28,9 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
         
-        @signal[mcsotdma_statistic_num_packets_received](type=long);
-        @signal[mcsotdma_statistic_num_packet_collisions](type=long);
-        @signal[mcsotdma_statistic_num_packet_decoded](type=long);
+        @signal[mcsotdma_statistic_num_packets_received](type=double);
+        @signal[mcsotdma_statistic_num_packet_collisions](type=double);
+        @signal[mcsotdma_statistic_num_packet_decoded](type=double);
         
         @statistic[rlc_bits_received_from_upper](title="Rlc:packet_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_bits_received_from_lower](title="Rlc:packet_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
