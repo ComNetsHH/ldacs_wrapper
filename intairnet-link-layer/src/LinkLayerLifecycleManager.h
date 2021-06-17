@@ -42,6 +42,8 @@ class LinkLayerLifecycleManager: public cSimpleModule
     void registerClient(IntAirNetLinkLayer *linkLayer);
     virtual ~LinkLayerLifecycleManager();
 
+    int getRandomInt(int min, int max, int k);
+
 };
 
 
