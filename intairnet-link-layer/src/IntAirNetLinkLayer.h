@@ -48,6 +48,15 @@ protected:
     simsignal_t mcsotdma_statistic_num_packet_collisions_signal;
     simsignal_t mcsotdma_statistic_num_packet_decoded_signal;
 
+    simsignal_t mcsotdma_statistic_num_beacons_sent_signal;
+    simsignal_t mcsotdma_statistic_num_beacons_received_signal;
+
+    simsignal_t mcsotdma_phy_statistic_num_missed_packets_signal;
+
+    simsignal_t mcsotdma_statistic_contention_signal;
+    simsignal_t mcsotdma_statistic_num_active_neighbors_signal;
+    simsignal_t mcsotdma_statistic_broadcast_candidate_slots_signal;
+
     double slotDuration;
 
     /** Reference to the scheduler instance */
@@ -60,8 +69,6 @@ protected:
     IMac* macSublayer;
     IPhy* phySubLayer;
 
-    cMessage* subLayerTimerMessage = nullptr;
-    cMessage* slotTimerMessage = nullptr;
     Packet *tmp;
 
     InterfaceEntry *interfaceEntry = nullptr;

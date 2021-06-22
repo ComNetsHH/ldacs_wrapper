@@ -36,7 +36,7 @@ IntAirNetLinkLayer::~IntAirNetLinkLayer() {
 }
 
 void IntAirNetLinkLayer::finish() {
-    cancelAndDelete(subLayerTimerMessage);
+    //cancelAndDelete(subLayerTimerMessage);
 }
 
 void IntAirNetLinkLayer::initialize(int stage)
@@ -51,8 +51,12 @@ void IntAirNetLinkLayer::initialize(int stage)
         mcsotdma_statistic_num_packets_received_signal = registerSignal("mcsotdma_statistic_num_packets_received");
         mcsotdma_statistic_num_packet_collisions_signal = registerSignal("mcsotdma_statistic_num_packet_collisions");
         mcsotdma_statistic_num_packet_decoded_signal = registerSignal("mcsotdma_statistic_num_packet_decoded");
-
-        subLayerTimerMessage = new cMessage("subLayerTimer");
+        mcsotdma_statistic_num_beacons_sent_signal = registerSignal("mcsotdma_statistic_num_beacons_sent");
+        mcsotdma_statistic_num_beacons_received_signal = registerSignal("mcsotdma_statistic_num_beacons_received");
+        mcsotdma_phy_statistic_num_missed_packets_signal = registerSignal("mcsotdma_phy_statistic_num_missed_packets");
+        mcsotdma_statistic_contention_signal = registerSignal("mcsotdma_statistic_contention");
+        mcsotdma_statistic_num_active_neighbors_signal = registerSignal("mcsotdma_statistic_num_active_neighbors");
+        mcsotdma_statistic_broadcast_candidate_slots_signal = registerSignal("mcsotdma_statistic_broadcast_candidate_slots");
 
         upperLayerInGateId = findGate("upperLayerIn");
         upperLayerOutGateId = findGate("upperLayerOut");
@@ -137,6 +141,8 @@ void IntAirNetLinkLayer::initialize(int stage)
                 ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
                 ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
                 ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
+                ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
+
 
                 lifecycleManager->registerClient(this);
     }
@@ -202,34 +208,10 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
 
     phySubLayer->onReception(containedPacket, center_frequency);
     pkt->attachPacket(nullptr);
-    delete packet;
+    delete pkt;
 }
 
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
-    throw cRuntimeError("Unused");
-
-    if(message == subLayerTimerMessage) {
-        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-            double time = it->first;
-            if(time == simTime().dbl()) {
-                //((MacLayer*)macSublayer)->onEvent(time);
-                callbackTimes.erase(it);
-            }
-        }
-        double min_time = -1;
-        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-            double time = it->first;
-            if(min_time < 0) {
-                min_time = time;
-            } else if(time < min_time) {
-                min_time = time;
-            }
-        }
-        if(!subLayerTimerMessage->isScheduled()) {
-            scheduleAt(min_time, subLayerTimerMessage);
-        }
-    }
-
 }
 
 void IntAirNetLinkLayer::handleMessageWhenDown(cMessage *msg) {
@@ -259,19 +241,7 @@ bool IntAirNetLinkLayer::isLowerMessage(cMessage *message)
 }
 
 void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {
-    callbackTimes.push_back(make_pair(time, layer));
-    double min_time = -1;
-    for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-        double time = it->first;
-        if(min_time < 0) {
-            min_time = time;
-        } else if(time < min_time) {
-            min_time = time;
-        }
-    }
-    if(!subLayerTimerMessage->isScheduled()) {
-        scheduleAt(min_time, subLayerTimerMessage);
-    }
+
 }
 
 
@@ -324,9 +294,25 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     }
     if(statistic_name == "MCSOTDMA:statistic_num_packet_decoded(num)") {
         emit(mcsotdma_statistic_num_packet_decoded_signal, value);
-
     }
-
+    if(statistic_name == "MCSOTDMA:statistic_num_sent_beacons(-2)") {
+        emit(mcsotdma_statistic_num_beacons_sent_signal, value);
+    }
+    if(statistic_name == "MCSOTDMA:statistic_num_received_beacons(-2)") {
+        emit(mcsotdma_statistic_num_beacons_received_signal, value);
+    }
+    if(statistic_name == "MCSOTDMA:Phy:statistic_num_missed_packets") {
+        emit(mcsotdma_phy_statistic_num_missed_packets_signal, value);
+    }
+    if(statistic_name == "MCSOTDMA:statistic_contention") {
+        emit(mcsotdma_statistic_contention_signal, value);
+    }
+    if(statistic_name == "MCSOTDMA:statistic_num_active_neighbors") {
+        emit(mcsotdma_statistic_num_active_neighbors_signal, value);
+    }
+    if(statistic_name == "MCSOTDMA:statistic_broadcast_candidate_slots") {
+        emit(mcsotdma_statistic_broadcast_candidate_slots_signal, value);
+    }
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {
