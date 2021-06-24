@@ -57,7 +57,11 @@ protected:
             "mcsotdma_statistic_num_link_infos_sent",
             "mcsotdma_statistic_num_cancelled_link_requests",
             "mcsotdma_statistic_num_packet_collisions",
-            "mcsotdma_statistic_num_packet_decoded"
+            "mcsotdma_statistic_num_packet_decoded",
+            "mcsotdma_statistic_contention",
+            "mcsotdma_statistic_num_active_neighbors_signal",
+            "mcsotdma_statistic_broadcast_candidate_slots_signal",
+            "mcsotdma_phy_statistic_num_missed_packets_signal"
     };
     std::vector<simsignal_t> mcsotdma_statistics;
 
@@ -73,8 +77,6 @@ protected:
     IMac* macSublayer;
     IPhy* phySubLayer;
 
-    cMessage* subLayerTimerMessage = nullptr;
-    cMessage* slotTimerMessage = nullptr;
     Packet *tmp;
 
     InterfaceEntry *interfaceEntry = nullptr;

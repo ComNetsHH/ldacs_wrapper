@@ -36,7 +36,12 @@ void IntAirNetRadio::startReception(cMessage *timer, IRadioSignal::SignalPart pa
     //}
     //else
     //    EV_INFO << "Reception started: \x1b[1mignoring\x1b[0m " << (ISignal *)signal << " " << IRadioSignal::getSignalPartName(part) << " as " << reception << endl;
+
+        if(arrival->getEndTime(part) < simTime()) {
+            return;
+        }
     timer->setKind(part);
+
     scheduleAt(arrival->getEndTime(part), timer);
     updateTransceiverState();
     updateTransceiverPart();

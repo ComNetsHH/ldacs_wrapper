@@ -40,7 +40,11 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_num_link_infos_sent](type=double);
         @signal[mcsotdma_statistic_num_cancelled_link_requests](type=double);
         @signal[mcsotdma_statistic_num_packet_collisions](type=double);
-        @signal[mcsotdma_statistic_num_packet_decoded](type=double);
+        @signal[mcsotdma_statistic_num_packet_decoded](type=double);                       
+        @signal[mcsotdma_phy_statistic_num_missed_packets](type=double);        
+        @signal[mcsotdma_statistic_contention](type=double);
+        @signal[mcsotdma_statistic_num_active_neighbors](type=double);
+        @signal[mcsotdma_statistic_broadcast_candidate_slots](type=double);
         
         @statistic[rlc_bits_received_from_upper](title="Rlc:packet_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_bits_received_from_lower](title="Rlc:packet_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
@@ -57,8 +61,11 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_num_link_infos_sent](title="MCSOTDMA:num_link_infos_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_cancelled_link_requests](title="MCSOTDMA:num_cancelled_link_requests(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_packet_collisions](title="MCSOTDMA:num_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_packet_decoded](title="MCSOTDMA:num_packet_decoded(num)"; record=vector,histogram,last; interpolationmode=none);
-                                  
+        @statistic[mcsotdma_statistic_num_packet_decoded](title="MCSOTDMA:num_packet_decoded(num)"; record=vector,histogram,last; interpolationmode=none);                                                        
+        @statistic[mcsotdma_phy_statistic_num_missed_packets](title="MCSOTDMA:Phy:statistic_num_missed_packets(num)"; record=vector,histogram,last; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_contention](title="MCSOTDMA:statistic_contention"; record=vector,histogram,last; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_active_neighbors](title="MCSOTDMA:statistic_num_active_neighbors"; record=vector,histogram,last; interpolationmode=none);
+        @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="MCSOTDMA:statistic_broadcast_candidate_slots"; record=vector,histogram,last; interpolationmode=none);
         
     gates:
         input upperLayerIn @labels(INetworkHeader/down);

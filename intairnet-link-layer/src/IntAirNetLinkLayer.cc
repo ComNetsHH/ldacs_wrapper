@@ -36,7 +36,7 @@ IntAirNetLinkLayer::~IntAirNetLinkLayer() {
 }
 
 void IntAirNetLinkLayer::finish() {
-    cancelAndDelete(subLayerTimerMessage);
+    //cancelAndDelete(subLayerTimerMessage);
 }
 
 void IntAirNetLinkLayer::initialize(int stage)
@@ -48,14 +48,11 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         rlc_bits_received_from_upper_signal = registerSignal("rlc_bits_received_from_upper");
         rlc_bits_received_from_lower_signal = registerSignal("rlc_bits_received_from_lower");
-
         mcsotdma_statistics.clear();
         for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
             const std::string& s = str_mcsotdma_statistics.at(i);
             mcsotdma_statistics.push_back(registerSignal(s.c_str()));
         }
-
-        subLayerTimerMessage = new cMessage("subLayerTimer");
 
         upperLayerInGateId = findGate("upperLayerIn");
         upperLayerOutGateId = findGate("upperLayerOut");
@@ -140,6 +137,8 @@ void IntAirNetLinkLayer::initialize(int stage)
                 ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
                 ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
                 ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
+                ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
+
 
                 lifecycleManager->registerClient(this);
     }
@@ -205,34 +204,10 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
 
     phySubLayer->onReception(containedPacket, center_frequency);
     pkt->attachPacket(nullptr);
-    delete packet;
+    delete pkt;
 }
 
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
-    throw cRuntimeError("Unused");
-
-    if(message == subLayerTimerMessage) {
-        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-            double time = it->first;
-            if(time == simTime().dbl()) {
-                //((MacLayer*)macSublayer)->onEvent(time);
-                callbackTimes.erase(it);
-            }
-        }
-        double min_time = -1;
-        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-            double time = it->first;
-            if(min_time < 0) {
-                min_time = time;
-            } else if(time < min_time) {
-                min_time = time;
-            }
-        }
-        if(!subLayerTimerMessage->isScheduled()) {
-            scheduleAt(min_time, subLayerTimerMessage);
-        }
-    }
-
 }
 
 void IntAirNetLinkLayer::handleMessageWhenDown(cMessage *msg) {
@@ -262,19 +237,7 @@ bool IntAirNetLinkLayer::isLowerMessage(cMessage *message)
 }
 
 void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {
-    callbackTimes.push_back(make_pair(time, layer));
-    double min_time = -1;
-    for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-        double time = it->first;
-        if(min_time < 0) {
-            min_time = time;
-        } else if(time < min_time) {
-            min_time = time;
-        }
-    }
-    if(!subLayerTimerMessage->isScheduled()) {
-        scheduleAt(min_time, subLayerTimerMessage);
-    }
+
 }
 
 
@@ -313,11 +276,13 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
 
 void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     EV << statistic_name << ": " << value << endl;
-    if(statistic_name == "Rlc:packet_received_from_upper(bits)")
+    if(statistic_name == "Rlc:packet_received_from_upper(bits)") {
         emit(rlc_bits_received_from_upper_signal, value);
-
-    if(statistic_name == "Rlc:packet_received_from_lower(bits)")
+        return;
+    }
+    if(statistic_name == "Rlc:packet_received_from_lower(bits)") {
         emit(rlc_bits_received_from_lower_signal, value);
+    }
 
     for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
         const std::string& s = str_mcsotdma_statistics.at(i);
