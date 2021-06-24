@@ -44,9 +44,22 @@ protected:
     simsignal_t rlc_bits_received_from_upper_signal;
     simsignal_t rlc_bits_received_from_lower_signal;
 
-    simsignal_t mcsotdma_statistic_num_packets_received_signal;
-    simsignal_t mcsotdma_statistic_num_packet_collisions_signal;
-    simsignal_t mcsotdma_statistic_num_packet_decoded_signal;
+    const std::vector<std::string> str_mcsotdma_statistics = {
+            "mcsotdma_statistic_num_packets_received",
+            "mcsotdma_statistic_num_link_requests_received",
+            "mcsotdma_statistic_num_link_replies_received",
+            "mcsotdma_statistic_num_beacons_received",
+            "mcsotdma_statistic_num_link_infos_received",
+            "mcsotdma_statistic_num_packets_sent",
+            "mcsotdma_statistic_num_link_requests_sent",
+            "mcsotdma_statistic_num_link_replies_sent",
+            "mcsotdma_statistic_num_beacons_sent",
+            "mcsotdma_statistic_num_link_infos_sent",
+            "mcsotdma_statistic_num_cancelled_link_requests",
+            "mcsotdma_statistic_num_packet_collisions",
+            "mcsotdma_statistic_num_packet_decoded"
+    };
+    std::vector<simsignal_t> mcsotdma_statistics;
 
     double slotDuration;
 

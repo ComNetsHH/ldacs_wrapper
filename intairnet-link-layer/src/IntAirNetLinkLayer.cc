@@ -48,9 +48,12 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         rlc_bits_received_from_upper_signal = registerSignal("rlc_bits_received_from_upper");
         rlc_bits_received_from_lower_signal = registerSignal("rlc_bits_received_from_lower");
-        mcsotdma_statistic_num_packets_received_signal = registerSignal("mcsotdma_statistic_num_packets_received");
-        mcsotdma_statistic_num_packet_collisions_signal = registerSignal("mcsotdma_statistic_num_packet_collisions");
-        mcsotdma_statistic_num_packet_decoded_signal = registerSignal("mcsotdma_statistic_num_packet_decoded");
+
+        mcsotdma_statistics.clear();
+        for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
+            const std::string& s = str_mcsotdma_statistics.at(i);
+            mcsotdma_statistics.push_back(registerSignal(s.c_str()));
+        }
 
         subLayerTimerMessage = new cMessage("subLayerTimer");
 
@@ -310,23 +313,19 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
 
 void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     EV << statistic_name << ": " << value << endl;
-    if(statistic_name == "Rlc:packet_received_from_upper(bits)") {
+    if(statistic_name == "Rlc:packet_received_from_upper(bits)")
         emit(rlc_bits_received_from_upper_signal, value);
-    }
-    if(statistic_name == "Rlc:packet_received_from_lower(bits)") {
+
+    if(statistic_name == "Rlc:packet_received_from_lower(bits)")
         emit(rlc_bits_received_from_lower_signal, value);
-    }
-    if(statistic_name == "MCSOTDMA:statistic_num_packets_received(num)") {
-        emit(mcsotdma_statistic_num_packets_received_signal, value);
-    }
-    if(statistic_name == "MCSOTDMA:statistic_num_packet_collisions(num)") {
-        emit(mcsotdma_statistic_num_packet_collisions_signal, value);
-    }
-    if(statistic_name == "MCSOTDMA:statistic_num_packet_decoded(num)") {
-        emit(mcsotdma_statistic_num_packet_decoded_signal, value);
 
+    for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
+        const std::string& s = str_mcsotdma_statistics.at(i);
+        if (statistic_name == s) {
+            emit(mcsotdma_statistics.at(i), value);
+            return;
+        }
     }
-
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {
