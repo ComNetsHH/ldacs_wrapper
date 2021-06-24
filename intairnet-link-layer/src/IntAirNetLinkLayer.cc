@@ -49,8 +49,10 @@ void IntAirNetLinkLayer::initialize(int stage)
         rlc_bits_received_from_upper_signal = registerSignal("rlc_bits_received_from_upper");
         rlc_bits_received_from_lower_signal = registerSignal("rlc_bits_received_from_lower");
         mcsotdma_statistics.clear();
-        for (const std::string& s : str_mcsotdma_statistics)
+        for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
+            const std::string& s = str_mcsotdma_statistics.at(i);
             mcsotdma_statistics.push_back(registerSignal(s.c_str()));
+        }
 
         upperLayerInGateId = findGate("upperLayerIn");
         upperLayerOutGateId = findGate("upperLayerOut");
