@@ -25,8 +25,8 @@ void LinkLayerLifecycleManager::initialize(int stage) {
 
 int LinkLayerLifecycleManager::getRandomInt(int min, int max, int k) {
     try {
-    int rand_int = getRNG(k)->intRand(max - min);
-    return rand_int + min;
+        int rand_int = getRNG(k)->intRand(max - min);
+        return rand_int + min;
     } catch (const std::exception& e) {
         EV << "LinkLayerLifecycleManager::getRandomInt error: " << e.what() << std::endl;
         throw e;
