@@ -12,3 +12,6 @@ git pull
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 make
 cd ..
+cd intairnet-link-layer/sim-model/
+git pull
+cd ../..
