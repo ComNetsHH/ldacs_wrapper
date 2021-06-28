@@ -46,11 +46,15 @@ protected:
 
     const std::vector<std::string> str_mcsotdma_statistics = {
             "mcsotdma_statistic_num_packets_received",
+            "mcsotdma_statistic_num_broadcasts_received",
+            "mcsotdma_statistic_num_unicasts_received",
             "mcsotdma_statistic_num_link_requests_received",
             "mcsotdma_statistic_num_link_replies_received",
             "mcsotdma_statistic_num_beacons_received",
             "mcsotdma_statistic_num_link_infos_received",
             "mcsotdma_statistic_num_packets_sent",
+            "mcsotdma_statistic_num_broadcasts_sent",
+            "mcsotdma_statistic_num_unicasts_sent",
             "mcsotdma_statistic_num_link_requests_sent",
             "mcsotdma_statistic_num_link_replies_sent",
             "mcsotdma_statistic_num_beacons_sent",
