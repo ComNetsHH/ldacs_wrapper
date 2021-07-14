@@ -63,9 +63,9 @@ protected:
             "mcsotdma_statistic_num_packet_collisions",
             "mcsotdma_statistic_num_packet_decoded",
             "mcsotdma_statistic_contention",
-            "mcsotdma_statistic_num_active_neighbors_signal",
-            "mcsotdma_statistic_broadcast_candidate_slots_signal",
-            "mcsotdma_phy_statistic_num_missed_packets_signal"
+            "mcsotdma_statistic_num_active_neighbors",
+            "mcsotdma_statistic_broadcast_candidate_slots",
+            "mcsotdma_phy_statistic_num_missed_packets"
     };
     std::vector<simsignal_t> mcsotdma_statistics;
 

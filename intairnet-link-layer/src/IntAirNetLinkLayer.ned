@@ -31,6 +31,10 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
         
+        @statistic[rlc_bits_received_from_upper](title="Rlc:packet_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
+        @statistic[rlc_bits_received_from_lower](title="Rlc:packet_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
+        
+        
         @signal[mcsotdma_statistic_num_packets_received](type=double);
         @signal[mcsotdma_statistic_num_broadcasts_received](type=double);
         @signal[mcsotdma_statistic_num_unicasts_received](type=double);
@@ -52,10 +56,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_contention](type=double);
         @signal[mcsotdma_statistic_num_active_neighbors](type=double);
         @signal[mcsotdma_statistic_broadcast_candidate_slots](type=double);
-        
-        @statistic[rlc_bits_received_from_upper](title="Rlc:packet_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
-        @statistic[rlc_bits_received_from_lower](title="Rlc:packet_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
-        
+                       
         @statistic[mcsotdma_statistic_num_packets_received](title="MCSOTDMA:num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="MCSOTDMA:num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_unicasts_received](title="MCSOTDMA:num_unicasts_received(num)"; record=vector,histogram,last; interpolationmode=none);               
