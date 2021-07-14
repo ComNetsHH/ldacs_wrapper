@@ -108,15 +108,15 @@ void IntAirNetLinkLayer::initialize(int stage)
                 ((PassThroughArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
                 ((MacLayer*)macSublayer)->registerGetTimeCallback(getTimeFkt);
 
-                // Debug Messages
-                function<void(string)> debugFkt = [this](string message){
-                    cout << endl << message << endl;
-                    EV << "DEBUG: " << message << endl;
-                };
-                ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
-                ((PassThroughArq*)arqSublayer)->registerDebugMessageCallback(debugFkt);
-                ((MacLayer*)macSublayer)->registerDebugMessageCallback(debugFkt);
-                ((PhyLayer*)phySubLayer)->registerDebugMessageCallback(debugFkt);
+//                // Debug Messages
+//                function<void(string)> debugFkt = [this](string message){
+//                    cout << endl << message << endl;
+//                    EV << "DEBUG: " << message << endl;
+//                };
+//                ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
+//                ((PassThroughArq*)arqSublayer)->registerDebugMessageCallback(debugFkt);
+//                ((MacLayer*)macSublayer)->registerDebugMessageCallback(debugFkt);
+//                ((PhyLayer*)phySubLayer)->registerDebugMessageCallback(debugFkt);
 
                 // Schedule At
                 ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
@@ -141,6 +141,9 @@ void IntAirNetLinkLayer::initialize(int stage)
 
 
                 lifecycleManager->registerClient(this);
+
+                double bc_target_collision_prob = par("broadcastTargetCollisionRate");
+                macSublayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
     }
 
 }

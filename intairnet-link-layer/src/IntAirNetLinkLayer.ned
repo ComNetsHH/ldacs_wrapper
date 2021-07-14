@@ -22,9 +22,12 @@ package intairnet_link_layer;
 simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
         double slotDuration @unit(s) = default(12ms);
+        double broadcastTargetCollisionRate = default(0.05);
         string lifecycleManager = "^.^.^.lifecycleManager";
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
+        
+        
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
         
@@ -73,7 +76,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_phy_statistic_num_missed_packets](title="MCSOTDMA:Phy:statistic_num_missed_packets(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_contention](title="MCSOTDMA:statistic_contention"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_active_neighbors](title="MCSOTDMA:statistic_num_active_neighbors"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="MCSOTDMA:statistic_broadcast_candidate_slots"; record=vector,histogram,last; interpolationmode=none);
+        @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="MCSOTDMA:statistic_broadcast_candidate_slots"; record=vector,histogram,last; interpolationmode=none);               
         
     gates:
         input upperLayerIn @labels(INetworkHeader/down);
