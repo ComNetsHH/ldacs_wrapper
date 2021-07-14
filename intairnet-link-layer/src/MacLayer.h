@@ -15,19 +15,19 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-    class MacLayer : public MCSOTDMA_Mac {
+class MacLayer : public MCSOTDMA_Mac {
 
-            friend class LinkManagerTests;
-            friend class BCLinkManagerTests;
-            friend class SystemTests;
+        friend class LinkManagerTests;
+        friend class BCLinkManagerTests;
+        friend class SystemTests;
 
-        public:
-            explicit MacLayer(const MacId& id, uint32_t planning_horizon) : MCSOTDMA_Mac(id, planning_horizon) {}
+    public:
+        explicit MacLayer(const MacId& id, uint32_t planning_horizon) : MCSOTDMA_Mac(id, planning_horizon) {}
 
-        protected:
-            //void onReceptionSlot(const FrequencyChannel* channel) override {
-                // do nothing.
-            //}
-    };
+    protected:
+        //void onReceptionSlot(const FrequencyChannel* channel) override {
+            // do nothing.
+        //}
+};
 
 #endif /* MACLAYER_H_ */
