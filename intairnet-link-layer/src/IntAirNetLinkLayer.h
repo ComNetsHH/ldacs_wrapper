@@ -63,6 +63,7 @@ protected:
             "mcsotdma_statistic_num_packet_collisions",
             "mcsotdma_statistic_num_packet_decoded",
             "mcsotdma_statistic_contention",
+            "mcsotdma_statistic_congestion",
             "mcsotdma_statistic_num_active_neighbors",
             "mcsotdma_statistic_min_beacon_offset",
             "mcsotdma_statistic_broadcast_candidate_slots",
