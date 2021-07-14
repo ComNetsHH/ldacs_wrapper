@@ -55,6 +55,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_phy_statistic_num_missed_packets](type=double);        
         @signal[mcsotdma_statistic_contention](type=double);
         @signal[mcsotdma_statistic_num_active_neighbors](type=double);
+        @signal[mcsotdma_statistic_min_beacon_offset](type=double);        
         @signal[mcsotdma_statistic_broadcast_candidate_slots](type=double);
                        
         @statistic[mcsotdma_statistic_num_packets_received](title="MCSOTDMA:num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -77,6 +78,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_phy_statistic_num_missed_packets](title="MCSOTDMA:Phy:statistic_num_missed_packets(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_contention](title="MCSOTDMA:statistic_contention"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_active_neighbors](title="MCSOTDMA:statistic_num_active_neighbors"; record=vector,histogram,last; interpolationmode=none);
+        @statistic[mcsotdma_statistic_min_beacon_offset](title="MCSOTDMA:statistic_min_beacon_offset"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="MCSOTDMA:statistic_broadcast_candidate_slots"; record=vector,histogram,last; interpolationmode=none);               
         
     gates:
