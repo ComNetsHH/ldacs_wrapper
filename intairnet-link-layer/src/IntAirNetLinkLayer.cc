@@ -46,10 +46,10 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         slotDuration = par("slotDuration");
 
-        mcsotdma_statistics.clear();
+        mcsotdma_statistics_map.clear();
         for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
             const std::string& s = str_mcsotdma_statistics.at(i);
-            mcsotdma_statistics.push_back(registerSignal(s.c_str()));
+            mcsotdma_statistics_map[s] = registerSignal(s.c_str());
         }
 
         upperLayerInGateId = findGate("upperLayerIn");
@@ -276,15 +276,11 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
 }
 
 void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
-    for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
-        const std::string& s = str_mcsotdma_statistics.at(i);
-        if (statistic_name == s) {
-            emit(mcsotdma_statistics.at(i), value);
-            return;
-        }
-    }
-
-    throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
+    const auto it = mcsotdma_statistics_map.find(statistic_name);
+    if (it != mcsotdma_statistics_map.end())
+        emit((*it).second, value);
+    else
+        throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {

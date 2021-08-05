@@ -75,7 +75,7 @@ protected:
             "phy_statistic_num_packets_received",
             "phy_statistic_num_packets_missed"
     };
-    std::vector<simsignal_t> mcsotdma_statistics;
+    std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 
     double slotDuration;
 
