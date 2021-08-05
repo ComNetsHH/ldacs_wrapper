@@ -46,8 +46,6 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         slotDuration = par("slotDuration");
 
-        rlc_bits_received_from_upper_signal = registerSignal("rlc_bits_received_from_upper");
-        rlc_bits_received_from_lower_signal = registerSignal("rlc_bits_received_from_lower");
         mcsotdma_statistics.clear();
         for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
             const std::string& s = str_mcsotdma_statistics.at(i);
@@ -72,41 +70,41 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint32_t planning_horizon = 256;
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
-                rlcSubLayer = new Rlc(1600);
-                arqSublayer = new PassThroughArq();
-                macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
-                phySubLayer = new PhyLayer(planning_horizon);
+        rlcSubLayer = new Rlc(1600);
+        arqSublayer = new PassThroughArq();
+        macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
+        phySubLayer = new PhyLayer(planning_horizon);
 
-                auto reservation_manager = ((MacLayer*)macSublayer)->getReservationManager();
-
-
-                reservation_manager->setTransmitterReservationTable(((PhyLayer*)phySubLayer)->getTransmitterReservationTable());
-                for (ReservationTable*& table : ((PhyLayer*)phySubLayer)->getReceiverReservationTables()) {
-                    reservation_manager->addReceiverReservationTable(table);
-                }
-                reservation_manager->addFrequencyChannel(false, bc_frequency, bandwidth);
-                reservation_manager->addFrequencyChannel(true, center_frequency1, bandwidth);
-                reservation_manager->addFrequencyChannel(true, center_frequency2, bandwidth);
-                reservation_manager->addFrequencyChannel(true, center_frequency3, bandwidth);
+        auto reservation_manager = ((MacLayer*)macSublayer)->getReservationManager();
 
 
-                rlcSubLayer->setLowerLayer(arqSublayer);
-                rlcSubLayer->setUpperLayer((INet*)this);
-                arqSublayer->setUpperLayer(rlcSubLayer);
-                arqSublayer->setLowerLayer(macSublayer);
-                macSublayer->setUpperLayer(arqSublayer);
-                macSublayer->setLowerLayer(phySubLayer);
-                phySubLayer->setUpperLayer(macSublayer);
-                phySubLayer->setRadio((IRadio*)this);
+        reservation_manager->setTransmitterReservationTable(((PhyLayer*)phySubLayer)->getTransmitterReservationTable());
+        for (ReservationTable*& table : ((PhyLayer*)phySubLayer)->getReceiverReservationTables()) {
+            reservation_manager->addReceiverReservationTable(table);
+        }
+        reservation_manager->addFrequencyChannel(false, bc_frequency, bandwidth);
+        reservation_manager->addFrequencyChannel(true, center_frequency1, bandwidth);
+        reservation_manager->addFrequencyChannel(true, center_frequency2, bandwidth);
+        reservation_manager->addFrequencyChannel(true, center_frequency3, bandwidth);
 
-                /** Register callback functions **/
-                // GetTime
-                function<double()> getTimeFkt= [this]{
-                    return simTime().dbl();
-                };
-                ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
-                ((PassThroughArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
-                ((MacLayer*)macSublayer)->registerGetTimeCallback(getTimeFkt);
+
+        rlcSubLayer->setLowerLayer(arqSublayer);
+        rlcSubLayer->setUpperLayer((INet*)this);
+        arqSublayer->setUpperLayer(rlcSubLayer);
+        arqSublayer->setLowerLayer(macSublayer);
+        macSublayer->setUpperLayer(arqSublayer);
+        macSublayer->setLowerLayer(phySubLayer);
+        phySubLayer->setUpperLayer(macSublayer);
+        phySubLayer->setRadio((IRadio*)this);
+
+        /** Register callback functions **/
+        // GetTime
+        function<double()> getTimeFkt= [this]{
+            return simTime().dbl();
+        };
+        ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
+        ((PassThroughArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
+        ((MacLayer*)macSublayer)->registerGetTimeCallback(getTimeFkt);
 
 //                // Debug Messages
 //                function<void(string)> debugFkt = [this](string message){
@@ -118,32 +116,32 @@ void IntAirNetLinkLayer::initialize(int stage)
 //                ((MacLayer*)macSublayer)->registerDebugMessageCallback(debugFkt);
 //                ((PhyLayer*)phySubLayer)->registerDebugMessageCallback(debugFkt);
 
-                // Schedule At
-                ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
-                    this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
-                });
-                ((PassThroughArq*)arqSublayer)->registerScheduleAtCallback([this](double time){
-                    this->addCallback((IOmnetPluggable*)this->arqSublayer, time);
-                });
-                ((MacLayer*)macSublayer)->registerScheduleAtCallback([this](double time){
-                    this->addCallback((IOmnetPluggable*)this->macSublayer, time);
-                });
+        // Schedule At
+        ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
+        });
+        ((PassThroughArq*)arqSublayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->arqSublayer, time);
+        });
+        ((MacLayer*)macSublayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->macSublayer, time);
+        });
 
 
-                // Emit statistic
-                function<void(string, double)> emitFkt = [this](string message, double value){
-                    this->emitStatistic(message, value);
-                };
-                ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
-                ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
-                ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
-                ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
+        // Emit statistic
+        function<void(string, double)> emitFkt = [this](string message, double value){
+            this->emitStatistic(message, value);
+        };
+        ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
+        ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
+        ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
+        ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
 
 
-                lifecycleManager->registerClient(this);
+        lifecycleManager->registerClient(this);
 
-                double bc_target_collision_prob = par("broadcastTargetCollisionRate");
-                macSublayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
+        double bc_target_collision_prob = par("broadcastTargetCollisionRate");
+        macSublayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
     }
 
 }
@@ -278,15 +276,6 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
 }
 
 void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
-    EV << statistic_name << ": " << value << endl;
-    if(statistic_name == "Rlc:packet_received_from_upper(bits)") {
-        emit(rlc_bits_received_from_upper_signal, value);
-        return;
-    }
-    if(statistic_name == "Rlc:packet_received_from_lower(bits)") {
-        emit(rlc_bits_received_from_lower_signal, value);
-    }
-
     for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
         const std::string& s = str_mcsotdma_statistics.at(i);
         if (statistic_name == s) {
@@ -294,6 +283,8 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
             return;
         }
     }
+
+    throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {

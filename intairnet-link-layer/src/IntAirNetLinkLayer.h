@@ -40,14 +40,18 @@ class LinkLayerLifecycleManager;
 // public INet
 class IntAirNetLinkLayer: public LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTDMA::IRadio, public INet {
 protected:
-
-    simsignal_t rlc_bits_received_from_upper_signal;
-    simsignal_t rlc_bits_received_from_lower_signal;
-
     const std::vector<std::string> str_mcsotdma_statistics = {
+            "rlc_bits_received_from_upper",
+            "rlc_bits_received_from_lower",
+            "rlc_bits_requested_from_lower",
+            "rlc_packet_received_from_upper",
+            "rlc_packet_sent_down",
+            "rlc_packet_sent_up",
             "mcsotdma_statistic_num_packets_received",
             "mcsotdma_statistic_num_broadcasts_received",
+            "mcsotdma_statistic_num_broadcast_message_decoded",
             "mcsotdma_statistic_num_unicasts_received",
+            "mcsotdma_statistic_num_unicast_message_decoded",
             "mcsotdma_statistic_num_link_requests_received",
             "mcsotdma_statistic_num_link_replies_received",
             "mcsotdma_statistic_num_beacons_received",
@@ -67,7 +71,9 @@ protected:
             "mcsotdma_statistic_num_active_neighbors",
             "mcsotdma_statistic_min_beacon_offset",
             "mcsotdma_statistic_broadcast_candidate_slots",
-            "mcsotdma_phy_statistic_num_missed_packets"
+            "mcsotdma_phy_statistic_num_missed_packets",
+            "phy_statistic_num_packets_received",
+            "phy_statistic_num_packets_missed"
     };
     std::vector<simsignal_t> mcsotdma_statistics;
 
