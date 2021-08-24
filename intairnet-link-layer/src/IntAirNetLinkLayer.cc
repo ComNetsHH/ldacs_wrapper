@@ -20,6 +20,7 @@
 #include "../../glue-lib-headers/PassThroughArq.hpp"
 #include "../../glue-lib-headers/L3Packet.hpp"
 #include "../../glue-lib-headers/IOmnetPluggable.hpp"
+#include "../../glue-lib-headers/InetPacketPayload.hpp"
 #include "MacLayer.h"
 #include "PhyLayer.h"
 #include "LinkLayerLifecycleManager.h"
@@ -36,6 +37,8 @@ IntAirNetLinkLayer::~IntAirNetLinkLayer() {
 }
 
 void IntAirNetLinkLayer::finish() {
+    delete ((Rlc*)this->rlcSubLayer);
+    //delete this->macSubLayer;
     //cancelAndDelete(subLayerTimerMessage);
 }
 
@@ -71,11 +74,11 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
         rlcSubLayer = new Rlc(1600);
-        arqSublayer = new PassThroughArq();
-        macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
+        arqSubLayer = new PassThroughArq();
+        macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
         phySubLayer = new PhyLayer(planning_horizon);
 
-        auto reservation_manager = ((MacLayer*)macSublayer)->getReservationManager();
+        auto reservation_manager = ((MacLayer*)macSubLayer)->getReservationManager();
 
 
         reservation_manager->setTransmitterReservationTable(((PhyLayer*)phySubLayer)->getTransmitterReservationTable());
@@ -88,13 +91,13 @@ void IntAirNetLinkLayer::initialize(int stage)
         reservation_manager->addFrequencyChannel(true, center_frequency3, bandwidth);
 
 
-        rlcSubLayer->setLowerLayer(arqSublayer);
+        rlcSubLayer->setLowerLayer(arqSubLayer);
         rlcSubLayer->setUpperLayer((INet*)this);
-        arqSublayer->setUpperLayer(rlcSubLayer);
-        arqSublayer->setLowerLayer(macSublayer);
-        macSublayer->setUpperLayer(arqSublayer);
-        macSublayer->setLowerLayer(phySubLayer);
-        phySubLayer->setUpperLayer(macSublayer);
+        arqSubLayer->setUpperLayer(rlcSubLayer);
+        arqSubLayer->setLowerLayer(macSubLayer);
+        macSubLayer->setUpperLayer(arqSubLayer);
+        macSubLayer->setLowerLayer(phySubLayer);
+        phySubLayer->setUpperLayer(macSubLayer);
         phySubLayer->setRadio((IRadio*)this);
 
         /** Register callback functions **/
@@ -103,8 +106,8 @@ void IntAirNetLinkLayer::initialize(int stage)
             return simTime().dbl();
         };
         ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
-        ((PassThroughArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
-        ((MacLayer*)macSublayer)->registerGetTimeCallback(getTimeFkt);
+        ((PassThroughArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        ((MacLayer*)macSubLayer)->registerGetTimeCallback(getTimeFkt);
 
 //                // Debug Messages
 //                function<void(string)> debugFkt = [this](string message){
@@ -120,11 +123,11 @@ void IntAirNetLinkLayer::initialize(int stage)
         ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
             this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
         });
-        ((PassThroughArq*)arqSublayer)->registerScheduleAtCallback([this](double time){
-            this->addCallback((IOmnetPluggable*)this->arqSublayer, time);
+        ((PassThroughArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
         });
-        ((MacLayer*)macSublayer)->registerScheduleAtCallback([this](double time){
-            this->addCallback((IOmnetPluggable*)this->macSublayer, time);
+        ((MacLayer*)macSubLayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->macSubLayer, time);
         });
 
 
@@ -133,15 +136,23 @@ void IntAirNetLinkLayer::initialize(int stage)
             this->emitStatistic(message, value);
         };
         ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
-        ((PassThroughArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
-        ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
+        ((PassThroughArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        ((MacLayer*)macSubLayer)->registerEmitEventCallback(emitFkt);
         ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
 
+        // Emit statistic
+        function<void(L2Packet*)> deleteFkt = [this](L2Packet* pkt){
+            this->onPacketDelete(pkt);
+        };
+        ((Rlc*)rlcSubLayer)->registerDeleteCallback(deleteFkt);
+        //((PassThroughArq*)arqSubLayer)->registerDeleteCallback(deleteFkt);
+        ((MacLayer*)macSubLayer)->registerDeleteCallback(deleteFkt);
+        ((PhyLayer*)phySubLayer)->registerDeleteCallback(deleteFkt);
 
         lifecycleManager->registerClient(this);
 
         double bc_target_collision_prob = par("broadcastTargetCollisionRate");
-        macSublayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
+        macSubLayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
     }
 
 }
@@ -203,6 +214,20 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
         return;
     }
 
+    auto headers = containedPacket->getHeaders();
+    auto payloads = containedPacket->getPayloads();
+    int i = 0;
+    for (const auto* payload : payloads){
+        if(headers[i]->frame_type == L2Header::FrameType::broadcast || headers[i]->frame_type == L2Header::FrameType::unicast) {
+            if(payload != nullptr) {
+                if(((InetPacketPayload*)payload)->original) {
+                    take(((InetPacketPayload*)payload)->original);
+                }
+            }
+        }
+        i++;
+    }
+
     phySubLayer->onReception(containedPacket, center_frequency);
     pkt->attachPacket(nullptr);
     delete pkt;
@@ -254,12 +279,7 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
     if(packet->original == nullptr) {
         return;
     }
-    EV << packet->original->getName() << endl;
-    take(packet->original);
-    Packet* original = (Packet*)packet->original;//->dup();
-    //packet->original->setName("TEST");
-    EV << original->getName() << endl;
-    EV << original << endl;
+    Packet* original = (Packet*)packet->original;
 
     //delete packet->original;
     if(original) {
@@ -285,17 +305,34 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
 
 void IntAirNetLinkLayer::beforeSlotStart() {
     Enter_Method_Silent();
-    ((MacLayer*)macSublayer)->update(1);
+    ((MacLayer*)macSubLayer)->update(1);
 }
 
 void IntAirNetLinkLayer::onSlotStart() {
     Enter_Method_Silent();
-    ((MacLayer*)macSublayer)->execute();
+    ((MacLayer*)macSubLayer)->execute();
 }
 
 void IntAirNetLinkLayer::onSlotEnd() {
     Enter_Method_Silent();
-    ((MacLayer*)macSublayer)->onSlotEnd();
+    ((MacLayer*)macSubLayer)->onSlotEnd();
+}
+
+void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
+    auto headers = pkt->getHeaders();
+    auto payloads = pkt->getPayloads();
+    int i = 0;
+    for (const auto* payload : payloads){
+        if(headers[i]->frame_type == L2Header::FrameType::broadcast || headers[i]->frame_type == L2Header::FrameType::unicast) {
+            if(payload != nullptr) {
+                if(((InetPacketPayload*)payload)->original) {
+                    delete ((InetPacketPayload*)payload)->original;
+                    ((InetPacketPayload*)payload)->original = nullptr;
+                }
+            }
+        }
+        i++;
+    }
 }
 
 

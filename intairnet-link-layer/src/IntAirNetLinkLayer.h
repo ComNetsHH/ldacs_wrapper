@@ -85,8 +85,8 @@ protected:
     vector<pair<double, IOmnetPluggable*>> callbackTimes;
 
     IRlc* rlcSubLayer;
-    IArq* arqSublayer;
-    IMac* macSublayer;
+    IArq* arqSubLayer;
+    IMac* macSubLayer;
     IPhy* phySubLayer;
 
     Packet *tmp;
@@ -125,6 +125,8 @@ protected:
     void configureInterfaceEntry();
 
     void emitStatistic(string statistic_name, double value);
+
+    void onPacketDelete(L2Packet* pkt);
 
 public:
     void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
