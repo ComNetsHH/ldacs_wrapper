@@ -70,10 +70,10 @@ void IntAirNetLinkLayer::initialize(int stage)
         // Configure layer:
         // target collision probability
         double bc_target_collision_prob = par("broadcastTargetCollisionRate");
-        macSublayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
+        macSubLayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
         // minimum number of candidate slots during slot selection
         int min_bc_candidate_slots = par("broadcastSlotSelectionMinNumCandidateSlots");
-        macSublayer->setBcSlotSelectionMinNumCandidateSlots(min_bc_candidate_slots);
+        macSubLayer->setBcSlotSelectionMinNumCandidateSlots(min_bc_candidate_slots);
         // which contention method to use
         std::string contention_method = par("contentionMethod");
         ContentionMethod method;
@@ -85,7 +85,7 @@ void IntAirNetLinkLayer::initialize(int stage)
             method = ContentionMethod::all_active_again_assumption;
         else
             throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
-        macSublayer->setContentionMethod(method);
+        macSubLayer->setContentionMethod(method);
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
@@ -171,12 +171,9 @@ void IntAirNetLinkLayer::initialize(int stage)
         ((PhyLayer*)phySubLayer)->registerDeleteCallback(deleteFkt);
 
         lifecycleManager->registerClient(this);
-<<<<<<< HEAD
-=======
 
         double bc_target_collision_prob = par("broadcastTargetCollisionRate");
         macSubLayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
->>>>>>> 90ca41641b6912f8c2c9ce3912310da751b6c246
     }
 
 }
