@@ -20,6 +20,7 @@
 #include "../../glue-lib-headers/PassThroughArq.hpp"
 #include "../../glue-lib-headers/L3Packet.hpp"
 #include "../../glue-lib-headers/IOmnetPluggable.hpp"
+#include "../../glue-lib-headers/ContentionMethod.hpp"
 #include "MacLayer.h"
 #include "PhyLayer.h"
 #include "LinkLayerLifecycleManager.h"
@@ -62,6 +63,26 @@ void IntAirNetLinkLayer::initialize(int stage)
         cModule *radioModule = gate("lowerLayerOut")->getPathEndGate()->getOwnerModule();
         auto radio = check_and_cast<inet::physicallayer::IRadio *>(radioModule);
         radio->setRadioMode(inet::physicallayer::IRadio::RADIO_MODE_TRANSCEIVER);
+
+        // Configure layer:
+        // target collision probability
+        double bc_target_collision_prob = par("broadcastTargetCollisionRate");
+        macSublayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
+        // minimum number of candidate slots during slot selection
+        int min_bc_candidate_slots = par("broadcastSlotSelectionMinNumCandidateSlots");
+        macSublayer->setBcSlotSelectionMinNumCandidateSlots(min_bc_candidate_slots);
+        // which contention method to use
+        std::string contention_method = par("contentionMethod");
+        ContentionMethod method;
+        if (contention_method.compare("binomial_estimate") == 0)
+            method = ContentionMethod::binomial_estimate;
+        else if (contention_method.compare("poisson_binomial_estimate") == 0)
+            method = ContentionMethod::poisson_binomial_estimate;
+        else if (contention_method.compare("all_active_again_assumption") == 0)
+            method = ContentionMethod::all_active_again_assumption;
+        else
+            throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
+        macSublayer->setContentionMethod(method);
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
@@ -139,9 +160,6 @@ void IntAirNetLinkLayer::initialize(int stage)
 
 
         lifecycleManager->registerClient(this);
-
-        double bc_target_collision_prob = par("broadcastTargetCollisionRate");
-        macSublayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
     }
 
 }
