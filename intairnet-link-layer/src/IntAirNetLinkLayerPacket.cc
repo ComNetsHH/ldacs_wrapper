@@ -28,8 +28,6 @@ Packet* IntAirNetLinkLayerPacket::dup() const {
     pkt->center_frequency = this->center_frequency;
     auto containedPkt = this->getContainedPacket()->copy();
 
-    EV << "COMP " << ((containedPkt == this->getContainedPacket())?"YES":"NO") << endl;
-
     auto originalPayloads = this->getContainedPacket()->getPayloads();
     auto newPayloads = containedPkt->getPayloads();
     auto newHeaders = containedPkt->getHeaders();

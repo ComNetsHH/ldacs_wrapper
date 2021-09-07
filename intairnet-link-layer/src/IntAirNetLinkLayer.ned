@@ -23,6 +23,9 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
         double slotDuration @unit(s) = default(12ms);
         double broadcastTargetCollisionRate = default(0.05);
+        int broadcastSlotSelectionMinNumCandidateSlots = default(3);
+        string contentionMethod = default("poisson_binomial_estimate"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'
+        bool useBinomialContentionEstimation = default(false);        
         string lifecycleManager = "^.^.^.lifecycleManager";
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
