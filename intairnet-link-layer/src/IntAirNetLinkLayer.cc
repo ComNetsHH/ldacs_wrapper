@@ -83,6 +83,8 @@ void IntAirNetLinkLayer::initialize(int stage)
             method = ContentionMethod::poisson_binomial_estimate;
         else if (contention_method.compare("all_active_again_assumption") == 0)
             method = ContentionMethod::all_active_again_assumption;
+        else if (contention_method.compare("naive_random_access") == 0)
+            method = ContentionMethod::naive_random_access;
         else
             throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
         macSubLayer->setContentionMethod(method);
