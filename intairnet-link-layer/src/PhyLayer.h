@@ -8,9 +8,8 @@
 #ifndef PHYLAYER_H_
 #define PHYLAYER_H_
 
-#include "../../mc-sotdma-headers/MCSOTDMA_Phy.hpp"
-
-#include "../../glue-lib-headers/IOmnetPluggable.hpp"
+#include <MCSOTDMA_Phy.hpp>
+#include <IOmnetPluggable.hpp>
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 

@@ -10,8 +10,8 @@
 
 
 
-#include "../../mc-sotdma-headers/MCSOTDMA_Mac.hpp"
-#include "../../glue-lib-headers/IOmnetPluggable.hpp"
+#include <MCSOTDMA_Mac.hpp>
+#include <IOmnetPluggable.hpp>
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 

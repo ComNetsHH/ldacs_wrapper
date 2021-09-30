@@ -16,16 +16,15 @@
 #include "inet/linklayer/common/MacAddressTag_m.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/common/ProtocolGroup.h"
-#include "../../avionic-rlc-headers/Rlc.hpp"
-#include "../../glue-lib-headers/PassThroughArq.hpp"
-#include "../../glue-lib-headers/L3Packet.hpp"
-#include "../../glue-lib-headers/IOmnetPluggable.hpp"
-#include "../../glue-lib-headers/ContentionMethod.hpp"
-#include "../../glue-lib-headers/InetPacketPayload.hpp"
+#include <Rlc.hpp>
+#include <PassThroughArq.hpp>
+#include <L3Packet.hpp>
+#include <IOmnetPluggable.hpp>
+#include <ContentionMethod.hpp>
+#include <InetPacketPayload.hpp>
 #include "MacLayer.h"
 #include "PhyLayer.h"
 #include "LinkLayerLifecycleManager.h"
-//#include "../../mc-sotdma-headers/coutdebug.hpp"
 
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;

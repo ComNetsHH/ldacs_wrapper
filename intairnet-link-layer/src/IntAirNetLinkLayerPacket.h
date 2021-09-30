@@ -9,7 +9,7 @@
 #define INTAIRNETLINKLAYERPACKET_H_
 
 #include "inet/common/packet/Packet.h"
-#include "../../glue-lib-headers/L2Packet.hpp"
+#include <L2Packet.hpp>
 
 using namespace inet;
 using namespace TUHH_INTAIRNET_MCSOTDMA;
