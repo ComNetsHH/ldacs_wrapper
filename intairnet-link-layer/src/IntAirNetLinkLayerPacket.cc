@@ -6,7 +6,7 @@
  */
 
 #include "IntAirNetLinkLayerPacket.h"
-#include "../../glue-lib-headers/InetPacketPayload.hpp"
+#include <InetPacketPayload.hpp>
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 

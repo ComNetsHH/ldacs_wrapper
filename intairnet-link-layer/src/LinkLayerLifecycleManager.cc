@@ -1,7 +1,7 @@
 
 #include "LinkLayerLifecycleManager.h"
 #include "MacLayer.h"
-#include "../../glue-lib-headers/RngProvider.hpp"
+#include <RngProvider.hpp>
 
 Define_Module(LinkLayerLifecycleManager);
 

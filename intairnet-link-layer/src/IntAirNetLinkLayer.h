@@ -12,13 +12,13 @@
 #include "inet/networklayer/common/InterfaceEntry.h"
 //#include "LinkLayerLifecycleManager.h"
 
-#include "../glue-lib-headers/IRlc.hpp"
-#include "../glue-lib-headers/IMac.hpp"
-#include "../glue-lib-headers/IArq.hpp"
-#include "../glue-lib-headers/IPhy.hpp"
-#include "../glue-lib-headers/INet.hpp"
-#include "../glue-lib-headers/IRadio.hpp"
-#include "../glue-lib-headers/IOmnetPluggable.hpp"
+#include <IRlc.hpp>
+#include <IMac.hpp>
+#include <IArq.hpp>
+#include <IPhy.hpp>
+#include <INet.hpp>
+#include <IRadio.hpp>
+#include <IOmnetPluggable.hpp>
 
 #include <map>
 
