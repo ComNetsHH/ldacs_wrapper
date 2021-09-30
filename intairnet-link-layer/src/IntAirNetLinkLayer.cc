@@ -167,10 +167,10 @@ void IntAirNetLinkLayer::initialize(int stage)
         function<void(L2Packet*)> deleteFkt = [this](L2Packet* pkt){
             this->onPacketDelete(pkt);
         };
-        ((Rlc*)rlcSubLayer)->registerDeleteCallback(deleteFkt);
+        ((Rlc*)rlcSubLayer)->registerDeleteL2Callback(deleteFkt);
         //((PassThroughArq*)arqSubLayer)->registerDeleteCallback(deleteFkt);
-        ((MacLayer*)macSubLayer)->registerDeleteCallback(deleteFkt);
-        ((PhyLayer*)phySubLayer)->registerDeleteCallback(deleteFkt);
+        ((MacLayer*)macSubLayer)->registerDeleteL2Callback(deleteFkt);
+        ((PhyLayer*)phySubLayer)->registerDeleteL2Callback(deleteFkt);
 
         lifecycleManager->registerClient(this);
 
