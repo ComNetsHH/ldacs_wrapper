@@ -68,6 +68,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_num_active_neighbors](type=double);
         @signal[mcsotdma_statistic_min_beacon_offset](type=double);        
         @signal[mcsotdma_statistic_broadcast_candidate_slots](type=double);                              
+        @signal[mcsotdma_statistic_num_links_closed_early](type=double);   
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcast_message_decoded](title="mcsotdma_statistic_num_broadcast_message_decoded(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -91,7 +92,8 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_congestion](title="mcsotdma_statistic_congestion"; record=vector,histogram,last,mean; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_active_neighbors](title="mcsotdma_statistic_num_active_neighbors"; record=vector,histogram,last,mean; interpolationmode=none);
         @statistic[mcsotdma_statistic_min_beacon_offset](title="mcsotdma_statistic_min_beacon_offset"; record=vector,histogram,last,mean; interpolationmode=none);
-        @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="mcsotdma_statistic_broadcast_candidate_slots"; record=vector,histogram,last,mean; interpolationmode=none);             
+        @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="mcsotdma_statistic_broadcast_candidate_slots"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_links_closed_early](title="mcsotdma_statistic_num_links_closed_early"; record=vector,histogram,last,mean; interpolationmode=none);
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  

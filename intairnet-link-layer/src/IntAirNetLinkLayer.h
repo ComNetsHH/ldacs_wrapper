@@ -54,6 +54,7 @@ protected:
             "mcsotdma_statistic_num_unicast_message_decoded",
             "mcsotdma_statistic_num_link_requests_received",
             "mcsotdma_statistic_num_link_replies_received",
+            "mcsotdma_statistic_num_links_closed_early",
             "mcsotdma_statistic_num_beacons_received",
             "mcsotdma_statistic_num_link_infos_received",
             "mcsotdma_statistic_num_packets_sent",
@@ -71,7 +72,7 @@ protected:
             "mcsotdma_statistic_num_active_neighbors",
             "mcsotdma_statistic_min_beacon_offset",
             "mcsotdma_statistic_broadcast_candidate_slots",
-            "mcsotdma_phy_statistic_num_missed_packets",
+            "mcsotdma_phy_statistic_num_missed_packets",            
             "phy_statistic_num_packets_received",
             "phy_statistic_num_packets_missed"
     };
