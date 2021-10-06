@@ -72,6 +72,7 @@ protected:
             "mcsotdma_statistic_num_active_neighbors",
             "mcsotdma_statistic_min_beacon_offset",
             "mcsotdma_statistic_broadcast_candidate_slots",
+            "mcsotdma_statistic_broadcast_mac_delay",
             "mcsotdma_phy_statistic_num_missed_packets",            
             "phy_statistic_num_packets_received",
             "phy_statistic_num_packets_missed"
