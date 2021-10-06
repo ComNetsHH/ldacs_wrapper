@@ -1,3 +1,0 @@
-[submodule "intairnet-link-layer/sim-model"]
-	path = intairnet-link-layer/sim-model
-	url = git@collaborating.tuhh.de:e-4/research-projects/intairnet-collection/intairnet-data-link-layer-simulation-model.git
