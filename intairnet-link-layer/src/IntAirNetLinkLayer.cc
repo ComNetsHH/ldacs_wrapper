@@ -87,6 +87,9 @@ void IntAirNetLinkLayer::initialize(int stage)
         else
             throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
         macSubLayer->setContentionMethod(method);
+        // whether to always schedule next broadcast slot
+        bool should_always_schedule_next_broadcast_slot = par("alwaysAdvertiseNextBroadcastSlot");
+        macSubLayer->setAlwaysScheduleNextBroadcastSlot(should_always_schedule_next_broadcast_slot);
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
