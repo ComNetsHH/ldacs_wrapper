@@ -226,7 +226,12 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
         destination_mac_id = SYMBOLIC_LINK_ID_BROADCAST;
     }
 
-    rlcSubLayer->receiveFromUpper(int_air_net_packet, destination_mac_id);
+    try {
+        rlcSubLayer->receiveFromUpper(int_air_net_packet, destination_mac_id);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::handleUpperPacket: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
@@ -253,9 +258,14 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
         i++;
     }
 
-    phySubLayer->onReception(containedPacket, center_frequency);
-    pkt->attachPacket(nullptr);
-    delete pkt;
+    try {
+        phySubLayer->onReception(containedPacket, center_frequency);
+        pkt->attachPacket(nullptr);
+        delete pkt;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::handleLowerPacket: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
@@ -296,8 +306,12 @@ void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {
 void IntAirNetLinkLayer::sendToChannel(L2Packet* data, uint64_t center_frequency)  {
     auto pkt = PacketFactory::fromL2Packet(data, center_frequency);
     pkt->addTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
-    sendDown(pkt);
-
+    try {
+        sendDown(pkt);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::sendToChannel: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
@@ -316,7 +330,12 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
         auto payloadProtocol = ProtocolGroup::ethertype.getProtocol(ProtocolGroup::ethertype.getProtocolNumber(original->getTag<PacketProtocolTag>()->getProtocol()));
         original->addTagIfAbsent<DispatchProtocolReq>()->setProtocol(payloadProtocol);
         original->addTagIfAbsent<PacketProtocolTag>()->setProtocol(payloadProtocol);
-        sendUp(original);
+        try {
+            sendUp(original);
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in IntAirNetLinkLayer::receiveFromLower: " << e.what() << std::endl;
+            throw e;
+        }
     }
 }
 
@@ -330,17 +349,32 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
 
 void IntAirNetLinkLayer::beforeSlotStart() {
     Enter_Method_Silent();
-    ((MacLayer*)macSubLayer)->update(1);
+    try {
+        ((MacLayer*)macSubLayer)->update(1);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::beforeSlotStart: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::onSlotStart() {
     Enter_Method_Silent();
-    ((MacLayer*)macSubLayer)->execute();
+    try {
+        ((MacLayer*)macSubLayer)->execute();
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::onSlotStart: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::onSlotEnd() {
     Enter_Method_Silent();
-    ((MacLayer*)macSubLayer)->onSlotEnd();
+    try {
+        ((MacLayer*)macSubLayer)->onSlotEnd();
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::onSlotEnd: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
