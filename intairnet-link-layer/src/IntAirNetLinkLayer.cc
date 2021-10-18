@@ -95,7 +95,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
         configureInterfaceEntry();
         MacAddress address = interfaceEntry->getMacAddress();
-        uint32_t planning_horizon = 256;
+        uint32_t planning_horizon = par("planningHorizon");
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
         rlcSubLayer = new Rlc(1600);
