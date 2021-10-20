@@ -27,6 +27,8 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         string contentionMethod = default("poisson_binomial_estimate"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption', 'naive_random_access'        
         bool alwaysAdvertiseNextBroadcastSlot = default(true);
         int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*12ms>12s
+        int minBeaconInterval = default(80);
+        int maxBeaconInterval = default(25000);
         string lifecycleManager = "^.^.^.lifecycleManager";
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);

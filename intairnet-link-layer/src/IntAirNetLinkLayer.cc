@@ -90,6 +90,8 @@ void IntAirNetLinkLayer::initialize(int stage)
         // whether to always schedule next broadcast slot
         bool should_always_schedule_next_broadcast_slot = par("alwaysAdvertiseNextBroadcastSlot");
         macSubLayer->setAlwaysScheduleNextBroadcastSlot(should_always_schedule_next_broadcast_slot);
+        macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
+        macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
