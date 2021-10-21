@@ -66,13 +66,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         auto radio = check_and_cast<inet::physicallayer::IRadio *>(radioModule);
         radio->setRadioMode(inet::physicallayer::IRadio::RADIO_MODE_TRANSCEIVER);
 
-        // Configure layer:
-        // target collision probability
-        double bc_target_collision_prob = par("broadcastTargetCollisionRate");
-        macSubLayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
-        // minimum number of candidate slots during slot selection
-        int min_bc_candidate_slots = par("broadcastSlotSelectionMinNumCandidateSlots");
-        macSubLayer->setBcSlotSelectionMinNumCandidateSlots(min_bc_candidate_slots);
+        // Configure layer:                
         // which contention method to use
         std::string contention_method = par("contentionMethod");
         ContentionMethod method;
@@ -86,12 +80,14 @@ void IntAirNetLinkLayer::initialize(int stage)
             method = ContentionMethod::naive_random_access;
         else
             throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
-        macSubLayer->setContentionMethod(method);
-        // whether to always schedule next broadcast slot
-        bool should_always_schedule_next_broadcast_slot = par("alwaysAdvertiseNextBroadcastSlot");
-        macSubLayer->setAlwaysScheduleNextBroadcastSlot(should_always_schedule_next_broadcast_slot);
+        macSubLayer->setContentionMethod(method);        
+        macSubLayer->setBcSlotSelectionMinNumCandidateSlots(par("broadcastSlotSelectionMinNumCandidateSlots"));
+        macSubLayer->setAlwaysScheduleNextBroadcastSlot(par("alwaysAdvertiseNextBroadcastSlot"));
         macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
         macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
+        macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));
+        // for Konrad :*
+        // macSubLayer->setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, L2HeaderBeacon header)> func)
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
@@ -176,10 +172,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         ((MacLayer*)macSubLayer)->registerDeleteL2Callback(deleteFkt);
         ((PhyLayer*)phySubLayer)->registerDeleteL2Callback(deleteFkt);
 
-        lifecycleManager->registerClient(this);
-
-        double bc_target_collision_prob = par("broadcastTargetCollisionRate");
-        macSubLayer->setBroadcastTargetCollisionProb(bc_target_collision_prob);
+        lifecycleManager->registerClient(this);                
     }
 
 }
