@@ -1,6 +1,7 @@
 
 #include "LinkLayerLifecycleManager.h"
 #include "MacLayer.h"
+#include <RngProvider.hpp>
 
 Define_Module(LinkLayerLifecycleManager);
 
@@ -13,9 +14,23 @@ LinkLayerLifecycleManager::~LinkLayerLifecycleManager() {
 }
 
 void LinkLayerLifecycleManager::initialize(int stage) {
+    // Set RNG Provider to OMNeT++.
+    RngProvider::getInstance().setUseDefaultRngs(false);
+    RngProvider::getInstance().setOmnetGetInt([=](int min, int max, int k) {return this->getRandomInt(min, max, k);});
+
     slotTimer = new cMessage("slotTimer");
     slotDuration = par("slotDuration");
     scheduleAt(slotDuration, slotTimer);
+}
+
+int LinkLayerLifecycleManager::getRandomInt(int min, int max, int k) {
+    try {
+        int rand_int = getRNG(k)->intRand(max - min);
+        return rand_int + min;
+    } catch (const std::exception& e) {
+        EV << "LinkLayerLifecycleManager::getRandomInt error: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void LinkLayerLifecycleManager::registerClient(IntAirNetLinkLayer *ll) {

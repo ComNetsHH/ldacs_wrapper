@@ -12,13 +12,13 @@
 #include "inet/networklayer/common/InterfaceEntry.h"
 //#include "LinkLayerLifecycleManager.h"
 
-#include "../../glue-lib-headers/IRlc.hpp"
-#include "../../glue-lib-headers/IMac.hpp"
-#include "../../glue-lib-headers/IArq.hpp"
-#include "../../glue-lib-headers/IPhy.hpp"
-#include "../../glue-lib-headers/INet.hpp"
-#include "../../glue-lib-headers/IRadio.hpp"
-#include "../../glue-lib-headers/IOmnetPluggable.hpp"
+#include <IRlc.hpp>
+#include <IMac.hpp>
+#include <IArq.hpp>
+#include <IPhy.hpp>
+#include <INet.hpp>
+#include <IRadio.hpp>
+#include <IOmnetPluggable.hpp>
 
 #include <map>
 
@@ -40,9 +40,46 @@ class LinkLayerLifecycleManager;
 // public INet
 class IntAirNetLinkLayer: public LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTDMA::IRadio, public INet {
 protected:
+    const std::vector<std::string> str_mcsotdma_statistics = {
+            "rlc_bits_received_from_upper",
+            "rlc_bits_received_from_lower",
+            "rlc_bits_requested_from_lower",
+            "rlc_packet_received_from_upper",
+            "rlc_packet_sent_down",
+            "rlc_packet_sent_up",
+            "mcsotdma_statistic_num_packets_received",
+            "mcsotdma_statistic_num_broadcasts_received",
+            "mcsotdma_statistic_num_broadcast_message_decoded",
+            "mcsotdma_statistic_num_unicasts_received",
+            "mcsotdma_statistic_num_unicast_message_decoded",
+            "mcsotdma_statistic_num_link_requests_received",
+            "mcsotdma_statistic_num_link_replies_received",
+            "mcsotdma_statistic_num_links_closed_early",
+            "mcsotdma_statistic_num_beacons_received",
+            "mcsotdma_statistic_num_link_infos_received",
+            "mcsotdma_statistic_num_packets_sent",
+            "mcsotdma_statistic_num_broadcasts_sent",
+            "mcsotdma_statistic_num_unicasts_sent",
+            "mcsotdma_statistic_num_link_requests_sent",
+            "mcsotdma_statistic_num_link_replies_sent",
+            "mcsotdma_statistic_num_beacons_sent",
+            "mcsotdma_statistic_num_link_infos_sent",
+            "mcsotdma_statistic_num_cancelled_link_requests",
+            "mcsotdma_statistic_num_packet_collisions",
+            "mcsotdma_statistic_num_packet_decoded",
+            "mcsotdma_statistic_contention",
+            "mcsotdma_statistic_congestion",
+            "mcsotdma_statistic_num_active_neighbors",
+            "mcsotdma_statistic_min_beacon_offset",
+            "mcsotdma_statistic_broadcast_candidate_slots",
+            "mcsotdma_statistic_broadcast_mac_delay",
+            "mcsotdma_statistic_broadcast_selected_candidate_slot",
+            "mcsotdma_phy_statistic_num_missed_packets",            
+            "phy_statistic_num_packets_received",
+            "phy_statistic_num_packets_missed"
+    };
+    std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 
-    simsignal_t rlc_bits_received_from_upper_signal;
-    simsignal_t rlc_bits_received_from_lower_signal;
     double slotDuration;
 
     /** Reference to the scheduler instance */
@@ -51,12 +88,10 @@ protected:
     vector<pair<double, IOmnetPluggable*>> callbackTimes;
 
     IRlc* rlcSubLayer;
-    IArq* arqSublayer;
-    IMac* macSublayer;
+    IArq* arqSubLayer;
+    IMac* macSubLayer;
     IPhy* phySubLayer;
 
-    cMessage* subLayerTimerMessage = nullptr;
-    cMessage* slotTimerMessage = nullptr;
     Packet *tmp;
 
     InterfaceEntry *interfaceEntry = nullptr;
@@ -69,6 +104,7 @@ protected:
     int lowerLayerOutGateId = -1;
 
     void initialize(int stage) override;
+    void finish() override;
     void sendUp(cMessage *message);
     void sendDown(cMessage *message);
 
@@ -92,6 +128,8 @@ protected:
     void configureInterfaceEntry();
 
     void emitStatistic(string statistic_name, double value);
+
+    void onPacketDelete(L2Packet* pkt);
 
 public:
     void sendToChannel(L2Packet* data, uint64_t center_frequency) override;

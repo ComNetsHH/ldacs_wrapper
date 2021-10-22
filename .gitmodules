@@ -1,3 +1,0 @@
-[submodule "inet"]
-	path = inet
-	url = git@github.com:inet-framework/inet.git

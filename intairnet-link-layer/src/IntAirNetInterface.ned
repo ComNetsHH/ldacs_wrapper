@@ -14,6 +14,7 @@
 // 
 
 import intairnet_link_layer.IntAirNetLinkLayer;
+import intairnet_link_layer.IntAirNetRadio;
 import inet.queueing.contract.IPacketQueue;
 import inet.linklayer.contract.IWirelessInterface;
 import inet.networklayer.common.InterfaceEntry;
@@ -42,7 +43,7 @@ network IntAirNetInterface extends InterfaceEntry like IWirelessInterface
 			parameters:
                 @display("p=100,150");
         }
-        radio: <default("UnitDiskRadio")> like IRadio {
+        radio: IntAirNetRadio {
             parameters:
                 @display("p=100,300");
         }

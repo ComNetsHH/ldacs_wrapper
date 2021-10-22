@@ -9,8 +9,8 @@
 #define PACKETFACTORY_H_
 
 #include "IntAirNetLinkLayerPacket.h"
-#include "../../glue-lib-headers/L2Packet.hpp"
-#include "../../glue-lib-headers/L3Packet.hpp"
+#include <L2Packet.hpp>
+#include <L3Packet.hpp>
 
 using namespace inet;
 using namespace TUHH_INTAIRNET_MCSOTDMA;

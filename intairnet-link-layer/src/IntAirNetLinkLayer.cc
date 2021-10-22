@@ -16,11 +16,13 @@
 #include "inet/linklayer/common/MacAddressTag_m.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/common/ProtocolGroup.h"
-#include "../../avionic-rlc-headers/Rlc.hpp"
-#include "../../glue-lib-headers/PassThroughArq.hpp"
-#include "../../avionic-arq-headers/SelectiveRepeatArq.hpp"
-#include "../../glue-lib-headers/L3Packet.hpp"
-#include "../../glue-lib-headers/IOmnetPluggable.hpp"
+#include <Rlc.hpp>
+#include <PassThroughArq.hpp>
+#include <SelectiveRepeatArq.hpp>
+#include <L3Packet.hpp>
+#include <IOmnetPluggable.hpp>
+#include <ContentionMethod.hpp>
+#include <InetPacketPayload.hpp>
 #include "MacLayer.h"
 #include "PhyLayer.h"
 #include "LinkLayerLifecycleManager.h"
@@ -28,11 +30,18 @@
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;
 using namespace TUHH_INTAIRNET_ARQ;
+//coutd.setVerbose(false);
 
 Define_Module(IntAirNetLinkLayer);
 
 
 IntAirNetLinkLayer::~IntAirNetLinkLayer() {
+}
+
+void IntAirNetLinkLayer::finish() {
+    delete ((Rlc*)this->rlcSubLayer);
+    //delete this->macSubLayer;
+    //cancelAndDelete(subLayerTimerMessage);
 }
 
 void IntAirNetLinkLayer::initialize(int stage)
@@ -42,13 +51,11 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         slotDuration = par("slotDuration");
 
-        rlc_bits_received_from_upper_signal = registerSignal("rlc_bits_received_from_upper");
-        rlc_bits_received_from_lower_signal = registerSignal("rlc_bits_received_from_lower");
-
-        subLayerTimerMessage = new cMessage("subLayerTimer");
-        slotTimerMessage = new cMessage("slotTimer");
-        scheduleAt(slotDuration, slotTimerMessage);
-
+        mcsotdma_statistics_map.clear();
+        for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
+            const std::string& s = str_mcsotdma_statistics.at(i);
+            mcsotdma_statistics_map[s] = registerSignal(s.c_str());
+        }
 
         upperLayerInGateId = findGate("upperLayerIn");
         upperLayerOutGateId = findGate("upperLayerOut");
@@ -61,86 +68,102 @@ void IntAirNetLinkLayer::initialize(int stage)
         auto radio = check_and_cast<inet::physicallayer::IRadio *>(radioModule);
         radio->setRadioMode(inet::physicallayer::IRadio::RADIO_MODE_TRANSCEIVER);
 
+        // Configure layer:                
+        // which contention method to use
+        std::string contention_method = par("contentionMethod");
+        ContentionMethod method;
+        if (contention_method.compare("binomial_estimate") == 0)
+            method = ContentionMethod::binomial_estimate;
+        else if (contention_method.compare("poisson_binomial_estimate") == 0)
+            method = ContentionMethod::poisson_binomial_estimate;
+        else if (contention_method.compare("all_active_again_assumption") == 0)
+            method = ContentionMethod::all_active_again_assumption;
+        else if (contention_method.compare("naive_random_access") == 0)
+            method = ContentionMethod::naive_random_access;
+        else
+            throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
+        macSubLayer->setContentionMethod(method);        
+        macSubLayer->setBcSlotSelectionMinNumCandidateSlots(par("broadcastSlotSelectionMinNumCandidateSlots"));
+        macSubLayer->setAlwaysScheduleNextBroadcastSlot(par("alwaysAdvertiseNextBroadcastSlot"));
+        macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
+        macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
+        macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));
+        // for Konrad :*
+        // macSubLayer->setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, L2HeaderBeacon header)> func)
+
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
         configureInterfaceEntry();
         MacAddress address = interfaceEntry->getMacAddress();
-        uint32_t planning_horizon = 256;
+        uint32_t planning_horizon = par("planningHorizon");
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
-                rlcSubLayer = new Rlc(200);
-                arqSublayer = new SelectiveRepeatArq(100, 100);
-                macSublayer = new MacLayer(MacId(address.getInt()), planning_horizon);
-                phySubLayer = new PhyLayer(planning_horizon);
+        rlcSubLayer = new Rlc(1600);
+        arqSublayer = new SelectiveRepeatArq(100, 100);
+        macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
+        phySubLayer = new PhyLayer(planning_horizon);
 
-                auto reservation_manager = ((MacLayer*)macSublayer)->getReservationManager();
-
-
-                reservation_manager->setTransmitterReservationTable(((PhyLayer*)phySubLayer)->getTransmitterReservationTable());
-                for (ReservationTable*& table : ((PhyLayer*)phySubLayer)->getReceiverReservationTables()) {
-                    reservation_manager->addReceiverReservationTable(table);
-                }
-                reservation_manager->addFrequencyChannel(false, bc_frequency, bandwidth);
-                reservation_manager->addFrequencyChannel(true, center_frequency1, bandwidth);
-                reservation_manager->addFrequencyChannel(true, center_frequency2, bandwidth);
-                reservation_manager->addFrequencyChannel(true, center_frequency3, bandwidth);
+        auto reservation_manager = ((MacLayer*)macSubLayer)->getReservationManager();
 
 
-                rlcSubLayer->setLowerLayer(arqSublayer);
-                rlcSubLayer->setUpperLayer((INet*)this);
-                arqSublayer->setUpperLayer(rlcSubLayer);
-                arqSublayer->setLowerLayer(macSublayer);
-                macSublayer->setUpperLayer(arqSublayer);
-                macSublayer->setLowerLayer(phySubLayer);
-                phySubLayer->setUpperLayer(macSublayer);
-                phySubLayer->setRadio((IRadio*)this);
-
-                /** Register callback functions **/
-                // GetTime
-                function<double()> getTimeFkt= [this]{
-                    return simTime().dbl();
-                };
-                ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
-                ((SelectiveRepeatArq*)arqSublayer)->registerGetTimeCallback(getTimeFkt);
-                ((MacLayer*)macSublayer)->registerGetTimeCallback(getTimeFkt);
-
-                // Debug Messages
-                function<void(string)> debugFkt = [this](string message){
-
-                    EV << "DEBUG: " << message << endl;
-                };
-                ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
-                ((SelectiveRepeatArq*)arqSublayer)->registerDebugMessageCallback(debugFkt);
-                ((MacLayer*)macSublayer)->registerDebugMessageCallback(debugFkt);
-                ((PhyLayer*)phySubLayer)->registerDebugMessageCallback(debugFkt);
-
-                // Schedule At
-                ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
-                    EV << "Schedule AT: " << time << endl;
-                    this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
-                });
-                ((SelectiveRepeatArq*)arqSublayer)->registerScheduleAtCallback([this](double time){
-                    EV << "Schedule AT: " << time << endl;
-                    this->addCallback((IOmnetPluggable*)this->arqSublayer, time);
-                    //EV << "DEBUG: " << message << endl;
-                });
-                ((MacLayer*)macSublayer)->registerScheduleAtCallback([this](double time){
-                    EV << "Schedule AT: " << time << endl;
-                    this->addCallback((IOmnetPluggable*)this->macSublayer, time);
-                    //EV << "DEBUG: " << message << endl;
-                });
-
-                // Emit statistic
-                function<void(string, double)> emitFkt = [this](string message, double value){
-                    this->emitStatistic(message, value);
-                };
-                ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
-                ((SelectiveRepeatArq*)arqSublayer)->registerEmitEventCallback(emitFkt);
-                ((MacLayer*)macSublayer)->registerEmitEventCallback(emitFkt);
+        reservation_manager->setTransmitterReservationTable(((PhyLayer*)phySubLayer)->getTransmitterReservationTable());
+        for (ReservationTable*& table : ((PhyLayer*)phySubLayer)->getReceiverReservationTables()) {
+            reservation_manager->addReceiverReservationTable(table);
+        }
+        reservation_manager->addFrequencyChannel(false, bc_frequency, bandwidth);
+        reservation_manager->addFrequencyChannel(true, center_frequency1, bandwidth);
+        reservation_manager->addFrequencyChannel(true, center_frequency2, bandwidth);
+        reservation_manager->addFrequencyChannel(true, center_frequency3, bandwidth);
 
 
-                lifecycleManager->registerClient(this);
+        rlcSubLayer->setLowerLayer(arqSubLayer);
+        rlcSubLayer->setUpperLayer((INet*)this);
+        arqSubLayer->setUpperLayer(rlcSubLayer);
+        arqSubLayer->setLowerLayer(macSubLayer);
+        macSubLayer->setUpperLayer(arqSubLayer);
+        macSubLayer->setLowerLayer(phySubLayer);
+        phySubLayer->setUpperLayer(macSubLayer);
+        phySubLayer->setRadio((IRadio*)this);
 
+        /** Register callback functions **/
+        // GetTime
+        function<double()> getTimeFkt= [this]{
+            return simTime().dbl();
+        };
+        ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
+        ((PassThroughArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        ((MacLayer*)macSubLayer)->registerGetTimeCallback(getTimeFkt);
+
+        // Schedule At
+        ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
+        });
+        ((PassThroughArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
+        });
+        ((MacLayer*)macSubLayer)->registerScheduleAtCallback([this](double time){
+            this->addCallback((IOmnetPluggable*)this->macSubLayer, time);
+        });
+
+        // Emit statistic
+        function<void(string, double)> emitFkt = [this](string message, double value){
+            this->emitStatistic(message, value);
+        };
+        ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
+        ((SelectiveRepeatArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        ((MacLayer*)macSubLayer)->registerEmitEventCallback(emitFkt);
+        ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
+
+        // Delete packets
+        function<void(L2Packet*)> deleteFkt = [this](L2Packet* pkt){
+            this->onPacketDelete(pkt);
+        };
+        ((Rlc*)rlcSubLayer)->registerDeleteL2Callback(deleteFkt);
+        //((PassThroughArq*)arqSubLayer)->registerDeleteCallback(deleteFkt);
+        ((MacLayer*)macSubLayer)->registerDeleteL2Callback(deleteFkt);
+        ((PhyLayer*)phySubLayer)->registerDeleteL2Callback(deleteFkt);
+
+        lifecycleManager->registerClient(this);                
     }
 
 }
@@ -177,83 +200,61 @@ void IntAirNetLinkLayer::configureInterfaceEntry()
 }
 
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
-
-    // LOG ALL TAGS
-    auto tags = packet->getTags();
-    for(int i = 0; i< packet->getNumTags(); i++) {
-        EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
-    }
-
     // TODO: handle tags better
     tmp = packet;
-
 
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
     MacAddress address = macAddressReq->getDestAddress();
-    rlcSubLayer->receiveFromUpper(int_air_net_packet, MacId(address.getInt()));
+    auto destination_mac_id = MacId(address.getInt());
+
+    if(address.isBroadcast()) {
+        destination_mac_id = SYMBOLIC_LINK_ID_BROADCAST;
+    }
+
+    try {
+        rlcSubLayer->receiveFromUpper(int_air_net_packet, destination_mac_id);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::handleUpperPacket: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
-
-    auto tags = packet->getTags();
-    for(int i = 0; i< packet->getNumTags(); i++) {
-        EV << "TAG " << i<< ": "<< tags.getTag(i)->getClassName() << endl;
+    MacAddress address = interfaceEntry->getMacAddress();
+    auto id = pkt->destId;
+    if(id > 0 && id != MacId(address.getInt()).getId()) {
+        return;
     }
 
-    //TODO: resolve MAc ID
-    //phySubLayer->receive(containedPacket, MacId(2));
-    phySubLayer->onReception(containedPacket, center_frequency);
-    delete packet;
+    auto headers = containedPacket->getHeaders();
+    auto payloads = containedPacket->getPayloads();
+    int i = 0;
+    for (const auto* payload : payloads){
+        if(headers[i]->frame_type == L2Header::FrameType::broadcast || headers[i]->frame_type == L2Header::FrameType::unicast) {
+            if(payload != nullptr) {
+                if(((InetPacketPayload*)payload)->original) {
+                    take(((InetPacketPayload*)payload)->original);
+                }
+            }
+        }
+        i++;
+    }
+
+    try {
+        phySubLayer->onReception(containedPacket, center_frequency);
+        pkt->attachPacket(nullptr);
+        delete pkt;
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::handleLowerPacket: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
-
-    if(message == slotTimerMessage) {
-        std::exception_ptr eptr;
-        try {
-            //((MacLayer*)macSublayer)->update(1);
-            //((MacLayer*)macSublayer)->execute();
-        } catch (const std::exception& e){
-            throw cRuntimeError(e.what());
-        } catch(...) {
-            //throw;
-            //throw cRuntimeError(typeid(current_exception()).name());
-            int status;
-            throw cRuntimeError(abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, &status));
-        }
-
-        scheduleAt(simTime() + slotDuration, slotTimerMessage);
-    }
-
-    if(message == subLayerTimerMessage) {
-        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-            double time = it->first;
-            if(time == simTime().dbl()) {
-
-                EV << "TIME" << endl;
-
-                //((MacLayer*)macSublayer)->onEvent(time);
-                callbackTimes.erase(it);
-            }
-        }
-        double min_time = -1;
-        for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-            double time = it->first;
-            if(min_time < 0) {
-                min_time = time;
-            } else if(time < min_time) {
-                min_time = time;
-            }
-        }
-        if(!subLayerTimerMessage->isScheduled()) {
-            scheduleAt(min_time, subLayerTimerMessage);
-        }
-    }
-
 }
 
 void IntAirNetLinkLayer::handleMessageWhenDown(cMessage *msg) {
@@ -283,19 +284,7 @@ bool IntAirNetLinkLayer::isLowerMessage(cMessage *message)
 }
 
 void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {
-    callbackTimes.push_back(make_pair(time, layer));
-    double min_time = -1;
-    for(auto it = callbackTimes.begin(); it != callbackTimes.end(); it++) {
-        double time = it->first;
-        if(min_time < 0) {
-            min_time = time;
-        } else if(time < min_time) {
-            min_time = time;
-        }
-    }
-    if(!subLayerTimerMessage->isScheduled()) {
-        scheduleAt(min_time, subLayerTimerMessage);
-    }
+
 }
 
 
@@ -303,23 +292,23 @@ void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {
 void IntAirNetLinkLayer::sendToChannel(L2Packet* data, uint64_t center_frequency)  {
     auto pkt = PacketFactory::fromL2Packet(data, center_frequency);
     pkt->addTag<PacketProtocolTag>()->setProtocol(&Protocol::ackingMac);
-
-    // TODO: remove quickfix for copying tags
-    if(tmp != nullptr) {
-        // pkt->copyTags(*tmp);
+    try {
+        sendDown(pkt);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::sendToChannel: " << e.what() << std::endl;
+        throw e;
     }
-
-    sendDown(pkt);
-
 }
 
 void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
-    Packet* original = packet->original;
+    if(packet->original == nullptr) {
+        return;
+    }
+    Packet* original = (Packet*)packet->original;
+
+    //delete packet->original;
     if(original) {
-        take(original);
-
         auto macAddressReq = original->getTag<MacAddressReq>();
-
         auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
         macAddressInd->setSrcAddress(macAddressReq->getSrcAddress());
         macAddressInd->setDestAddress(macAddressReq->getDestAddress());
@@ -327,33 +316,68 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
         auto payloadProtocol = ProtocolGroup::ethertype.getProtocol(ProtocolGroup::ethertype.getProtocolNumber(original->getTag<PacketProtocolTag>()->getProtocol()));
         original->addTagIfAbsent<DispatchProtocolReq>()->setProtocol(payloadProtocol);
         original->addTagIfAbsent<PacketProtocolTag>()->setProtocol(payloadProtocol);
-        sendUp(original);
+        try {
+            sendUp(original);
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in IntAirNetLinkLayer::receiveFromLower: " << e.what() << std::endl;
+            throw e;
+        }
     }
 }
 
 void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
-    EV << statistic_name << ": " << value << endl;
-    if(statistic_name == "Rlc:packet_received_from_upper(bits)") {
-        emit(rlc_bits_received_from_upper_signal, value);
-    }
-    if(statistic_name == "Rlc:packet_received_from_lower(bits)") {
-        emit(rlc_bits_received_from_lower_signal, value);
-    }
+    const auto it = mcsotdma_statistics_map.find(statistic_name);
+    if (it != mcsotdma_statistics_map.end())
+        emit((*it).second, value);
+    else
+        throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {
     Enter_Method_Silent();
-    ((MacLayer*)macSublayer)->update(1);
+    try {
+        ((MacLayer*)macSubLayer)->update(1);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::beforeSlotStart: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::onSlotStart() {
     Enter_Method_Silent();
-    ((MacLayer*)macSublayer)->execute();
+    try {
+        ((MacLayer*)macSubLayer)->execute();
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::onSlotStart: " << e.what() << std::endl;
+        throw e;
+    }
 }
 
 void IntAirNetLinkLayer::onSlotEnd() {
     Enter_Method_Silent();
-    ((MacLayer*)macSublayer)->onSlotEnd();
+    try {
+        ((MacLayer*)macSubLayer)->onSlotEnd();
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::onSlotEnd: " << e.what() << std::endl;
+        throw e;
+    }
+}
+
+void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
+    auto headers = pkt->getHeaders();
+    auto payloads = pkt->getPayloads();
+    int i = 0;
+    for (const auto* payload : payloads){
+        if(headers[i]->frame_type == L2Header::FrameType::broadcast || headers[i]->frame_type == L2Header::FrameType::unicast) {
+            if(payload != nullptr) {
+                if(((InetPacketPayload*)payload)->original) {
+                    delete ((InetPacketPayload*)payload)->original;
+                    ((InetPacketPayload*)payload)->original = nullptr;
+                }
+            }
+        }
+        i++;
+    }
 }
 
 

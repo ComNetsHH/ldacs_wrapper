@@ -14,7 +14,7 @@
 #include "inet/linklayer/common/MacAddress.h"
 #include "inet/physicallayer/contract/packetlevel/IRadio.h"
 #include "inet/linklayer/acking/AckingMac.h"
-#include "../../glue-lib-headers/IMac.hpp"
+#include <IMac.hpp>
 #include "IntAirNetLinkLayer.h"
 
 using namespace inet;
@@ -41,6 +41,8 @@ class LinkLayerLifecycleManager: public cSimpleModule
     LinkLayerLifecycleManager();
     void registerClient(IntAirNetLinkLayer *linkLayer);
     virtual ~LinkLayerLifecycleManager();
+
+    int getRandomInt(int min, int max, int k);
 
 };
 
