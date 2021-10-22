@@ -99,7 +99,7 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
         rlcSubLayer = new Rlc(1600);
-        arqSublayer = new SelectiveRepeatArq(100, 100);
+        arqSubLayer = new SelectiveRepeatArq(100, 100);
         macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
         phySubLayer = new PhyLayer(planning_horizon);
 
