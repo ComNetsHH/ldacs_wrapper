@@ -215,6 +215,7 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
     try {
         rlcSubLayer->receiveFromUpper(int_air_net_packet, destination_mac_id);
     } catch (const std::exception& e) {
+        EV << "OH NO" << endl;
         std::cerr << "Exception in IntAirNetLinkLayer::handleUpperPacket: " << e.what() << std::endl;
         throw e;
     }
