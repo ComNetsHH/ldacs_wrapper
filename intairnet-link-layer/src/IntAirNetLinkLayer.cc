@@ -171,6 +171,12 @@ void IntAirNetLinkLayer::initialize(int stage)
         };
         ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2Callback(copyFkt);
 
+        // Deep Copy Packet Payloads
+        function<L2Packet::Payload*(L2Packet::Payload*)> copyPayloadFkt = [this](L2Packet::Payload* payload) {
+            return this->copyL2PacketPayload(payload);
+        };
+        ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2PayloadCallback(copyPayloadFkt);
+
 
 
         lifecycleManager->registerClient(this);
@@ -228,7 +234,6 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
-    cout << "RCVD from lower" << endl;
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
@@ -255,7 +260,7 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     try {
         phySubLayer->onReception(containedPacket, center_frequency);
         pkt->attachPacket(nullptr);
-        //delete pkt;
+        delete pkt;
     } catch (const std::exception& e) {
         std::cerr << "Exception in IntAirNetLinkLayer::handleLowerPacket: " << e.what() << std::endl;
         throw e;
@@ -406,6 +411,17 @@ L2Packet* IntAirNetLinkLayer::copyL2Packet(L2Packet* original) {
     return packet;
 }
 
+
+L2Packet::Payload* IntAirNetLinkLayer::copyL2PacketPayload(L2Packet::Payload* originalPayload) {
+    auto newPayload = originalPayload->copy();
+
+    if(((InetPacketPayload*)originalPayload)->original){
+        ((InetPacketPayload*)newPayload)->original = ((InetPacketPayload*)originalPayload)->original->dup();
+    }
+
+    return newPayload;
+
+}
 
 
 

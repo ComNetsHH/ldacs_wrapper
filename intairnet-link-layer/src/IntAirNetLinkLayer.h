@@ -156,6 +156,7 @@ public:
     void receiveFromLower(L3Packet* packet) override;
 
     L2Packet* copyL2Packet(L2Packet* original);
+    L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
 
 
     void beforeSlotStart();
