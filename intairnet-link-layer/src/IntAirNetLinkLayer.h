@@ -93,7 +93,8 @@ protected:
             "mcsotdma_statistic_broadcast_selected_candidate_slot",
             "mcsotdma_phy_statistic_num_missed_packets",            
             "phy_statistic_num_packets_received",
-            "phy_statistic_num_packets_missed"
+            "phy_statistic_num_packets_missed",
+            "mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 

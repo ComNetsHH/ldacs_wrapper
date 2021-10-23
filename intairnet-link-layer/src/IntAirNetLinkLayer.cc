@@ -342,8 +342,8 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     const auto it = mcsotdma_statistics_map.find(statistic_name);
     if (it != mcsotdma_statistics_map.end())
         emit((*it).second, value);
-    //else
-    //    throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
+    else
+        throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {
