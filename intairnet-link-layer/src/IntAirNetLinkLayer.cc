@@ -82,7 +82,7 @@ void IntAirNetLinkLayer::initialize(int stage)
             method = ContentionMethod::naive_random_access;
         else
             throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
-        macSubLayer->setContentionMethod(method);        
+        macSubLayer->setContentionMethod(method);
         macSubLayer->setBcSlotSelectionMinNumCandidateSlots(par("broadcastSlotSelectionMinNumCandidateSlots"));
         macSubLayer->setAlwaysScheduleNextBroadcastSlot(par("alwaysAdvertiseNextBroadcastSlot"));
         macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
@@ -98,8 +98,9 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint32_t planning_horizon = par("planningHorizon");
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
+
         rlcSubLayer = new Rlc(1600);
-        arqSubLayer = new SelectiveRepeatArq(100, 100);
+        arqSubLayer = new SelectiveRepeatArq(100, 100, par("data_per"));
         macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
         phySubLayer = new PhyLayer(planning_horizon);
 
@@ -159,11 +160,20 @@ void IntAirNetLinkLayer::initialize(int stage)
             this->onPacketDelete(pkt);
         };
         ((Rlc*)rlcSubLayer)->registerDeleteL2Callback(deleteFkt);
-        //((PassThroughArq*)arqSubLayer)->registerDeleteCallback(deleteFkt);
+        ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2Callback(deleteFkt);
         ((MacLayer*)macSubLayer)->registerDeleteL2Callback(deleteFkt);
         ((PhyLayer*)phySubLayer)->registerDeleteL2Callback(deleteFkt);
 
-        lifecycleManager->registerClient(this);                
+
+        // Deep Copy Packets
+        function<L2Packet*(L2Packet*)> copyFkt = [this](L2Packet* pkt) {
+            return this->copyL2Packet(pkt);
+        };
+        ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2Callback(copyFkt);
+
+
+
+        lifecycleManager->registerClient(this);
     }
 
 }
@@ -200,9 +210,6 @@ void IntAirNetLinkLayer::configureInterfaceEntry()
 }
 
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
-    // TODO: handle tags better
-    tmp = packet;
-
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
     MacAddress address = macAddressReq->getDestAddress();
@@ -215,13 +222,13 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
     try {
         rlcSubLayer->receiveFromUpper(int_air_net_packet, destination_mac_id);
     } catch (const std::exception& e) {
-        EV << "OH NO" << endl;
         std::cerr << "Exception in IntAirNetLinkLayer::handleUpperPacket: " << e.what() << std::endl;
         throw e;
     }
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
+    cout << "RCVD from lower" << endl;
     IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
@@ -248,7 +255,7 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
     try {
         phySubLayer->onReception(containedPacket, center_frequency);
         pkt->attachPacket(nullptr);
-        delete pkt;
+        //delete pkt;
     } catch (const std::exception& e) {
         std::cerr << "Exception in IntAirNetLinkLayer::handleLowerPacket: " << e.what() << std::endl;
         throw e;
@@ -330,8 +337,8 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     const auto it = mcsotdma_statistics_map.find(statistic_name);
     if (it != mcsotdma_statistics_map.end())
         emit((*it).second, value);
-    else
-        throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
+    //else
+    //    throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {
@@ -379,6 +386,24 @@ void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
         }
         i++;
     }
+}
+
+L2Packet* IntAirNetLinkLayer::copyL2Packet(L2Packet* original) {
+    auto packet = original->copy();
+    auto originalPayloads = original->getPayloads();
+    auto newHeaders = original->getHeaders();
+    auto newPayloads = packet->getPayloads();
+    int i = 0;
+    for(int i = 0; i< newHeaders.size(); i++) {
+        if(newHeaders[i]->frame_type == L2Header::FrameType::broadcast || newHeaders[i]->frame_type == L2Header::FrameType::unicast) {
+            if(originalPayloads[i] != nullptr) {
+                if(((InetPacketPayload*)originalPayloads[i])->original) {
+                    ((InetPacketPayload*)newPayloads[i])->original = ((InetPacketPayload*)(originalPayloads[i]))->original->dup();
+                }
+            }
+        }
+    }
+    return packet;
 }
 
 

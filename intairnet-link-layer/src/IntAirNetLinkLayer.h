@@ -18,6 +18,7 @@
 #include <IPhy.hpp>
 #include <INet.hpp>
 #include <IRadio.hpp>
+#include <L2Packet.hpp>
 #include <IOmnetPluggable.hpp>
 
 #include <map>
@@ -153,6 +154,8 @@ public:
     unsigned int getNumHopsToGroundStation() const override { return 0;};
     void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
     void receiveFromLower(L3Packet* packet) override;
+
+    L2Packet* copyL2Packet(L2Packet* original);
 
 
     void beforeSlotStart();
