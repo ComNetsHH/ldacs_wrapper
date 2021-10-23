@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for intairnet-link-layer
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KINET_PROJ=../../inet -DINET_IMPORT -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/ -I$$\(INET_PROJ\)/src -L$$\(INET_PROJ\)/src -lINET$$\(D\)
+#  opp_makemake -f --deep -O out -KINET_PROJ=../../inet -KINTAIRNET_RADIO_PROJ=../../intairnet-radio/intairnet-radio -DINET_IMPORT -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/mc-sotdma-headers -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-rlc-headers -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-arq-headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I$$\(INET_PROJ\)/src -I$$\(INTAIRNET_RADIO_PROJ\) -L$$\(INET_PROJ\)/src -L$$\(INTAIRNET_RADIO_PROJ\) -lINET$$\(D\) -lintairnet-radio$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -16,13 +16,21 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/ -I$(INET_PROJ)/src
+INCLUDE_PATH = \
+    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/mc-sotdma-headers \
+    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers \
+    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-rlc-headers \
+    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-arq-headers \
+    -I. \
+    -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include \
+    -I$(INET_PROJ)/src \
+    -I$(INTAIRNET_RADIO_PROJ)
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(INET_PROJ)/src  -lINET$(D)
+LIBS = $(LDFLAG_LIBPATH)$(INET_PROJ)/src $(LDFLAG_LIBPATH)$(INTAIRNET_RADIO_PROJ)  -lINET$(D) -lintairnet-radio$(D)
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -33,6 +41,7 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 OBJS = \
     $O/IntAirNetLinkLayer.o \
     $O/IntAirNetLinkLayerPacket.o \
+    $O/IntAirNetRadio.o \
     $O/LinkLayerLifecycleManager.o \
     $O/MacLayer.o \
     $O/PacketFactory.o \
@@ -46,6 +55,7 @@ SMFILES =
 
 # Other makefile variables (-K)
 INET_PROJ=../../inet
+INTAIRNET_RADIO_PROJ=../../intairnet-radio/intairnet-radio
 
 #------------------------------------------------------------------------------
 
@@ -70,7 +80,7 @@ include $(CONFIGFILE)
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 ifneq ($(TOOLCHAIN_NAME),clangc2)
-LIBS += -Wl,-rpath,$(abspath $(INET_PROJ)/src)
+LIBS += -Wl,-rpath,$(abspath $(INET_PROJ)/src) -Wl,-rpath,$(abspath $(INTAIRNET_RADIO_PROJ))
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)

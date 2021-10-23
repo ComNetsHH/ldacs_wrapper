@@ -100,7 +100,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
 
         rlcSubLayer = new Rlc(1600);
-        arqSubLayer = new SelectiveRepeatArq(100, 100, par("data_per"));
+        arqSubLayer = new SelectiveRepeatArq(100, 100);
         macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
         phySubLayer = new PhyLayer(planning_horizon);
 
@@ -164,6 +164,12 @@ void IntAirNetLinkLayer::initialize(int stage)
         ((MacLayer*)macSubLayer)->registerDeleteL2Callback(deleteFkt);
         ((PhyLayer*)phySubLayer)->registerDeleteL2Callback(deleteFkt);
 
+
+        // Delete Payloads
+        function<void(L2Packet::Payload*)> deletePayloadFkt = [this](L2Packet::Payload* payload){
+            this->onPayloadDelete(payload);
+        };
+        ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2PayloadCallback(deletePayloadFkt);
 
         // Deep Copy Packets
         function<L2Packet*(L2Packet*)> copyFkt = [this](L2Packet* pkt) {
@@ -319,7 +325,6 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
     }
     Packet* original = (Packet*)packet->original;
 
-    //delete packet->original;
     if(original) {
         auto macAddressReq = original->getTag<MacAddressReq>();
         auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
@@ -393,12 +398,23 @@ void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
     }
 }
 
+void IntAirNetLinkLayer::onPayloadDelete(L2Packet::Payload* payload) {
+    if(!payload) {
+        return;
+    }
+    auto inetPayload = (InetPacketPayload*)payload;
+    if(inetPayload->original){
+       delete inetPayload->original;
+    }
+
+    delete payload;
+}
+
 L2Packet* IntAirNetLinkLayer::copyL2Packet(L2Packet* original) {
     auto packet = original->copy();
     auto originalPayloads = original->getPayloads();
     auto newHeaders = original->getHeaders();
     auto newPayloads = packet->getPayloads();
-    int i = 0;
     for(int i = 0; i< newHeaders.size(); i++) {
         if(newHeaders[i]->frame_type == L2Header::FrameType::broadcast || newHeaders[i]->frame_type == L2Header::FrameType::unicast) {
             if(originalPayloads[i] != nullptr) {

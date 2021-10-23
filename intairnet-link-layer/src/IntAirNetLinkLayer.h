@@ -148,6 +148,10 @@ protected:
     void emitStatistic(string statistic_name, double value);
 
     void onPacketDelete(L2Packet* pkt);
+    void onPayloadDelete(L2Packet::Payload* payload);
+
+    L2Packet* copyL2Packet(L2Packet* original);
+    L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
 
 public:
     void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
@@ -155,10 +159,6 @@ public:
     unsigned int getNumHopsToGroundStation() const override { return 0;};
     void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
     void receiveFromLower(L3Packet* packet) override;
-
-    L2Packet* copyL2Packet(L2Packet* original);
-    L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
-
 
     void beforeSlotStart();
     void onSlotStart();
