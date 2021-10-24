@@ -100,7 +100,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
 
         rlcSubLayer = new Rlc(1600);
-        arqSubLayer = new SelectiveRepeatArq(100, 100);
+        arqSubLayer = new SelectiveRepeatArq(MacId(address.getInt()), 100, 100);
         macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
         phySubLayer = new PhyLayer(planning_horizon);
 
