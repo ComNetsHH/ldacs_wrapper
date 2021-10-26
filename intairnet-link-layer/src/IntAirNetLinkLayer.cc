@@ -418,7 +418,7 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     auto encodedPosition = header.position.encodedPosition;
     Coord rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);
     auto rcvdMacAddress = MacAddress(0x0AAA00000000ULL + (origin_id.getId() & 0xffffffffUL));
-    auto rcvdIpAddress = arp->getL3AddressFor(macAddress);
+    auto rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
 
     const auto& beacon = makeShared<GpsrBeacon>();
 
@@ -426,7 +426,7 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     beacon->setPosition(rcvdPosition);
 
     // Probably unused. Just setting it for completeness
-    beacon->setChunkLength(10);
+    beacon->setChunkLength(B(10));
 
     /**
      *  // @Musab, this code snippet will pass the beacon up, replace "MyNewGpsr" with you actual class name and make processBeacon a public function :)
