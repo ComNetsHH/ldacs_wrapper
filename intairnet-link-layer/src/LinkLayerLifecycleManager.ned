@@ -20,5 +20,6 @@ module LinkLayerLifecycleManager
 parameters:
         double slotDuration @unit(s) = default(12ms);
         @class(LinkLayerLifecycleManager);
+        @display("i=misc/node");
 }
 

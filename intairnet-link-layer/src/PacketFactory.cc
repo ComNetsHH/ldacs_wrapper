@@ -44,7 +44,14 @@ string PacketFactory::getPacketName(L2Packet* packet) {
         return "IAN-Packet";
 
     }
+
+    for(int i= 0; i< headers.size(); i++) {
+        if(headers[i]->frame_type == L2Header::FrameType::link_establishment_request) {
+            return "IAN-Link-Request";
+        }
+    }
     auto header = headers[1];
+
     if(header->frame_type == L2Header::FrameType::beacon) {
         return "IAN-Beacon";
     }
