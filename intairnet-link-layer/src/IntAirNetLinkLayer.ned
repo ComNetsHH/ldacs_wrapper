@@ -30,6 +30,10 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         int minBeaconInterval = default(80);
         int maxBeaconInterval = default(25000);
         string lifecycleManager = "^.^.^.lifecycleManager";
+        string arpModule = default("^.^.ipv4.arp");
+        bool gpsrIsUsed = default(false);
+        string gpsrModule = default("^.^.gpsr");
+        
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
         
