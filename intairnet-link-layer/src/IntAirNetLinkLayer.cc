@@ -433,7 +433,7 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     /**
      *  // @Musab, this code snippet will pass the beacon up, replace "MyNewGpsr" with you actual class name and make processBeacon a public function :)
      *  // Pass up beacon directly to gpsr (skipping NW layer)
-     *  MyNewGpsr* gpsr = getModuleFromPar<MyNewGpsr>(par("gpsrModule"), this);
+     *  GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
      *  gpsr->processBeacon(beacon)
      *
      **/
