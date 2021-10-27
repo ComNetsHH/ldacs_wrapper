@@ -32,6 +32,10 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         bool forceBidirectionalP2PLinks = default(false);
         bool initializeBidirectionalP2PLinks = default(true);
         string lifecycleManager = "^.^.^.lifecycleManager";
+        string arpModule = default("^.^.ipv4.arp");
+        bool gpsrIsUsed = default(false);
+        string gpsrModule = default("^.^.gpsr");
+        
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
         

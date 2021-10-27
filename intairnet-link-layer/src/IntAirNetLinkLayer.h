@@ -10,6 +10,7 @@
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/common/packet/Packet.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
+#include "inet/networklayer/contract/IArp.h"
 //#include "LinkLayerLifecycleManager.h"
 
 #include <IRlc.hpp>
@@ -130,6 +131,15 @@ protected:
     void emitStatistic(string statistic_name, double value);
 
     void onPacketDelete(L2Packet* pkt);
+
+    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);
+
+    cModule *host = nullptr;
+    IMobility *mobility = nullptr;
+    IArp *arp = nullptr;
+
+    bool gpsrIsUsed = false;
+
 
 public:
     void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
