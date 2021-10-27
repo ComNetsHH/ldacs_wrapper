@@ -29,6 +29,8 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*12ms>12s
         int minBeaconInterval = default(80);
         int maxBeaconInterval = default(25000);
+        bool forceBidirectionalP2PLinks = default(false);
+        bool initializeBidirectionalP2PLinks = default(true);
         string lifecycleManager = "^.^.^.lifecycleManager";
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
