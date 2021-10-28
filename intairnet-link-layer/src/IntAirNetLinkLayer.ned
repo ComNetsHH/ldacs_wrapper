@@ -31,7 +31,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         int maxBeaconInterval = default(25000);
         bool forceBidirectionalP2PLinks = default(false);
         bool initializeBidirectionalP2PLinks = default(true);
-        bool closeP2PLinksEarly = default(false)
+        bool closeP2PLinksEarly = default(false);
         string lifecycleManager = "^.^.^.lifecycleManager";
         string arpModule = default("^.^.ipv4.arp");
         bool gpsrIsUsed = default(false);
