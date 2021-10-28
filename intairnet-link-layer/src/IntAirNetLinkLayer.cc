@@ -370,6 +370,11 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
 
 void IntAirNetLinkLayer::beforeSlotStart() {
     Enter_Method_Silent();
+
+    if(operationalState == State::NOT_OPERATING) {
+        return;
+    }
+
     try {
         ((MacLayer*)macSubLayer)->update(1);
     } catch (const std::exception& e) {
@@ -380,6 +385,11 @@ void IntAirNetLinkLayer::beforeSlotStart() {
 
 void IntAirNetLinkLayer::onSlotStart() {
     Enter_Method_Silent();
+
+    if(operationalState == State::NOT_OPERATING) {
+        return;
+    }
+
     try {
         ((MacLayer*)macSubLayer)->execute();
     } catch (const std::exception& e) {
@@ -390,6 +400,11 @@ void IntAirNetLinkLayer::onSlotStart() {
 
 void IntAirNetLinkLayer::onSlotEnd() {
     Enter_Method_Silent();
+
+    if(operationalState == State::NOT_OPERATING) {
+        return;
+    }
+
     try {
         ((MacLayer*)macSubLayer)->onSlotEnd();
     } catch (const std::exception& e) {
