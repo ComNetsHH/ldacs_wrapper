@@ -95,6 +95,8 @@ void IntAirNetLinkLayer::initialize(int stage)
         macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));
         macSubLayer->setForceBidirectionalLinks(par("forceBidirectionalP2PLinks"));
         macSubLayer->setInitializeBidirectionalLinks(par("initializeBidirectionalP2PLinks"));
+        macSubLayer->setInitializeBidirectionalLinks(par("initializeBidirectionalP2PLinks"));
+        macSubLayer->setCloseP2PLinksEarly(par("closeP2PLinksEarly"));
         
         // Report Beacon Callback
         function<void (MacId, L2HeaderBeacon)> reportBeaconCallback = [this](MacId origin_id, L2HeaderBeacon header){
