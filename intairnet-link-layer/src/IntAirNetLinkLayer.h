@@ -77,7 +77,9 @@ protected:
             "mcsotdma_statistic_broadcast_selected_candidate_slot",
             "mcsotdma_phy_statistic_num_missed_packets",            
             "phy_statistic_num_packets_received",
-            "phy_statistic_num_packets_missed"
+            "phy_statistic_num_packets_missed",
+            "mcsotdma_statistic_broadcast_wasted_tx_opportunities",
+            "mcsotdma_statistic_unicast_wasted_tx_opportunities"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 
