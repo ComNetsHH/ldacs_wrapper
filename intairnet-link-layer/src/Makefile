@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for intairnet-link-layer
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -KINET_PROJ=../../inet -KINTAIRNET_RADIO_PROJ=../../intairnet-radio/intairnet-radio -DINET_IMPORT -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/mc-sotdma-headers -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-rlc-headers -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-arq-headers -I. -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -I$$\(INET_PROJ\)/src -I$$\(INTAIRNET_RADIO_PROJ\) -L$$\(INET_PROJ\)/src -L$$\(INTAIRNET_RADIO_PROJ\) -lINET$$\(D\) -lintairnet-radio$$\(D\)
+#  opp_makemake -f --deep -O out -KINET4_PROJ=../../../inet4 -DINET_IMPORT -I../../../inet4 -I../glue-lib-headers -I../avionic-rlc-headers -I../avionic-arq-headers -I../mc-sotdma-headers -I. -I../../../inet4/src -L../../../inet4/src -L../glue-lib -L../avionic-rlc -L../avionic-arq -L../mc-sotdma -lINET -lintairnet_linklayer_glue -ltuhh_intairnet_rlc -ltuhh_intairnet_arq -ltuhh_intairnet_mc-sotdma
 #
 
 # Name of target to be created (-o option)
@@ -17,20 +17,19 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 
 # C++ include paths (with -I)
 INCLUDE_PATH = \
-    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/mc-sotdma-headers \
-    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/glue-lib-headers \
-    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-rlc-headers \
-    -I/Users/fu/TUHH/Projects/intairnet-omnet-wrapper/avionic-arq-headers \
+    -I../../../inet4 \
+    -I../glue-lib-headers \
+    -I../avionic-rlc-headers \
+    -I../avionic-arq-headers \
+    -I../mc-sotdma-headers \
     -I. \
-    -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include \
-    -I$(INET_PROJ)/src \
-    -I$(INTAIRNET_RADIO_PROJ)
+    -I../../../inet4/src
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(INET_PROJ)/src $(LDFLAG_LIBPATH)$(INTAIRNET_RADIO_PROJ)  -lINET$(D) -lintairnet-radio$(D)
+LIBS = $(LDFLAG_LIBPATH)../../../inet4/src $(LDFLAG_LIBPATH)../glue-lib $(LDFLAG_LIBPATH)../avionic-rlc $(LDFLAG_LIBPATH)../avionic-arq $(LDFLAG_LIBPATH)../mc-sotdma  -lINET -lintairnet_linklayer_glue -ltuhh_intairnet_rlc -ltuhh_intairnet_arq -ltuhh_intairnet_mc-sotdma
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -54,8 +53,7 @@ MSGFILES =
 SMFILES =
 
 # Other makefile variables (-K)
-INET_PROJ=../../inet
-INTAIRNET_RADIO_PROJ=../../intairnet-radio/intairnet-radio
+INET4_PROJ=../../../inet4
 
 #------------------------------------------------------------------------------
 
@@ -80,7 +78,7 @@ include $(CONFIGFILE)
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 ifneq ($(TOOLCHAIN_NAME),clangc2)
-LIBS += -Wl,-rpath,$(abspath $(INET_PROJ)/src) -Wl,-rpath,$(abspath $(INTAIRNET_RADIO_PROJ))
+LIBS += -Wl,-rpath,$(abspath ../../../inet4/src) -Wl,-rpath,$(abspath ../glue-lib) -Wl,-rpath,$(abspath ../avionic-rlc) -Wl,-rpath,$(abspath ../avionic-arq) -Wl,-rpath,$(abspath ../mc-sotdma)
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)

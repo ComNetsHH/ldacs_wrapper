@@ -10,6 +10,7 @@
 #include "inet/common/ProtocolTag_m.h"
 #include "inet/common/packet/Packet.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
+#include "inet/networklayer/contract/IArp.h"
 //#include "LinkLayerLifecycleManager.h"
 
 #include <IRlc.hpp>
@@ -94,7 +95,10 @@ protected:
             "mcsotdma_phy_statistic_num_missed_packets",            
             "phy_statistic_num_packets_received",
             "phy_statistic_num_packets_missed",
-            "mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate"
+            "mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate",
+            "mcsotdma_statistic_broadcast_wasted_tx_opportunities",
+            "mcsotdma_statistic_unicast_wasted_tx_opportunities",
+            "mcsotdma_statistic_pp_link_missed_last_reply_opportunity"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 
@@ -152,6 +156,15 @@ protected:
 
     L2Packet* copyL2Packet(L2Packet* original);
     L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
+
+    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);
+
+    cModule *host = nullptr;
+    IMobility *mobility = nullptr;
+    IArp *arp = nullptr;
+
+    bool gpsrIsUsed = false;
+
 
 public:
     void sendToChannel(L2Packet* data, uint64_t center_frequency) override;

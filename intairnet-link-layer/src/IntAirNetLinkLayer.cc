@@ -16,6 +16,7 @@
 #include "inet/linklayer/common/MacAddressTag_m.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/common/ProtocolGroup.h"
+#include "inet/routing/gpsr/Gpsr_m.h"
 #include <Rlc.hpp>
 #include <PassThroughArq.hpp>
 #include <SelectiveRepeatArq.hpp>
@@ -23,6 +24,7 @@
 #include <IOmnetPluggable.hpp>
 #include <ContentionMethod.hpp>
 #include <InetPacketPayload.hpp>
+#include <SimulatorPosition.hpp>
 #include "MacLayer.h"
 #include "PhyLayer.h"
 #include "LinkLayerLifecycleManager.h"
@@ -50,6 +52,11 @@ void IntAirNetLinkLayer::initialize(int stage)
     if (stage == INITSTAGE_LOCAL) {
 
         slotDuration = par("slotDuration");
+        gpsrIsUsed = par("gpsrIsUsed").boolValue();
+
+        host = getContainingNode(this);
+        mobility = check_and_cast<IMobility *>(host->getSubmodule("mobility"));
+        arp = getModuleFromPar<IArp>(par("arpModule"), this);
 
         mcsotdma_statistics_map.clear();
         for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
@@ -88,8 +95,17 @@ void IntAirNetLinkLayer::initialize(int stage)
         macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
         macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
         macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));
-        // for Konrad :*
-        // macSubLayer->setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, L2HeaderBeacon header)> func)
+        macSubLayer->setForceBidirectionalLinks(par("forceBidirectionalP2PLinks"));
+        macSubLayer->setInitializeBidirectionalLinks(par("initializeBidirectionalP2PLinks"));
+        macSubLayer->setInitializeBidirectionalLinks(par("initializeBidirectionalP2PLinks"));
+        macSubLayer->setCloseP2PLinksEarly(par("closeP2PLinksEarly"));
+        
+        // Report Beacon Callback
+        function<void (MacId, L2HeaderBeacon)> reportBeaconCallback = [this](MacId origin_id, L2HeaderBeacon header){
+            return this->onBeaconReceive(origin_id, header);
+        };
+
+        macSubLayer->setOmnetPassUpBeaconFct(reportBeaconCallback);
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
         lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
@@ -182,10 +198,16 @@ void IntAirNetLinkLayer::initialize(int stage)
             return this->copyL2PacketPayload(payload);
         };
         ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2PayloadCallback(copyPayloadFkt);
+        // getPosition
+        function<SimulatorPosition()> getPositionFkt = [this](){
+            auto pos = this->mobility->getCurrentPosition();
+            return SimulatorPosition(pos.x, pos.y, pos.z);
+        };
+        ((MacLayer*)macSubLayer)->registerGetPositionCallback(getPositionFkt);
 
 
 
-        lifecycleManager->registerClient(this);
+        lifecycleManager->registerClient(this);                
     }
 
 }
@@ -347,12 +369,17 @@ void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
     const auto it = mcsotdma_statistics_map.find(statistic_name);
     if (it != mcsotdma_statistics_map.end())
         emit((*it).second, value);
-    else
-        throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
+    // else
+    //     throw std::invalid_argument("Emitted statistic not registered: '" + statistic_name + "'.");
 }
 
 void IntAirNetLinkLayer::beforeSlotStart() {
     Enter_Method_Silent();
+
+    if(operationalState == State::NOT_OPERATING) {
+        return;
+    }
+
     try {
         ((MacLayer*)macSubLayer)->update(1);
     } catch (const std::exception& e) {
@@ -363,6 +390,11 @@ void IntAirNetLinkLayer::beforeSlotStart() {
 
 void IntAirNetLinkLayer::onSlotStart() {
     Enter_Method_Silent();
+
+    if(operationalState == State::NOT_OPERATING) {
+        return;
+    }
+
     try {
         ((MacLayer*)macSubLayer)->execute();
     } catch (const std::exception& e) {
@@ -373,6 +405,11 @@ void IntAirNetLinkLayer::onSlotStart() {
 
 void IntAirNetLinkLayer::onSlotEnd() {
     Enter_Method_Silent();
+
+    if(operationalState == State::NOT_OPERATING) {
+        return;
+    }
+
     try {
         ((MacLayer*)macSubLayer)->onSlotEnd();
     } catch (const std::exception& e) {
@@ -398,6 +435,7 @@ void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
     }
 }
 
+<<<<<<< HEAD
 void IntAirNetLinkLayer::onPayloadDelete(L2Packet::Payload* payload) {
     if(!payload) {
         return;
@@ -438,6 +476,34 @@ L2Packet::Payload* IntAirNetLinkLayer::copyL2PacketPayload(L2Packet::Payload* or
     return newPayload;
 
 }
+=======
+void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header) {
+    if(!gpsrIsUsed) {
+        return;
+    }
+    auto encodedPosition = header.position.encodedPosition;
+    Coord rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);
+    auto rcvdMacAddress = MacAddress(0x0AAA00000000ULL + (origin_id.getId() & 0xffffffffUL));
+    auto rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
+
+    const auto& beacon = makeShared<GpsrBeacon>();
+
+    beacon->setAddress(rcvdIpAddress);
+    beacon->setPosition(rcvdPosition);
+
+    // Probably unused. Just setting it for completeness
+    beacon->setChunkLength(B(10));
+
+    /**
+     *  // @Musab, this code snippet will pass the beacon up, replace "MyNewGpsr" with you actual class name and make processBeacon a public function :)
+     *  // Pass up beacon directly to gpsr (skipping NW layer)
+     *  GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
+     *  gpsr->processBeacon(beacon)
+     *
+     **/
+}
+
+>>>>>>> master
 
 
 
