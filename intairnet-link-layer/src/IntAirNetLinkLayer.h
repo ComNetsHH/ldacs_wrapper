@@ -79,7 +79,8 @@ protected:
             "phy_statistic_num_packets_received",
             "phy_statistic_num_packets_missed",
             "mcsotdma_statistic_broadcast_wasted_tx_opportunities",
-            "mcsotdma_statistic_unicast_wasted_tx_opportunities"
+            "mcsotdma_statistic_unicast_wasted_tx_opportunities",
+            "mcsotdma_statistic_pp_link_missed_last_reply_opportunity"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 
