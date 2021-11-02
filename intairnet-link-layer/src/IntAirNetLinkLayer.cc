@@ -435,7 +435,6 @@ void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
     }
 }
 
-<<<<<<< HEAD
 void IntAirNetLinkLayer::onPayloadDelete(L2Packet::Payload* payload) {
     if(!payload) {
         return;
@@ -476,7 +475,7 @@ L2Packet::Payload* IntAirNetLinkLayer::copyL2PacketPayload(L2Packet::Payload* or
     return newPayload;
 
 }
-=======
+
 void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header) {
     if(!gpsrIsUsed) {
         return;
@@ -503,7 +502,6 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
      **/
 }
 
->>>>>>> master
 
 
 
