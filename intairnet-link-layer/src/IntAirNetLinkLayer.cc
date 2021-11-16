@@ -89,6 +89,7 @@ void IntAirNetLinkLayer::initialize(int stage)
             throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
         macSubLayer->setContentionMethod(method);        
         macSubLayer->setBcSlotSelectionMinNumCandidateSlots(par("broadcastSlotSelectionMinNumCandidateSlots"));
+        macSubLayer->setBcSlotSelectionMaxNumCandidateSlots(par("broadcastSlotSelectionMaxNumCandidateSlots"));
         macSubLayer->setAlwaysScheduleNextBroadcastSlot(par("alwaysAdvertiseNextBroadcastSlot"));
         macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
         macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
