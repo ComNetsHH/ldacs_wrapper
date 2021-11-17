@@ -90,7 +90,8 @@ void IntAirNetLinkLayer::initialize(int stage)
         macSubLayer->setContentionMethod(method);        
         macSubLayer->setBcSlotSelectionMinNumCandidateSlots(par("broadcastSlotSelectionMinNumCandidateSlots"));
         macSubLayer->setBcSlotSelectionMaxNumCandidateSlots(par("broadcastSlotSelectionMaxNumCandidateSlots"));
-        macSubLayer->setAlwaysScheduleNextBroadcastSlot(par("alwaysAdvertiseNextBroadcastSlot"));
+        macSubLayer->setAlwaysScheduleNextBroadcastSlot(par("alwaysAdvertiseNextBroadcastSlot"));        
+        macSubLayer->setEnableBeacons(par("enableBeacons"));
         macSubLayer->setWriteResourceUtilizationIntoBeacon(par("writeResourceUtilizationToBeaconPayload"));        
         macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
         macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
