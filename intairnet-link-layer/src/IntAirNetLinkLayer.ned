@@ -26,7 +26,8 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
         int broadcastSlotSelectionMaxNumCandidateSlots = default(1000);
         string contentionMethod = default("poisson_binomial_estimate"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption', 'naive_random_access'        
-        bool alwaysAdvertiseNextBroadcastSlot = default(true);
+        bool alwaysScheduleNextBroadcastSlot = default(true);
+        bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
         bool enableBeacons = default(true);
         bool writeResourceUtilizationToBeaconPayload = default(true);
         int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*12ms>12s
