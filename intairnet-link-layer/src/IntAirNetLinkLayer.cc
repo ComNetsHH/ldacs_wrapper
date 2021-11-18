@@ -81,12 +81,12 @@ void IntAirNetLinkLayer::initialize(int stage)
             method = ContentionMethod::binomial_estimate;
         else if (contention_method.compare("poisson_binomial_estimate") == 0)
             method = ContentionMethod::poisson_binomial_estimate;
-        else if (contention_method.compare("all_active_again_assumption") == 0)
-            method = ContentionMethod::all_active_again_assumption;
+        else if (contention_method.compare("randomized_slotted_aloha") == 0)
+            method = ContentionMethod::randomized_slotted_aloha;
         else if (contention_method.compare("naive_random_access") == 0)
             method = ContentionMethod::naive_random_access;
         else
-            throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption'.");
+            throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'.");
         macSubLayer->setContentionMethod(method);        
         macSubLayer->setBcSlotSelectionMinNumCandidateSlots(par("broadcastSlotSelectionMinNumCandidateSlots"));
         macSubLayer->setBcSlotSelectionMaxNumCandidateSlots(par("broadcastSlotSelectionMaxNumCandidateSlots"));
