@@ -21,7 +21,7 @@ package intairnet_link_layer;
 
 simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
-        double slotDuration @unit(s) = default(12ms);
+        double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.05);
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
         int broadcastSlotSelectionMaxNumCandidateSlots = default(1000);
