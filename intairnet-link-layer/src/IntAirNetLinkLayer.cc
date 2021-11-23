@@ -55,10 +55,6 @@ void IntAirNetLinkLayer::initialize(int stage)
         gpsrIsUsed = par("gpsrIsUsed").boolValue();
         arqIsUsed = par("arqIsUsed").boolValue();
 
-        if(arqIsUsed) {
-            cout << "USING ARQ" << endl;
-        }
-
         host = getContainingNode(this);
         mobility = check_and_cast<IMobility *>(host->getSubmodule("mobility"));
         arp = getModuleFromPar<IArp>(par("arpModule"), this);
@@ -126,7 +122,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         rlcSubLayer = new Rlc(1600);
         if(arqIsUsed) {
-            arqSubLayer = new SelectiveRepeatArq(MacId(address.getInt()), 100, 100, par("per").doubleValue());
+            arqSubLayer = new SelectiveRepeatArq(MacId(address.getInt()), 100, 100, 1 + par("numRtx").intValue(), par("per").doubleValue());
         } else {
             arqSubLayer = new PassThroughArq();
         }
