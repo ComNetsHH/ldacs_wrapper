@@ -19,6 +19,7 @@
 #include <IPhy.hpp>
 #include <INet.hpp>
 #include <IRadio.hpp>
+#include <L2Packet.hpp>
 #include <IOmnetPluggable.hpp>
 
 #include <map>
@@ -48,6 +49,22 @@ protected:
             "rlc_packet_received_from_upper",
             "rlc_packet_sent_down",
             "rlc_packet_sent_up",
+            "rlc_packets_to_send",
+            "rlc_packets_injected",
+            "rlc_awaiting_reassembly",
+            "arq_bits_sent_down",
+            "arq_bits_sent_up",
+            "arq_num_rtx",
+            "arq_sent_unacked",
+            "arq_received_out_of_sequence",
+            "arq_seq_no_received",
+            "arq_seq_no_sent",
+            "arq_rtx_list",
+            "arq_srej",
+            "arq_seqno_passed_up",
+            "arq_bits_requested_from_lower",
+            "arq_out_of_sequence_list",
+            "arq_seq_no_passed_up",
             "mcsotdma_statistic_num_packets_received",
             "mcsotdma_statistic_num_broadcasts_received",
             "mcsotdma_statistic_num_broadcast_message_decoded",
@@ -78,6 +95,7 @@ protected:
             "mcsotdma_phy_statistic_num_missed_packets",            
             "phy_statistic_num_packets_received",
             "phy_statistic_num_packets_missed",
+            "mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate",
             "mcsotdma_statistic_broadcast_wasted_tx_opportunities",
             "mcsotdma_statistic_unicast_wasted_tx_opportunities",
             "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
@@ -136,6 +154,10 @@ protected:
     void emitStatistic(string statistic_name, double value);
 
     void onPacketDelete(L2Packet* pkt);
+    void onPayloadDelete(L2Packet::Payload* payload);
+
+    L2Packet* copyL2Packet(L2Packet* original);
+    L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
 
     void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);
 
@@ -144,6 +166,7 @@ protected:
     IArp *arp = nullptr;
 
     bool gpsrIsUsed = false;
+    bool arqIsUsed = false;
 
 
 public:
@@ -152,7 +175,6 @@ public:
     unsigned int getNumHopsToGroundStation() const override { return 0;};
     void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
     void receiveFromLower(L3Packet* packet) override;
-
 
     void beforeSlotStart();
     void onSlotStart();

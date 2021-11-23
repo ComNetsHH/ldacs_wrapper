@@ -19,6 +19,7 @@
 #include "inet/routing/gpsr/Gpsr_m.h"
 #include <Rlc.hpp>
 #include <PassThroughArq.hpp>
+#include <SelectiveRepeatArq.hpp>
 #include <L3Packet.hpp>
 #include <IOmnetPluggable.hpp>
 #include <ContentionMethod.hpp>
@@ -30,6 +31,7 @@
 
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;
+using namespace TUHH_INTAIRNET_ARQ;
 //coutd.setVerbose(false);
 
 Define_Module(IntAirNetLinkLayer);
@@ -51,6 +53,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         slotDuration = par("slotDuration");
         gpsrIsUsed = par("gpsrIsUsed").boolValue();
+        arqIsUsed = par("arqIsUsed").boolValue();
 
         host = getContainingNode(this);
         mobility = check_and_cast<IMobility *>(host->getSubmodule("mobility"));
@@ -116,8 +119,14 @@ void IntAirNetLinkLayer::initialize(int stage)
         uint32_t planning_horizon = par("planningHorizon");
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
 
+
         rlcSubLayer = new Rlc(1600);
-        arqSubLayer = new PassThroughArq();
+        if(arqIsUsed) {
+            arqSubLayer = new SelectiveRepeatArq(MacId(address.getInt()), 100, 100, 1 + par("numRtx").intValue(), par("per").doubleValue());
+        } else {
+            arqSubLayer = new PassThroughArq();
+        }
+        
         macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
         phySubLayer = new PhyLayer(planning_horizon);
 
@@ -149,50 +158,87 @@ void IntAirNetLinkLayer::initialize(int stage)
             return simTime().dbl();
         };
         ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
-        ((PassThroughArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        }else {
+            ((PassThroughArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        }
         ((MacLayer*)macSubLayer)->registerGetTimeCallback(getTimeFkt);
-
-//                // Debug Messages
-//                function<void(string)> debugFkt = [this](string message){
-//                    cout << endl << message << endl;
-//                    EV << "DEBUG: " << message << endl;
-//                };
-//                ((Rlc*)rlcSubLayer)->registerDebugMessageCallback(debugFkt);
-//                ((PassThroughArq*)arqSublayer)->registerDebugMessageCallback(debugFkt);
-//                ((MacLayer*)macSublayer)->registerDebugMessageCallback(debugFkt);
-//                ((PhyLayer*)phySubLayer)->registerDebugMessageCallback(debugFkt);
 
         // Schedule At
         ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
             this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
         });
-        ((PassThroughArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
-            this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
-        });
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
+                this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
+            });
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
+                this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
+            });
+        }
         ((MacLayer*)macSubLayer)->registerScheduleAtCallback([this](double time){
             this->addCallback((IOmnetPluggable*)this->macSubLayer, time);
         });
-
 
         // Emit statistic
         function<void(string, double)> emitFkt = [this](string message, double value){
             this->emitStatistic(message, value);
         };
         ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
-        ((PassThroughArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        }
         ((MacLayer*)macSubLayer)->registerEmitEventCallback(emitFkt);
         ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
 
-        // Emit statistic
+        // Delete packets
         function<void(L2Packet*)> deleteFkt = [this](L2Packet* pkt){
             this->onPacketDelete(pkt);
         };
         ((Rlc*)rlcSubLayer)->registerDeleteL2Callback(deleteFkt);
-        //((PassThroughArq*)arqSubLayer)->registerDeleteCallback(deleteFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2Callback(deleteFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerDeleteL2Callback(deleteFkt);
+        }
         ((MacLayer*)macSubLayer)->registerDeleteL2Callback(deleteFkt);
         ((PhyLayer*)phySubLayer)->registerDeleteL2Callback(deleteFkt);
 
 
+        // Delete Payloads
+        function<void(L2Packet::Payload*)> deletePayloadFkt = [this](L2Packet::Payload* payload){
+            this->onPayloadDelete(payload);
+        };
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2PayloadCallback(deletePayloadFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerDeleteL2PayloadCallback(deletePayloadFkt);
+        }
+
+        // Deep Copy Packets
+        function<L2Packet*(L2Packet*)> copyFkt = [this](L2Packet* pkt) {
+            return this->copyL2Packet(pkt);
+        };
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2Callback(copyFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerCopyL2Callback(copyFkt);
+        }
+
+        // Deep Copy Packet Payloads
+        function<L2Packet::Payload*(L2Packet::Payload*)> copyPayloadFkt = [this](L2Packet::Payload* payload) {
+            return this->copyL2PacketPayload(payload);
+        };
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2PayloadCallback(copyPayloadFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerCopyL2PayloadCallback(copyPayloadFkt);
+        }
+        
         // getPosition
         function<SimulatorPosition()> getPositionFkt = [this](){
             auto pos = this->mobility->getCurrentPosition();
@@ -239,9 +285,6 @@ void IntAirNetLinkLayer::configureInterfaceEntry()
 }
 
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
-    // TODO: handle tags better
-    tmp = packet;
-
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
     MacAddress address = macAddressReq->getDestAddress();
@@ -345,7 +388,6 @@ void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
     }
     Packet* original = (Packet*)packet->original;
 
-    //delete packet->original;
     if(original) {
         auto macAddressReq = original->getTag<MacAddressReq>();
         auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
@@ -432,6 +474,47 @@ void IntAirNetLinkLayer::onPacketDelete(L2Packet* pkt) {
         }
         i++;
     }
+}
+
+void IntAirNetLinkLayer::onPayloadDelete(L2Packet::Payload* payload) {
+    if(!payload) {
+        return;
+    }
+    auto inetPayload = (InetPacketPayload*)payload;
+    if(inetPayload->original){
+       delete inetPayload->original;
+    }
+
+    delete payload;
+}
+
+L2Packet* IntAirNetLinkLayer::copyL2Packet(L2Packet* original) {
+    auto packet = original->copy();
+    auto originalPayloads = original->getPayloads();
+    auto newHeaders = original->getHeaders();
+    auto newPayloads = packet->getPayloads();
+    for(int i = 0; i< newHeaders.size(); i++) {
+        if(newHeaders[i]->frame_type == L2Header::FrameType::broadcast || newHeaders[i]->frame_type == L2Header::FrameType::unicast) {
+            if(originalPayloads[i] != nullptr) {
+                if(((InetPacketPayload*)originalPayloads[i])->original) {
+                    ((InetPacketPayload*)newPayloads[i])->original = ((InetPacketPayload*)(originalPayloads[i]))->original->dup();
+                }
+            }
+        }
+    }
+    return packet;
+}
+
+
+L2Packet::Payload* IntAirNetLinkLayer::copyL2PacketPayload(L2Packet::Payload* originalPayload) {
+    auto newPayload = originalPayload->copy();
+
+    if(((InetPacketPayload*)originalPayload)->original){
+        ((InetPacketPayload*)newPayload)->original = ((InetPacketPayload*)originalPayload)->original->dup();
+    }
+
+    return newPayload;
+
 }
 
 void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header) {

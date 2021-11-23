@@ -3,7 +3,8 @@
 	<name>intairnet-link-layer</name>
 	<comment></comment>
 	<projects>
-		<project>inet4</project>
+		<project>inet</project>
+		<project>intairnet-radio</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

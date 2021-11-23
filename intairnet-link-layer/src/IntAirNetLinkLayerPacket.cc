@@ -31,7 +31,6 @@ Packet* IntAirNetLinkLayerPacket::dup() const {
     auto originalPayloads = this->getContainedPacket()->getPayloads();
     auto newPayloads = containedPkt->getPayloads();
     auto newHeaders = containedPkt->getHeaders();
-    int i = 0;
     for(int i = 0; i< newHeaders.size(); i++) {
         if(newHeaders[i]->frame_type == L2Header::FrameType::broadcast || newHeaders[i]->frame_type == L2Header::FrameType::unicast) {
             if(originalPayloads[i] != nullptr) {

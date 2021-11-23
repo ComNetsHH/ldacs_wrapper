@@ -63,7 +63,11 @@ void IntAirNetRadio::endReception(cMessage *timer)
         auto macFrame = medium->receivePacket(this, signal);
         // TODO: FIXME: see handling packets with incorrect PHY headers in the TODO file
         decapsulate(macFrame);
-        sendUp(macFrame);
+        if(uniform(0, 1.0) > par("per").doubleValue()) {
+            sendUp(macFrame);
+        } else {
+            delete macFrame;
+        }
         receptionTimer = nullptr;
         emit(receptionEndedSignal, check_and_cast<const cObject *>(reception));
     //}

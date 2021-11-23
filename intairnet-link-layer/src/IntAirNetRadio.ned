@@ -19,5 +19,6 @@ package intairnet_link_layer;
 
 module IntAirNetRadio extends UnitDiskRadio {
 	parameters:
+	    double per = default(0);
 	    @class(IntAirNetRadio);
 }
