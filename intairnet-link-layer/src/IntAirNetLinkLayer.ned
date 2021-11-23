@@ -21,12 +21,15 @@ package intairnet_link_layer;
 
 simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
-        double per = default(0.0);
-        double slotDuration @unit(s) = default(12ms);
+        double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.05);
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
-        string contentionMethod = default("poisson_binomial_estimate"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'all_active_again_assumption', 'naive_random_access'        
-        bool alwaysAdvertiseNextBroadcastSlot = default(true);
+        int broadcastSlotSelectionMaxNumCandidateSlots = default(1000);
+        string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'        
+        bool alwaysScheduleNextBroadcastSlot = default(true);
+        bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
+        bool enableBeacons = default(true);
+        bool writeResourceUtilizationToBeaconPayload = default(true);
         int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*12ms>12s
         int minBeaconInterval = default(80);
         int maxBeaconInterval = default(25000);
