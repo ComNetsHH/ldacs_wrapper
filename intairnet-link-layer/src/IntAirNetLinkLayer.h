@@ -80,7 +80,9 @@ protected:
             "phy_statistic_num_packets_missed",
             "mcsotdma_statistic_broadcast_wasted_tx_opportunities",
             "mcsotdma_statistic_unicast_wasted_tx_opportunities",
-            "mcsotdma_statistic_pp_link_missed_last_reply_opportunity"
+            "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
+            "mcsotdma_statistic_pp_link_establishment_time",
+            "mcsotdma_statistic_num_pp_links_established"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 

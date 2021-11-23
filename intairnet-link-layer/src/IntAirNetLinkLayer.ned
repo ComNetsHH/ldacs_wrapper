@@ -24,15 +24,15 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.05);
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
-        int broadcastSlotSelectionMaxNumCandidateSlots = default(1000);
+        int broadcastSlotSelectionMaxNumCandidateSlots = default(42);  // 24ms * 42slots = 1008ms at most
         string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'        
         bool alwaysScheduleNextBroadcastSlot = default(true);
         bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
         bool enableBeacons = default(true);
         bool writeResourceUtilizationToBeaconPayload = default(true);
-        int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*12ms>12s
+        int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*24ms>24s
         int minBeaconInterval = default(80);
-        int maxBeaconInterval = default(25000);
+        int maxBeaconInterval = default(25000); // 24ms * 25000slots = 10min
         bool forceBidirectionalP2PLinks = default(false);
         bool initializeBidirectionalP2PLinks = default(true);
         bool closeP2PLinksEarly = default(false);
@@ -88,7 +88,9 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate](type=double);  
         @signal[mcsotdma_statistic_broadcast_wasted_tx_opportunities](type=double);  
         @signal[mcsotdma_statistic_unicast_wasted_tx_opportunities](type=double);    
-        @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);            
+        @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);     
+        @signal[mcsotdma_statistic_pp_link_establishment_time](type=double);
+        @signal[mcsotdma_statistic_num_pp_links_established](type=double);        
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcast_message_decoded](title="mcsotdma_statistic_num_broadcast_message_decoded(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -119,6 +121,8 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_broadcast_wasted_tx_opportunities](title="mcsotdma_statistic_broadcast_wasted_tx_opportunities"; record=vector,histogram,last,mean; interpolationmode=none);        
         @statistic[mcsotdma_statistic_unicast_wasted_tx_opportunities](title="mcsotdma_statistic_unicast_wasted_tx_opportunities"; record=vector,histogram,last,mean; interpolationmode=none);        
         @statistic[mcsotdma_statistic_unicast_wasted_tx_opportunities](title="mcsotdma_statistic_pp_link_missed_last_reply_opportunity"; record=vector,histogram,last,mean; interpolationmode=none);                
+        @statistic[mcsotdma_statistic_pp_link_establishment_time](title="mcsotdma_statistic_pp_link_establishment_time"; record=vector,histogram,last,mean; interpolationmode=none);                                
+        @statistic[mcsotdma_statistic_num_pp_links_established](title="mcsotdma_statistic_num_pp_links_established"; record=vector,histogram,last,mean; interpolationmode=none);                        
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
