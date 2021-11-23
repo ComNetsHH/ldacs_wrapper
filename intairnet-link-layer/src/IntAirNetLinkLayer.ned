@@ -23,6 +23,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
         double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.05);
+        double per = default(0);
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
         int broadcastSlotSelectionMaxNumCandidateSlots = default(1000);
         string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'        
@@ -38,6 +39,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         bool closeP2PLinksEarly = default(false);
         string lifecycleManager = "^.^.^.lifecycleManager";
         string arpModule = default("^.^.ipv4.arp");
+        bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
         string gpsrModule = default("^.^.gpsr");
         

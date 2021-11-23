@@ -164,6 +164,7 @@ protected:
     IArp *arp = nullptr;
 
     bool gpsrIsUsed = false;
+    bool arqIsUsed = false;
 
 
 public:

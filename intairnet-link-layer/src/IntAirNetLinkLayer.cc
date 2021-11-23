@@ -53,6 +53,11 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         slotDuration = par("slotDuration");
         gpsrIsUsed = par("gpsrIsUsed").boolValue();
+        arqIsUsed = par("arqIsUsed").boolValue();
+
+        if(arqIsUsed) {
+            cout << "USING ARQ" << endl;
+        }
 
         host = getContainingNode(this);
         mobility = check_and_cast<IMobility *>(host->getSubmodule("mobility"));
@@ -120,7 +125,12 @@ void IntAirNetLinkLayer::initialize(int stage)
 
 
         rlcSubLayer = new Rlc(1600);
-        arqSubLayer = new SelectiveRepeatArq(MacId(address.getInt()), 100, 100, par("per").doubleValue());
+        if(arqIsUsed) {
+            arqSubLayer = new SelectiveRepeatArq(MacId(address.getInt()), 100, 100, par("per").doubleValue());
+        } else {
+            arqSubLayer = new PassThroughArq();
+        }
+        
         macSubLayer = new MacLayer(MacId(address.getInt()), planning_horizon);
         phySubLayer = new PhyLayer(planning_horizon);
 
@@ -152,16 +162,26 @@ void IntAirNetLinkLayer::initialize(int stage)
             return simTime().dbl();
         };
         ((Rlc*)rlcSubLayer)->registerGetTimeCallback(getTimeFkt);
-        ((PassThroughArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        }else {
+            ((PassThroughArq*)arqSubLayer)->registerGetTimeCallback(getTimeFkt);
+        }
         ((MacLayer*)macSubLayer)->registerGetTimeCallback(getTimeFkt);
 
         // Schedule At
         ((Rlc*)rlcSubLayer)->registerScheduleAtCallback([this](double time){
             this->addCallback((IOmnetPluggable*)this->rlcSubLayer, time);
         });
-        ((PassThroughArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
-            this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
-        });
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
+                this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
+            });
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerScheduleAtCallback([this](double time){
+                this->addCallback((IOmnetPluggable*)this->arqSubLayer, time);
+            });
+        }
         ((MacLayer*)macSubLayer)->registerScheduleAtCallback([this](double time){
             this->addCallback((IOmnetPluggable*)this->macSubLayer, time);
         });
@@ -171,7 +191,11 @@ void IntAirNetLinkLayer::initialize(int stage)
             this->emitStatistic(message, value);
         };
         ((Rlc*)rlcSubLayer)->registerEmitEventCallback(emitFkt);
-        ((SelectiveRepeatArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerEmitEventCallback(emitFkt);
+        }
         ((MacLayer*)macSubLayer)->registerEmitEventCallback(emitFkt);
         ((PhyLayer*)phySubLayer)->registerEmitEventCallback(emitFkt);
 
@@ -180,7 +204,11 @@ void IntAirNetLinkLayer::initialize(int stage)
             this->onPacketDelete(pkt);
         };
         ((Rlc*)rlcSubLayer)->registerDeleteL2Callback(deleteFkt);
-        ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2Callback(deleteFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2Callback(deleteFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerDeleteL2Callback(deleteFkt);
+        }
         ((MacLayer*)macSubLayer)->registerDeleteL2Callback(deleteFkt);
         ((PhyLayer*)phySubLayer)->registerDeleteL2Callback(deleteFkt);
 
@@ -189,19 +217,32 @@ void IntAirNetLinkLayer::initialize(int stage)
         function<void(L2Packet::Payload*)> deletePayloadFkt = [this](L2Packet::Payload* payload){
             this->onPayloadDelete(payload);
         };
-        ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2PayloadCallback(deletePayloadFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerDeleteL2PayloadCallback(deletePayloadFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerDeleteL2PayloadCallback(deletePayloadFkt);
+        }
 
         // Deep Copy Packets
         function<L2Packet*(L2Packet*)> copyFkt = [this](L2Packet* pkt) {
             return this->copyL2Packet(pkt);
         };
-        ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2Callback(copyFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2Callback(copyFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerCopyL2Callback(copyFkt);
+        }
 
         // Deep Copy Packet Payloads
         function<L2Packet::Payload*(L2Packet::Payload*)> copyPayloadFkt = [this](L2Packet::Payload* payload) {
             return this->copyL2PacketPayload(payload);
         };
-        ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2PayloadCallback(copyPayloadFkt);
+        if(arqIsUsed) {
+            ((SelectiveRepeatArq*)arqSubLayer)->registerCopyL2PayloadCallback(copyPayloadFkt);
+        } else {
+            ((PassThroughArq*)arqSubLayer)->registerCopyL2PayloadCallback(copyPayloadFkt);
+        }
+        
         // getPosition
         function<SimulatorPosition()> getPositionFkt = [this](){
             auto pos = this->mobility->getCurrentPosition();
