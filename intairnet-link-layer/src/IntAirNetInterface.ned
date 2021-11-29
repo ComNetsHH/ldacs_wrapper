@@ -43,7 +43,7 @@ network IntAirNetInterface extends InterfaceEntry like IWirelessInterface
 			parameters:
                 @display("p=100,150");
         }
-        radio: IntAirNetRadio {
+        radio: <default("IntAirNetRadio")> like IRadio {
             parameters:
                 @display("p=100,300");
         }

@@ -15,6 +15,8 @@
 
 #include "IntAirNetRadio.h"
 #include "inet/physicallayer/common/packetlevel/RadioMedium.h"
+#include "IntAirNetLinkLayerPacket.h"
+#include <L2Packet.hpp>
 
 Register_Class(IntAirNetRadio);
 
@@ -66,7 +68,9 @@ void IntAirNetRadio::endReception(cMessage *timer)
         if(uniform(0, 1.0) > par("per").doubleValue()) {
             sendUp(macFrame);
         } else {
-            delete macFrame;
+            L2Packet * containedPkt =  ((IntAirNetLinkLayerPacket *)macFrame)->getContainedPacket();
+            containedPkt->hasChannelError = true;
+            sendUp(macFrame);
         }
         receptionTimer = nullptr;
         emit(receptionEndedSignal, check_and_cast<const cObject *>(reception));
