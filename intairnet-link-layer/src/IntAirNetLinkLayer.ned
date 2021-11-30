@@ -113,7 +113,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_num_link_infos_sent](type=double);
         @signal[mcsotdma_statistic_num_cancelled_link_requests](type=double);
         @signal[mcsotdma_statistic_num_packet_collisions](type=double);
-        @signal[mcsotdma_statistic_num_packet_decoded](type=double);                                      
+        @signal[mcsotdma_statistic_num_channel_errors](type=double);        
         @signal[mcsotdma_statistic_contention](type=double);
         @signal[mcsotdma_statistic_congestion](type=double);
         @signal[mcsotdma_statistic_num_active_neighbors](type=double);
@@ -147,8 +147,8 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_num_beacons_sent](title="mcsotdma_statistic_num_beacons_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_link_infos_sent](title="mcsotdma_statistic_num_link_infos_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_cancelled_link_requests](title="mcsotdma_statistic_num_cancelled_link_requests(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_packet_collisions](title="mcsotdma_statistic_num_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_packet_decoded](title="mcsotdma_statistic_num_packet_decoded(num)"; record=vector,histogram,last; interpolationmode=none);                                                                       
+        @statistic[mcsotdma_statistic_num_packet_collisions](title="mcsotdma_statistic_num_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_num_channel_errors](title="mcsotdma_statistic_num_channel_errors(num)"; record=vector,histogram,last; interpolationmode=none);                
         @statistic[mcsotdma_statistic_contention](title="mcsotdma_statistic_contention"; record=vector,histogram,last,mean; interpolationmode=none);
         @statistic[mcsotdma_statistic_congestion](title="mcsotdma_statistic_congestion"; record=vector,histogram,last,mean; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_active_neighbors](title="mcsotdma_statistic_num_active_neighbors"; record=vector,histogram,last,mean; interpolationmode=none);
