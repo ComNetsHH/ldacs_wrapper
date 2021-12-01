@@ -97,9 +97,9 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         
         @signal[mcsotdma_statistic_num_packets_received](type=double);
         @signal[mcsotdma_statistic_num_broadcasts_received](type=double);
-        @signal[mcsotdma_statistic_num_broadcast_message_decoded](type=double);        
+        @signal[mcsotdma_statistic_num_broadcast_message_processed](type=double);        
         @signal[mcsotdma_statistic_num_unicasts_received](type=double);
-        @signal[mcsotdma_statistic_num_unicast_message_decoded](type=double);        
+        @signal[mcsotdma_statistic_num_unicast_message_processed](type=double);        
         @signal[mcsotdma_statistic_num_link_requests_received](type=double);
         @signal[mcsotdma_statistic_num_link_replies_received](type=double);
         @signal[mcsotdma_statistic_num_beacons_received](type=double);
@@ -132,9 +132,9 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_num_pp_links_established](type=double);        
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_broadcast_message_decoded](title="mcsotdma_statistic_num_broadcast_message_decoded(num)"; record=vector,histogram,last; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_broadcast_message_processed](title="mcsotdma_statistic_num_broadcast_message_processed(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_unicasts_received](title="mcsotdma_statistic_num_unicasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_unicast_message_decoded](title="mcsotdma_statistic_num_unicast_message_decoded(num)"; record=vector,histogram,last; interpolationmode=none);               
+        @statistic[mcsotdma_statistic_num_unicast_message_processed](title="mcsotdma_statistic_num_unicast_message_processed(num)"; record=vector,histogram,last; interpolationmode=none);               
         @statistic[mcsotdma_statistic_num_link_requests_received](title="mcsotdma_statistic_num_link_requests_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_link_replies_received](title="mcsotdma_statistic_num_link_replies_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_beacons_received](title="mcsotdma_statistic_num_beacons_received(num)"; record=vector,histogram,last; interpolationmode=none);
