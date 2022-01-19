@@ -100,7 +100,14 @@ protected:
             "mcsotdma_statistic_unicast_wasted_tx_opportunities",
             "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
             "mcsotdma_statistic_pp_link_establishment_time",
-            "mcsotdma_statistic_num_pp_links_established"
+            "mcsotdma_statistic_num_pp_links_established",
+            "mcsotdma_statistic_num_third_party_link_requests_received",
+            "mcsotdma_statistic_num_third_party_replies_rcvd",
+            "mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot",
+            "mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals",
+            "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
+            "mcsotdma_statistic_pp_link_missed_first_data_tx",
+            "mcsotdma_statistic_num_pp_links_expired"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 

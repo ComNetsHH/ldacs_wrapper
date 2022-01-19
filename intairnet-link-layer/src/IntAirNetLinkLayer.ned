@@ -130,6 +130,14 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);     
         @signal[mcsotdma_statistic_pp_link_establishment_time](type=double);
         @signal[mcsotdma_statistic_num_pp_links_established](type=double);        
+        @signal[mcsotdma_statistic_num_third_party_link_requests_received](type=double);
+        @signal[mcsotdma_statistic_num_third_party_replies_rcvd](type=double);
+        @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot](type=double);
+        @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals](type=double);
+        @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);
+        @signal[mcsotdma_statistic_pp_link_missed_first_data_tx](type=double);   
+        @signal[mcsotdma_statistic_num_pp_links_expired](type=double);   
+        
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcast_message_processed](title="mcsotdma_statistic_num_broadcast_message_processed(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -164,6 +172,13 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_unicast_wasted_tx_opportunities](title="mcsotdma_statistic_pp_link_missed_last_reply_opportunity"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_pp_link_establishment_time](title="mcsotdma_statistic_pp_link_establishment_time"; record=vector,histogram,last,mean; interpolationmode=none);                                
         @statistic[mcsotdma_statistic_num_pp_links_established](title="mcsotdma_statistic_num_pp_links_established"; record=vector,histogram,last,mean; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_num_third_party_link_requests_received](title="mcsotdma_statistic_num_third_party_link_requests_received"; record=vector,histogram,last,mean; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_num_third_party_replies_rcvd](title="mcsotdma_statistic_num_third_party_replies_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot"; record=vector,histogram,last,mean; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals"; record=vector,histogram,last,mean; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](title="mcsotdma_statistic_pp_link_missed_last_reply_opportunity"; record=vector,histogram,last,mean; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_pp_link_missed_first_data_tx](title="mcsotdma_statistic_pp_link_missed_first_data_tx"; record=vector,histogram,last,mean; interpolationmode=none);                                
+        @statistic[mcsotdma_statistic_num_pp_links_expired](title="mcsotdma_statistic_num_pp_links_expired"; record=vector,histogram,last,mean; interpolationmode=none);                                        
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
