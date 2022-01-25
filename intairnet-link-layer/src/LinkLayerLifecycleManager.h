@@ -18,18 +18,16 @@
 #include "IntAirNetLinkLayer.h"
 
 using namespace inet;
-using namespace std;
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-
-
-
-class LinkLayerLifecycleManager: public cSimpleModule
-{
+class LinkLayerLifecycleManager: public cSimpleModule {
     protected:
         bool isFirstSlot = true;
         double slotDuration;
-        vector<IntAirNetLinkLayer *> linkLayers;
+        /** LDACS users. */
+        std::vector<IntAirNetLinkLayer *> linkLayers;        
+        /** DME users. */
+        std::vector<DMELinkLayer*> dmeLinkLayers;
         cMessage *slotTimer = nullptr;
 
         void initialize(int stage) override;

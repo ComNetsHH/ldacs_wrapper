@@ -11,7 +11,6 @@
 #include "inet/common/packet/Packet.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "inet/networklayer/contract/IArp.h"
-//#include "LinkLayerLifecycleManager.h"
 
 #include <IRlc.hpp>
 #include <IMac.hpp>
@@ -39,7 +38,6 @@ class LinkLayerLifecycleManager;
  *    @date August 2020
  *
  */
-// public INet
 class IntAirNetLinkLayer: public LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTDMA::IRadio, public INet {
 protected:
     const std::vector<std::string> str_mcsotdma_statistics = {
