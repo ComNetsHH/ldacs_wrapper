@@ -107,7 +107,8 @@ protected:
             "mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals",
             "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
             "mcsotdma_statistic_pp_link_missed_first_data_tx",
-            "mcsotdma_statistic_num_pp_links_expired"
+            "mcsotdma_statistic_num_pp_links_expired",
+            "mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 
