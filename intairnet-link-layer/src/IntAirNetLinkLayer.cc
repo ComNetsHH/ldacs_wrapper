@@ -16,7 +16,8 @@
 #include "inet/linklayer/common/MacAddressTag_m.h"
 #include "inet/networklayer/contract/IInterfaceTable.h"
 #include "inet/common/ProtocolGroup.h"
-#include "inet/routing/gpsr/Gpsr_m.h"
+#include <GpsrModified.h>
+#include <GpsrModified_m.h>
 #include <Rlc.hpp>
 #include <PassThroughArq.hpp>
 #include <SelectiveRepeatArq.hpp>
