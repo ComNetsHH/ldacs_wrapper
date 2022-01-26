@@ -25,9 +25,7 @@ class LinkLayerLifecycleManager: public cSimpleModule {
         bool isFirstSlot = true;
         double slotDuration;
         /** LDACS users. */
-        std::vector<IntAirNetLinkLayer *> linkLayers;        
-        /** DME users. */
-        std::vector<DMELinkLayer*> dmeLinkLayers;
+        std::vector<IntAirNetLinkLayer *> linkLayers;                
         cMessage *slotTimer = nullptr;
 
         void initialize(int stage) override;

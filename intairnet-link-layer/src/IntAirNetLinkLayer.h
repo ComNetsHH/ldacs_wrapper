@@ -25,7 +25,6 @@
 
 using namespace inet;
 using namespace std;
-
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 class LinkLayerLifecycleManager;

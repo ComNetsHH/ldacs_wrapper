@@ -11,33 +11,59 @@
 #include "inet/common/packet/Packet.h"
 #include "inet/networklayer/common/InterfaceEntry.h"
 #include "inet/networklayer/contract/IArp.h"
+#include <IRadio.hpp>
+#include <INet.hpp>
+#include <L3Packet.hpp>
+#include <L2Packet.hpp>
+#include <IOmnetPluggable.hpp>
 
-class DMELinkLayer : public LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTDMA::IRadio, public INet {
+class DMELinkLayer : public inet::LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTDMA::IRadio, public TUHH_INTAIRNET_MCSOTDMA::INet {
 	public:
+		/** Constructor. */
 		DMELinkLayer() = default;
+		/** Destructor. */
 		~DMELinkLayer() = default;
+
+		/** IRadio interface function to send a packet to a particular frequency subchannel. */
+		void sendToChannel(TUHH_INTAIRNET_MCSOTDMA::L2Packet* data, uint64_t center_frequency) override;
+		/** IRadio interface function to receive a packet on a particular frequency subchannel. */
+		void receiveFromChannel(TUHH_INTAIRNET_MCSOTDMA::L2Packet *packet, uint64_t center_frequency) override;		
+		/** INet interface function when a layer-3 packet was received and reassembled. */
+		void receiveFromLower(L3Packet* packet) override;
+
+		/** Called before the start of each time slot. */
+		void beforeSlotStart();
+		/** Called at the start of each time slot. */
+		void onSlotStart();
+		/** Called at the end of each time slot. */
+		void onSlotEnd();
+
+		/** TODO delete from interface */
+		unsigned int getNumHopsToGroundStation() const override { return 0;};
+		/** TODO delete from interface */
+    	void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
 
 	protected:
 		void initialize(int stage) override;
 		void finish() override;
-		void sendUp(cMessage *message);
-		void sendDown(cMessage *message);
+		void sendUp(inet::cMessage *message);
+		void sendDown(inet::cMessage *message);
 
-		void handleMessageWhenDown(cMessage *msg) override;
-		void handleStartOperation(LifecycleOperation *operation) override;
-		void handleStopOperation(LifecycleOperation *operation) override;
-		void handleCrashOperation(LifecycleOperation *operation) override;
+		void handleMessageWhenDown(inet::cMessage *msg) override;
+		void handleStartOperation(inet::LifecycleOperation *operation) override;
+		void handleStopOperation(inet::LifecycleOperation *operation) override;
+		void handleCrashOperation(inet::LifecycleOperation *operation) override;
 
-		bool isInitializeStage(int stage) override { return stage == INITSTAGE_LINK_LAYER; }
-		bool isModuleStartStage(int stage) override { return stage == ModuleStartOperation::STAGE_LINK_LAYER; }
-		bool isModuleStopStage(int stage) override { return stage == ModuleStopOperation::STAGE_LINK_LAYER; }
+		bool isInitializeStage(int stage) override;
+		bool isModuleStartStage(int stage) override;
+		bool isModuleStopStage(int stage) override;
 
-		bool isUpperMessage(cMessage *message) override;
-		bool isLowerMessage(cMessage *message) override;
+		bool isUpperMessage(inet::cMessage *message) override;
+		bool isLowerMessage(inet::cMessage *message) override;
 
-		void handleUpperPacket(Packet *packet) override;
-		void handleLowerPacket(Packet *packet) override;
-		void handleSelfMessage(cMessage *message) override;
+		void handleUpperPacket(inet::Packet *packet) override;
+		void handleLowerPacket(inet::Packet *packet) override;
+		void handleSelfMessage(inet::cMessage *message) override;
 		
 };
 
