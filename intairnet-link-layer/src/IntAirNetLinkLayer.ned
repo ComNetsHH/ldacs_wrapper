@@ -26,7 +26,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         double per = default(0);
         int numRtx = default(3);
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
-        int broadcastSlotSelectionMaxNumCandidateSlots = default(90);  // 24ms * 90slots = 2160ms at most, 1080ms on average
+        int broadcastSlotSelectionMaxNumCandidateSlots = default(10000); 
         string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'        
         bool alwaysScheduleNextBroadcastSlot = default(true);
         bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
