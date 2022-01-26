@@ -71,15 +71,13 @@ protected:
             "mcsotdma_statistic_num_link_requests_received",
             "mcsotdma_statistic_num_link_replies_received",
             "mcsotdma_statistic_num_links_closed_early",
-            "mcsotdma_statistic_num_beacons_received",
-            "mcsotdma_statistic_num_link_infos_received",
+            "mcsotdma_statistic_num_beacons_received",            
             "mcsotdma_statistic_num_packets_sent",
             "mcsotdma_statistic_num_broadcasts_sent",
             "mcsotdma_statistic_num_unicasts_sent",
             "mcsotdma_statistic_num_link_requests_sent",
             "mcsotdma_statistic_num_link_replies_sent",
-            "mcsotdma_statistic_num_beacons_sent",
-            "mcsotdma_statistic_num_link_infos_sent",
+            "mcsotdma_statistic_num_beacons_sent",            
             "mcsotdma_statistic_num_cancelled_link_requests",
             "mcsotdma_statistic_num_packet_collisions",            
             "mcsotdma_statistic_num_channel_errors",
@@ -105,7 +103,8 @@ protected:
             "mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals",
             "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
             "mcsotdma_statistic_pp_link_missed_first_data_tx",
-            "mcsotdma_statistic_num_pp_links_expired"
+            "mcsotdma_statistic_num_pp_links_expired",
+            "mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots"
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 

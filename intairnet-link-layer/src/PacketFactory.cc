@@ -66,10 +66,7 @@ string PacketFactory::getPacketName(L2Packet* packet) {
     }
     if(header->frame_type == L2Header::FrameType::link_establishment_reply) {
         return "IAN-Link-Reply";
-    }
-    if(header->frame_type == L2Header::FrameType::link_info) {
-        return "IAN-Link-Info";
-    }
+    }    
     return "IAN-Packet";
 }
 

@@ -102,15 +102,13 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_num_unicast_message_processed](type=double);        
         @signal[mcsotdma_statistic_num_link_requests_received](type=double);
         @signal[mcsotdma_statistic_num_link_replies_received](type=double);
-        @signal[mcsotdma_statistic_num_beacons_received](type=double);
-        @signal[mcsotdma_statistic_num_link_infos_received](type=double);
+        @signal[mcsotdma_statistic_num_beacons_received](type=double);        
         @signal[mcsotdma_statistic_num_packets_sent](type=double);
         @signal[mcsotdma_statistic_num_broadcasts_sent](type=double);
         @signal[mcsotdma_statistic_num_unicasts_sent](type=double);
         @signal[mcsotdma_statistic_num_link_requests_sent](type=double);
         @signal[mcsotdma_statistic_num_link_replies_sent](type=double);
-        @signal[mcsotdma_statistic_num_beacons_sent](type=double);
-        @signal[mcsotdma_statistic_num_link_infos_sent](type=double);
+        @signal[mcsotdma_statistic_num_beacons_sent](type=double);        
         @signal[mcsotdma_statistic_num_cancelled_link_requests](type=double);
         @signal[mcsotdma_statistic_num_packet_collisions](type=double);
         @signal[mcsotdma_statistic_num_channel_errors](type=double);        
@@ -137,6 +135,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);
         @signal[mcsotdma_statistic_pp_link_missed_first_data_tx](type=double);   
         @signal[mcsotdma_statistic_num_pp_links_expired](type=double);   
+        @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots](type=double);           
         
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -145,15 +144,13 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_num_unicast_message_processed](title="mcsotdma_statistic_num_unicast_message_processed(num)"; record=vector,histogram,last; interpolationmode=none);               
         @statistic[mcsotdma_statistic_num_link_requests_received](title="mcsotdma_statistic_num_link_requests_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_link_replies_received](title="mcsotdma_statistic_num_link_replies_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_beacons_received](title="mcsotdma_statistic_num_beacons_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_link_infos_received](title="mcsotdma_statistic_num_link_infos_received(num)"; record=vector,histogram,last; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_beacons_received](title="mcsotdma_statistic_num_beacons_received(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_num_packets_sent](title="mcsotdma_statistic_num_packets_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_sent](title="mcsotdma_statistic_num_broadcasts_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_unicasts_sent](title="mcsotdma_statistic_num_unicasts_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_link_requests_sent](title="mcsotdma_statistic_num_link_requests_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_link_replies_sent](title="mcsotdma_statistic_num_link_replies_sent(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_beacons_sent](title="mcsotdma_statistic_num_beacons_sent(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_link_infos_sent](title="mcsotdma_statistic_num_link_infos_sent(num)"; record=vector,histogram,last; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_beacons_sent](title="mcsotdma_statistic_num_beacons_sent(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_num_cancelled_link_requests](title="mcsotdma_statistic_num_cancelled_link_requests(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_packet_collisions](title="mcsotdma_statistic_num_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_num_channel_errors](title="mcsotdma_statistic_num_channel_errors(num)"; record=vector,histogram,last; interpolationmode=none);                
@@ -179,6 +176,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](title="mcsotdma_statistic_pp_link_missed_last_reply_opportunity"; record=vector,histogram,last,mean; interpolationmode=none);                        
         @statistic[mcsotdma_statistic_pp_link_missed_first_data_tx](title="mcsotdma_statistic_pp_link_missed_first_data_tx"; record=vector,histogram,last,mean; interpolationmode=none);                                
         @statistic[mcsotdma_statistic_num_pp_links_expired](title="mcsotdma_statistic_num_pp_links_expired"; record=vector,histogram,last,mean; interpolationmode=none);                                        
+        @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots"; record=vector,histogram,last,mean; interpolationmode=none);                                        
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
