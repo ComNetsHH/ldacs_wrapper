@@ -20,6 +20,9 @@ package intairnet_link_layer;
 
 simple LinkLayer extends LayeredProtocolBase like ILinkLayer {
     parameters:
+        @display("i=block/rxtx");
+        @class(LinkLayer);
+
         string lifecycleManager = "^.^.^.lifecycleManager";      
         string arpModule = default("^.^.ipv4.arp");  
     gates:
