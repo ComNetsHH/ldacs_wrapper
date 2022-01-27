@@ -21,8 +21,41 @@ class LinkLayerLifecycleManager;
  *    @author Konrad Fuger, TUHH ComNets
  *    @date August 2020
  */
-class IntAirNetLinkLayer : public LinkLayer {
+class IntAirNetLinkLayer : public LinkLayer {   
+public:
+    void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
+    void receiveFromChannel(L2Packet *packet, uint64_t center_frequency) override { };    
+    void receiveFromLower(L3Packet* packet) override;
+
+    void beforeSlotStart();
+    void onSlotStart();
+    void onSlotEnd();
+
 protected:
+    ~IntAirNetLinkLayer();    
+    void initialize(int stage) override;
+    void finish() override;        
+    void handleUpperPacket(Packet *packet) override;
+    void handleLowerPacket(Packet *packet) override;    
+    void addCallback(IOmnetPluggable *layer, double time);    
+    void emitStatistic(string statistic_name, double value);
+    void onPacketDelete(L2Packet* pkt);
+    void onPayloadDelete(L2Packet::Payload* payload);
+    L2Packet* copyL2Packet(L2Packet* original);
+    L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
+    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);   
+
+protected:    
+    std::map<std::string, simsignal_t> mcsotdma_statistics_map;
+    double slotDuration;    
+    vector<pair<double, IOmnetPluggable*>> callbackTimes;
+    IRlc* rlcSubLayer;
+    IArq* arqSubLayer;
+    IMac* macSubLayer;
+    IPhy* phySubLayer;
+    Packet *tmp;    
+    bool gpsrIsUsed = false;
+    bool arqIsUsed = false;    
     const std::vector<std::string> str_mcsotdma_statistics = {
             "rlc_bits_received_from_upper",
             "rlc_bits_received_from_lower",
@@ -89,71 +122,6 @@ protected:
             "mcsotdma_statistic_num_pp_links_expired",
             "mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots"
     };
-    std::map<std::string, simsignal_t> mcsotdma_statistics_map;
-
-    double slotDuration;    
-
-    vector<pair<double, IOmnetPluggable*>> callbackTimes;
-
-    IRlc* rlcSubLayer;
-    IArq* arqSubLayer;
-    IMac* macSubLayer;
-    IPhy* phySubLayer;
-
-    Packet *tmp;    
-
-    ~IntAirNetLinkLayer();    
-
-    void initialize(int stage) override;
-    void finish() override;
-    void sendUp(cMessage *message);
-    void sendDown(cMessage *message);
-
-    void handleMessageWhenDown(cMessage *msg) override;
-    void handleStartOperation(LifecycleOperation *operation) override;
-    void handleStopOperation(LifecycleOperation *operation) override;
-    void handleCrashOperation(LifecycleOperation *operation) override;
-
-    bool isInitializeStage(int stage) override { return stage == INITSTAGE_LINK_LAYER; }
-    bool isModuleStartStage(int stage) override { return stage == ModuleStartOperation::STAGE_LINK_LAYER; }
-    bool isModuleStopStage(int stage) override { return stage == ModuleStopOperation::STAGE_LINK_LAYER; }
-
-    bool isUpperMessage(cMessage *message) override;
-    bool isLowerMessage(cMessage *message) override;
-
-    void handleUpperPacket(Packet *packet) override;
-    void handleLowerPacket(Packet *packet) override;
-    void handleSelfMessage(cMessage *message) override;
-
-    void addCallback(IOmnetPluggable *layer, double time);    
-
-    void emitStatistic(string statistic_name, double value);
-
-    void onPacketDelete(L2Packet* pkt);
-    void onPayloadDelete(L2Packet::Payload* payload);
-
-    L2Packet* copyL2Packet(L2Packet* original);
-    L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
-
-    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);    
-
-    bool gpsrIsUsed = false;
-    bool arqIsUsed = false;
-
-
-public:
-    void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
-    void receiveFromChannel(L2Packet *packet, uint64_t center_frequency) override { };
-    unsigned int getNumHopsToGroundStation() const override { return 0;};
-    void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
-    void receiveFromLower(L3Packet* packet) override;
-
-    void beforeSlotStart();
-    void onSlotStart();
-    void onSlotEnd();
-
-
-
 };
 
 #endif //__INET_INT_AIR_NET_LL_H

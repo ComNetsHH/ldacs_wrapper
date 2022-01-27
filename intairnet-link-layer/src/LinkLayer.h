@@ -44,15 +44,15 @@ class LinkLayer : public inet::LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTD
     	void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
 
 	protected:
-		void initialize(int stage) override;
-		void finish() override;
-		void sendUp(inet::cMessage *message);
-		void sendDown(inet::cMessage *message);
+		virtual void initialize(int stage) override;
+		virtual void finish() override;
+		virtual void sendUp(inet::cMessage *message);
+		virtual void sendDown(inet::cMessage *message);
 
-		void handleMessageWhenDown(inet::cMessage *msg) override;
-		void handleStartOperation(inet::LifecycleOperation *operation) override;
-		void handleStopOperation(inet::LifecycleOperation *operation) override;
-		void handleCrashOperation(inet::LifecycleOperation *operation) override;
+		virtual void handleMessageWhenDown(inet::cMessage *msg) override;
+		virtual void handleStartOperation(inet::LifecycleOperation *operation) override;
+		virtual void handleStopOperation(inet::LifecycleOperation *operation) override;
+		virtual void handleCrashOperation(inet::LifecycleOperation *operation) override;
 
 		bool isInitializeStage(int stage) override;
 		bool isModuleStartStage(int stage) override;

@@ -32,15 +32,13 @@
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;
 using namespace TUHH_INTAIRNET_ARQ;
-//coutd.setVerbose(false);
 
 Define_Module(IntAirNetLinkLayer);
 
-
-IntAirNetLinkLayer::~IntAirNetLinkLayer() {
-}
+IntAirNetLinkLayer::~IntAirNetLinkLayer() {}
 
 void IntAirNetLinkLayer::finish() {
+    LinkLayer::finish();
     delete ((Rlc*)this->rlcSubLayer);
     //delete this->macSubLayer;
     //cancelAndDelete(subLayerTimerMessage);
@@ -230,17 +228,6 @@ void IntAirNetLinkLayer::initialize(int stage) {
 
 }
 
-void IntAirNetLinkLayer::sendUp(cMessage *message)
-{
-    send(message, upperLayerOutGateId);
-}
-
-void IntAirNetLinkLayer::sendDown(cMessage *message)
-{
-    send(message, lowerLayerOutGateId);
-
-}
-
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
     L3Packet* int_air_net_packet = PacketFactory::fromInetPacket(packet);
     auto macAddressReq = packet->getTag<MacAddressReq>();
@@ -291,35 +278,6 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
         std::cerr << "Exception in IntAirNetLinkLayer::handleLowerPacket: " << e.what() << std::endl;
         throw e;
     }
-}
-
-void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
-}
-
-void IntAirNetLinkLayer::handleMessageWhenDown(cMessage *msg) {
-
-}
-
-void IntAirNetLinkLayer::handleStartOperation(LifecycleOperation *operation){
-
-}
-
-void IntAirNetLinkLayer::handleStopOperation(LifecycleOperation *operation) {
-
-}
-
-void IntAirNetLinkLayer::handleCrashOperation(LifecycleOperation *operation) {
-
-}
-
-bool IntAirNetLinkLayer::isUpperMessage(cMessage *message)
-{
-    return message->getArrivalGateId() == upperLayerInGateId;
-}
-
-bool IntAirNetLinkLayer::isLowerMessage(cMessage *message)
-{
-    return message->getArrivalGateId() == lowerLayerInGateId;
 }
 
 void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {

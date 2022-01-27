@@ -13,13 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import inet.linklayer.contract.ILinkLayer;
-import inet.common.LayeredProtocolBase;
+import intairnet_link_layer.LinkLayer;
 
 package intairnet_link_layer;
 
-
-simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
+simple IntAirNetLinkLayer extends LinkLayer {
     parameters:
         double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.626);
@@ -37,9 +35,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         int maxBeaconInterval = default(25000); // 24ms * 25000slots = 10min
         bool forceBidirectionalP2PLinks = default(false);
         bool initializeBidirectionalP2PLinks = default(true);
-        bool closeP2PLinksEarly = default(false);
-        string lifecycleManager = "^.^.^.lifecycleManager";
-        string arpModule = default("^.^.ipv4.arp");
+        bool closeP2PLinksEarly = default(false);                
         bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
         string gpsrModule = default("^.^.gpsr");
@@ -181,11 +177,5 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
         @statistic[phy_statistic_num_packets_received](title="phy_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[phy_statistic_num_packets_missed](title="phy_statistic_num_packets_missed(num)"; record=vector,histogram,last; interpolationmode=none);
-        
-    gates:
-        input upperLayerIn @labels(INetworkHeader/down);
-        output upperLayerOut @labels(INetworkHeader/up);
-        input lowerLayerIn @labels(ILinkLayerFrame/up);
-        output lowerLayerOut @labels(ILinkLayerFrame/down);
+        @statistic[phy_statistic_num_packets_missed](title="phy_statistic_num_packets_missed(num)"; record=vector,histogram,last; interpolationmode=none);            
 }

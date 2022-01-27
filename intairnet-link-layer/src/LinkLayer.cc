@@ -49,51 +49,55 @@ void LinkLayer::initialize(int stage) {
 }
 
 void LinkLayer::finish() {
-	throw std::runtime_error("finish not implemented");
+	// nothing to do
 }
 
 void LinkLayer::sendUp(inet::cMessage *message) {
-	throw std::runtime_error("sendUp not implemented");
+	send(message, upperLayerOutGateId);
 }
 
 void LinkLayer::sendDown(inet::cMessage *message) {
-	throw std::runtime_error("sendDown not implemented");
+	send(message, lowerLayerOutGateId);
 }
 
 void LinkLayer::handleMessageWhenDown(inet::cMessage *msg) {
-	throw std::runtime_error("handleMessageWhenDown not implemented");
+	
 }
 
 void LinkLayer::handleStartOperation(inet::LifecycleOperation *operation) {
-	throw std::runtime_error("handleStartOperation not implemented");
+	
 }
 
 void LinkLayer::handleStopOperation(inet::LifecycleOperation *operation) {
-	throw std::runtime_error("handleStopOperation not implemented");
+	
 }
 
 void LinkLayer::handleCrashOperation(inet::LifecycleOperation *operation) {
-	throw std::runtime_error("handleCrashOperation not implemented");
+	
+}
+
+void LinkLayer::handleSelfMessage(inet::cMessage *message) {
+	
 }
 
 bool LinkLayer::isInitializeStage(int stage) {
-	throw std::runtime_error("isInitializeStage not implemented");
+	return stage == inet::INITSTAGE_LINK_LAYER;
 }
 
 bool LinkLayer::isModuleStartStage(int stage) {
-	throw std::runtime_error("isModuleStartStage not implemented");
+	return stage == inet::ModuleStartOperation::STAGE_LINK_LAYER;
 }
 
 bool LinkLayer::isModuleStopStage(int stage) {
-	throw std::runtime_error("isModuleStopStage not implemented");
+	return stage == inet::ModuleStopOperation::STAGE_LINK_LAYER;
 }
 
 bool LinkLayer::isUpperMessage(inet::cMessage *message) {
-	throw std::runtime_error("isUpperMessage not implemented");
+	return message->getArrivalGateId() == upperLayerInGateId;
 }
 
 bool LinkLayer::isLowerMessage(inet::cMessage *message) {
-	throw std::runtime_error("isLowerMessage not implemented");
+	return message->getArrivalGateId() == lowerLayerInGateId;
 }
 
 void LinkLayer::handleUpperPacket(inet::Packet *packet) {
@@ -102,8 +106,4 @@ void LinkLayer::handleUpperPacket(inet::Packet *packet) {
 
 void LinkLayer::handleLowerPacket(inet::Packet *packet) {
 	throw std::runtime_error("handleLowerPacket not implemented");
-}
-
-void LinkLayer::handleSelfMessage(inet::cMessage *message) {
-	throw std::runtime_error("handleSelfMessage not implemented");
 }
