@@ -33,51 +33,35 @@
 using namespace inet::physicallayer;
 using namespace TUHH_INTAIRNET_RLC;
 using namespace TUHH_INTAIRNET_ARQ;
-//coutd.setVerbose(false);
 
 Define_Module(IntAirNetLinkLayer);
 
-
-IntAirNetLinkLayer::~IntAirNetLinkLayer() {
-}
+IntAirNetLinkLayer::~IntAirNetLinkLayer() {}
 
 void IntAirNetLinkLayer::finish() {
+    LinkLayer::finish();
     delete ((Rlc*)this->rlcSubLayer);
     //delete this->macSubLayer;
     //cancelAndDelete(subLayerTimerMessage);
 }
 
-void IntAirNetLinkLayer::initialize(int stage)
-{
+void IntAirNetLinkLayer::initialize(int stage) {    
     LayeredProtocolBase::initialize(stage);
+    LinkLayer::initialize(stage);
+
     if (stage == INITSTAGE_LOCAL) {
 
         slotDuration = par("slotDuration");
         gpsrIsUsed = par("gpsrIsUsed").boolValue();
-        arqIsUsed = par("arqIsUsed").boolValue();
-
-        host = getContainingNode(this);
-        mobility = check_and_cast<IMobility *>(host->getSubmodule("mobility"));
-        arp = getModuleFromPar<IArp>(par("arpModule"), this);
+        arqIsUsed = par("arqIsUsed").boolValue();        
 
         mcsotdma_statistics_map.clear();
         for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
             const std::string& s = str_mcsotdma_statistics.at(i);
             mcsotdma_statistics_map[s] = registerSignal(s.c_str());
-        }
-
-        upperLayerInGateId = findGate("upperLayerIn");
-        upperLayerOutGateId = findGate("upperLayerOut");
-        lowerLayerInGateId = findGate("lowerLayerIn");
-        lowerLayerOutGateId = findGate("lowerLayerOut");
-
+        }        
     }
-    else if (stage == INITSTAGE_LINK_LAYER) {
-        cModule *radioModule = gate("lowerLayerOut")->getPathEndGate()->getOwnerModule();
-        auto radio = check_and_cast<inet::physicallayer::IRadio *>(radioModule);
-        radio->setRadioMode(inet::physicallayer::IRadio::RADIO_MODE_TRANSCEIVER);
-
-        // Configure layer:                
+    else if (stage == INITSTAGE_LINK_LAYER) {                
         // which contention method to use
         std::string contention_method = par("contentionMethod");
         ContentionMethod method;
@@ -110,9 +94,7 @@ void IntAirNetLinkLayer::initialize(int stage)
 
         macSubLayer->setOmnetPassUpBeaconFct(reportBeaconCallback);
 
-    } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {
-        lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
-        configureInterfaceEntry();
+    } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {                
         MacAddress address = interfaceEntry->getMacAddress();
         uint32_t planning_horizon = par("planningHorizon");
         uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
@@ -242,44 +224,9 @@ void IntAirNetLinkLayer::initialize(int stage)
             auto pos = this->mobility->getCurrentPosition();
             return SimulatorPosition(pos.x, pos.y, pos.z);
         };
-        ((MacLayer*)macSubLayer)->registerGetPositionCallback(getPositionFkt);
-
-
-
-        lifecycleManager->registerClient(this);                
+        ((MacLayer*)macSubLayer)->registerGetPositionCallback(getPositionFkt);                        
     }
 
-}
-
-void IntAirNetLinkLayer::sendUp(cMessage *message)
-{
-    send(message, upperLayerOutGateId);
-}
-
-void IntAirNetLinkLayer::sendDown(cMessage *message)
-{
-    send(message, lowerLayerOutGateId);
-
-}
-
-void IntAirNetLinkLayer::configureInterfaceEntry()
-{
-    interfaceEntry = getContainingNicModule(this);
-    MacAddress address = MacAddress::generateAutoAddress();
-
-    // data rate
-    interfaceEntry->setDatarate(10);
-
-    // generate a link-layer address to be used as interface token for IPv6
-    interfaceEntry->setMacAddress(address);
-    interfaceEntry->setInterfaceToken(address.formInterfaceIdentifier());
-
-    //TODO: set high enough so that IP does not fragment
-    interfaceEntry->setMtu(1500);
-
-    // capabilities
-    interfaceEntry->setMulticast(true);
-    interfaceEntry->setBroadcast(true);
 }
 
 void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
@@ -301,7 +248,7 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
-    IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
+    auto* pkt = (IntAirNetLinkLayerPacket*) packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
     MacAddress address = interfaceEntry->getMacAddress();
@@ -332,35 +279,6 @@ void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
         std::cerr << "Exception in IntAirNetLinkLayer::handleLowerPacket: " << e.what() << std::endl;
         throw e;
     }
-}
-
-void IntAirNetLinkLayer::handleSelfMessage(cMessage *message) {
-}
-
-void IntAirNetLinkLayer::handleMessageWhenDown(cMessage *msg) {
-
-}
-
-void IntAirNetLinkLayer::handleStartOperation(LifecycleOperation *operation){
-
-}
-
-void IntAirNetLinkLayer::handleStopOperation(LifecycleOperation *operation) {
-
-}
-
-void IntAirNetLinkLayer::handleCrashOperation(LifecycleOperation *operation) {
-
-}
-
-bool IntAirNetLinkLayer::isUpperMessage(cMessage *message)
-{
-    return message->getArrivalGateId() == upperLayerInGateId;
-}
-
-bool IntAirNetLinkLayer::isLowerMessage(cMessage *message)
-{
-    return message->getArrivalGateId() == lowerLayerInGateId;
 }
 
 void IntAirNetLinkLayer::addCallback(IOmnetPluggable *layer, double time) {

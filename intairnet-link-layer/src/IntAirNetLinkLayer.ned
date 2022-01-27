@@ -13,14 +13,15 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import inet.linklayer.contract.ILinkLayer;
-import inet.common.LayeredProtocolBase;
+import intairnet_link_layer.LinkLayer;
 
 package intairnet_link_layer;
 
-
-simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
+simple IntAirNetLinkLayer extends LinkLayer {
     parameters:
+        @display("i=block/rxtx");
+        @class(IntAirNetLinkLayer);
+        
         double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.626);
         double per = default(0);
@@ -32,20 +33,15 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
         bool enableBeacons = default(true);
         bool writeResourceUtilizationToBeaconPayload = default(true);
-        int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*24ms>24s
+        int planningHorizon = default(4096); // number of slots both into past and future
         int minBeaconInterval = default(80);
         int maxBeaconInterval = default(25000); // 24ms * 25000slots = 10min
         bool forceBidirectionalP2PLinks = default(false);
         bool initializeBidirectionalP2PLinks = default(true);
-        bool closeP2PLinksEarly = default(false);
-        string lifecycleManager = "^.^.^.lifecycleManager";
-        string arpModule = default("^.^.ipv4.arp");
+        bool closeP2PLinksEarly = default(false);                
         bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
-        string gpsrModule = default("^.^.gpsr");
-        
-        @display("i=block/rxtx");
-        @class(IntAirNetLinkLayer);
+        string gpsrModule = default("^.^.gpsr");                
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
@@ -92,7 +88,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[arq_srej](title="arq_srej(seqNo)"; record=vector,histogram; interpolationmode=none);   
         @statistic[arq_seqno_passed_up](title="arq_seqno_passed_up(seqNo)"; record=vector,histogram; interpolationmode=none);    
         @statistic[arq_out_of_sequence_list](title="arq_out_of_sequence_list(seqNo)"; record=vector,histogram; interpolationmode=none);  
-        @statistic[arq_seq_no_passed_up](title="arq_seq_no_passed_up(seqNo)"; record=vector,histogram; interpolationmode=none);  
+        @statistic[arq_seq_no_passed_up](title="arq_seq_no_passed_up(seqNo)"; record=vector,histogram; interpolationmode=none);                  
               
         
         @signal[mcsotdma_statistic_num_packets_received](type=double);
@@ -136,6 +132,7 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @signal[mcsotdma_statistic_pp_link_missed_first_data_tx](type=double);   
         @signal[mcsotdma_statistic_num_pp_links_expired](type=double);   
         @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots](type=double);           
+        @signal[mcsotdma_statistic_num_num_dme_packets_rcvd](type=double);                   
         
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -177,15 +174,10 @@ simple IntAirNetLinkLayer extends LayeredProtocolBase like ILinkLayer {
         @statistic[mcsotdma_statistic_pp_link_missed_first_data_tx](title="mcsotdma_statistic_pp_link_missed_first_data_tx"; record=vector,histogram,last,mean; interpolationmode=none);                                
         @statistic[mcsotdma_statistic_num_pp_links_expired](title="mcsotdma_statistic_num_pp_links_expired"; record=vector,histogram,last,mean; interpolationmode=none);                                        
         @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots"; record=vector,histogram,last,mean; interpolationmode=none);                                        
+        @statistic[mcsotdma_statistic_num_num_dme_packets_rcvd](title="mcsotdma_statistic_num_num_dme_packets_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                                                
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
         @statistic[phy_statistic_num_packets_received](title="phy_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[phy_statistic_num_packets_missed](title="phy_statistic_num_packets_missed(num)"; record=vector,histogram,last; interpolationmode=none);
-        
-    gates:
-        input upperLayerIn @labels(INetworkHeader/down);
-        output upperLayerOut @labels(INetworkHeader/up);
-        input lowerLayerIn @labels(ILinkLayerFrame/up);
-        output lowerLayerOut @labels(ILinkLayerFrame/down);
+        @statistic[phy_statistic_num_packets_missed](title="phy_statistic_num_packets_missed(num)"; record=vector,histogram,last; interpolationmode=none);            
 }

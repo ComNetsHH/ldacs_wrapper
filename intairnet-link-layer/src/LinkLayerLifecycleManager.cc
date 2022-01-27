@@ -33,7 +33,7 @@ int LinkLayerLifecycleManager::getRandomInt(int min, int max, int k) {
     }
 }
 
-void LinkLayerLifecycleManager::registerClient(IntAirNetLinkLayer *ll) {
+void LinkLayerLifecycleManager::registerClient(LinkLayer *ll) {
     Enter_Method_Silent();
     linkLayers.push_back(ll);
 

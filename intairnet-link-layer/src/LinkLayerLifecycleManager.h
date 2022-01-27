@@ -15,21 +15,17 @@
 #include "inet/physicallayer/contract/packetlevel/IRadio.h"
 #include "inet/linklayer/acking/AckingMac.h"
 #include <IMac.hpp>
-#include "IntAirNetLinkLayer.h"
+#include "LinkLayer.h"
 
 using namespace inet;
-using namespace std;
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-
-
-
-class LinkLayerLifecycleManager: public cSimpleModule
-{
+class LinkLayerLifecycleManager: public cSimpleModule {
     protected:
         bool isFirstSlot = true;
         double slotDuration;
-        vector<IntAirNetLinkLayer *> linkLayers;
+        /** LDACS users. */
+        std::vector<LinkLayer*> linkLayers;                
         cMessage *slotTimer = nullptr;
 
         void initialize(int stage) override;
@@ -39,7 +35,7 @@ class LinkLayerLifecycleManager: public cSimpleModule
 
   public:
     LinkLayerLifecycleManager();
-    void registerClient(IntAirNetLinkLayer *linkLayer);
+    void registerClient(LinkLayer *linkLayer);
     virtual ~LinkLayerLifecycleManager();
 
     int getRandomInt(int min, int max, int k);
