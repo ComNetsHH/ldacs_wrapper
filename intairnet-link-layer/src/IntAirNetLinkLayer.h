@@ -1,26 +1,13 @@
 #ifndef __INET_INT_AIR_NET_LL_H
 #define __INET_INT_AIR_NET_LL_H
 
-#include "inet/common/INETDefs.h"
-#include "inet/queueing/contract/IPacketQueue.h"
-#include "inet/physicallayer/contract/packetlevel/IRadio.h"
-#include "inet/common/lifecycle/ModuleOperations.h"
-#include "inet/common/LayeredProtocolBase.h"
-#include "inet/linklayer/common/MacAddressTag_m.h"
-#include "inet/common/ProtocolTag_m.h"
-#include "inet/common/packet/Packet.h"
-#include "inet/networklayer/common/InterfaceEntry.h"
-#include "inet/networklayer/contract/IArp.h"
-
+#include "LinkLayer.h"
 #include <IRlc.hpp>
 #include <IMac.hpp>
 #include <IArq.hpp>
 #include <IPhy.hpp>
-#include <INet.hpp>
-#include <IRadio.hpp>
 #include <L2Packet.hpp>
 #include <IOmnetPluggable.hpp>
-
 #include <map>
 
 using namespace inet;
@@ -30,14 +17,11 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 class LinkLayerLifecycleManager;
 
 
-/** @brief
- * Interface implementation of the RLC layer. It defines all common function needed to implement a RLC
- *
+/** 
  *    @author Konrad Fuger, TUHH ComNets
  *    @date August 2020
- *
  */
-class IntAirNetLinkLayer: public LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTDMA::IRadio, public INet {
+class IntAirNetLinkLayer : public LinkLayer {
 protected:
     const std::vector<std::string> str_mcsotdma_statistics = {
             "rlc_bits_received_from_upper",
