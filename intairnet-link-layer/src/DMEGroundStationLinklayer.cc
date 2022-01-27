@@ -1,17 +1,16 @@
-#include "DMELinkLayer.h"
+#include "DMEGroundStationLinkLayer.h"
 #include "PacketFactory.h"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
-Define_Module(DMELinkLayer);
+Define_Module(DMEGroundStationLinkLayer);
 
-void DMELinkLayer::initialize(int stage) {
+void DMEGroundStationLinkLayer::initialize(int stage) {
 	// call base initialize functions
 	LayeredProtocolBase::initialize(stage);
 	LinkLayer::initialize(stage);
 	// now there's three typical init-stages
 	if (stage == INITSTAGE_LOCAL) {
-		// here we parse .ini parameters into member variables
-		this->is_ground_station = par("is_ground_station").boolValue();
+		// here we parse .ini parameters into member variables		
 		this->center_frequency = par("center_frequency").intValue();
 	} else if (stage == INITSTAGE_LINK_LAYER) {                
 
@@ -25,7 +24,7 @@ void DMELinkLayer::initialize(int stage) {
  * and may be used to update internal states if that is needed
  * it could also be that nothing is done here
  */
-void DMELinkLayer::beforeSlotStart() {	
+void DMEGroundStationLinkLayer::beforeSlotStart() {	
 	Enter_Method_Silent(); // just keep this, OMNeT++ needs this
 }
 
@@ -33,7 +32,7 @@ void DMELinkLayer::beforeSlotStart() {
  * at the beginning of a time slot, this is called
  * so you may transmit a packet, or schedule the next transmission, or some such
  */
-void DMELinkLayer::onSlotStart() {	
+void DMEGroundStationLinkLayer::onSlotStart() {	
 	Enter_Method_Silent(); // just keep this, OMNeT++ needs this
 	// update current time slot
 	current_time_slot++;
@@ -55,7 +54,7 @@ void DMELinkLayer::onSlotStart() {
 			// it's generally nice to print errors to stdout
 			// so that you immediately see what's wrong
 			// without having to go into a debugger
-			std::cerr << "Exception in DMELinkLayer::sendToChannel: " << e.what() << std::endl;
+			std::cerr << "Exception in DMEGroundStationLinkLayer::sendToChannel: " << e.what() << std::endl;
 			// after catching it, we throw it again, so that the program still terminates
 			throw e;
 		}
@@ -69,15 +68,15 @@ void DMELinkLayer::onSlotStart() {
  * so if that container contains exactly one packet, it is processed
  * and if it contains >1 packets, then a collision has occurred, the respective statistic is updated, and the packets are discarded
  */
-void DMELinkLayer::onSlotEnd() {
+void DMEGroundStationLinkLayer::onSlotEnd() {
 	Enter_Method_Silent(); // just keep this, OMNeT++ needs this
 }
 
-void DMELinkLayer::handleUpperPacket(inet::Packet *packet) {
+void DMEGroundStationLinkLayer::handleUpperPacket(inet::Packet *packet) {
 	throw std::runtime_error("handleUpperPacket not implemented @DME");
 }
 
-void DMELinkLayer::handleLowerPacket(inet::Packet *packet) {
+void DMEGroundStationLinkLayer::handleLowerPacket(inet::Packet *packet) {
 	// We're sending only IntAirNetLinkLayerPacket* instances, so it's safe to cast.
 	auto* casted_packet = (IntAirNetLinkLayerPacket*) packet;
 	// These contain our own packet implementation, which you can get like so.

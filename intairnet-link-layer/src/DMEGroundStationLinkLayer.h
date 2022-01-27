@@ -3,12 +3,12 @@
 
 #include "LinkLayer.h"
 
-class DMELinkLayer : public LinkLayer {
+class DMEGroundStationLinkLayer : public LinkLayer {
 	public:
 		/** Constructor. */
-		DMELinkLayer() = default;
+		DMEGroundStationLinkLayer() = default;
 		/** Destructor. */
-		~DMELinkLayer() = default;
+		~DMEGroundStationLinkLayer() = default;
 
 		/** Called before the start of each time slot. */
 		void beforeSlotStart();
@@ -30,15 +30,14 @@ class DMELinkLayer : public LinkLayer {
     	void handleLowerPacket(inet::Packet *packet) override;
 
 	protected:
-		unsigned long long current_time_slot = 0;		
-		bool is_ground_station = false;
+		unsigned long long current_time_slot = 0;				
 
 	public:
 		// I made it public s.t. the << operator below can use it.
 		uint64_t center_frequency = 1000;
 };
 
-inline std::ostream& operator<<(std::ostream& stream, const DMELinkLayer& link_layer) {
+inline std::ostream& operator<<(std::ostream& stream, const DMEGroundStationLinkLayer& link_layer) {
 	return stream << "DMEGroundStation(f=" << link_layer.center_frequency << ")";
 }
 

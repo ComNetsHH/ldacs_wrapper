@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-import intairnet_link_layer.DMELinkLayer;
+import intairnet_link_layer.DMEGroundStationLinkLayer;
 import intairnet_link_layer.IntAirNetRadio;
 import inet.queueing.contract.IPacketQueue;
 import inet.linklayer.contract.IWirelessInterface;
@@ -23,7 +23,7 @@ import inet.physicallayer.contract.packetlevel.IRadio;
 package intairnet_link_layer;
 
 
-network DMEInterface extends InterfaceEntry like IWirelessInterface
+network DMEGroundStationInterface extends InterfaceEntry like IWirelessInterface
 {
     parameters:
         @class(::inet::InterfaceEntry);
@@ -39,7 +39,7 @@ network DMEInterface extends InterfaceEntry like IWirelessInterface
         output upperLayerOut;
         input radioIn @labels(Signal);
     submodules:
-        linkLayer: DMELinkLayer {
+        linkLayer: DMEGroundStationLinkLayer {
 			parameters:
                 @display("p=100,150");
         }
