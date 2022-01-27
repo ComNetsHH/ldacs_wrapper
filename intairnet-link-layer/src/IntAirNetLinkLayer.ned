@@ -33,7 +33,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
         bool enableBeacons = default(true);
         bool writeResourceUtilizationToBeaconPayload = default(true);
-        int planningHorizon = default(1024); // number of slots both into past and future, e.g. 1024*24ms>24s
+        int planningHorizon = default(4096); // number of slots both into past and future
         int minBeaconInterval = default(80);
         int maxBeaconInterval = default(25000); // 24ms * 25000slots = 10min
         bool forceBidirectionalP2PLinks = default(false);
