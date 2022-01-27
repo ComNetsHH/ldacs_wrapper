@@ -88,7 +88,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[arq_srej](title="arq_srej(seqNo)"; record=vector,histogram; interpolationmode=none);   
         @statistic[arq_seqno_passed_up](title="arq_seqno_passed_up(seqNo)"; record=vector,histogram; interpolationmode=none);    
         @statistic[arq_out_of_sequence_list](title="arq_out_of_sequence_list(seqNo)"; record=vector,histogram; interpolationmode=none);  
-        @statistic[arq_seq_no_passed_up](title="arq_seq_no_passed_up(seqNo)"; record=vector,histogram; interpolationmode=none);  
+        @statistic[arq_seq_no_passed_up](title="arq_seq_no_passed_up(seqNo)"; record=vector,histogram; interpolationmode=none);                  
               
         
         @signal[mcsotdma_statistic_num_packets_received](type=double);
@@ -132,6 +132,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_pp_link_missed_first_data_tx](type=double);   
         @signal[mcsotdma_statistic_num_pp_links_expired](type=double);   
         @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots](type=double);           
+        @signal[mcsotdma_statistic_num_num_dme_packets_rcvd](type=double);                   
         
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -173,6 +174,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[mcsotdma_statistic_pp_link_missed_first_data_tx](title="mcsotdma_statistic_pp_link_missed_first_data_tx"; record=vector,histogram,last,mean; interpolationmode=none);                                
         @statistic[mcsotdma_statistic_num_pp_links_expired](title="mcsotdma_statistic_num_pp_links_expired"; record=vector,histogram,last,mean; interpolationmode=none);                                        
         @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots"; record=vector,histogram,last,mean; interpolationmode=none);                                        
+        @statistic[mcsotdma_statistic_num_num_dme_packets_rcvd](title="mcsotdma_statistic_num_num_dme_packets_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                                                
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  

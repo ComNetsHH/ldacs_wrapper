@@ -247,7 +247,7 @@ void IntAirNetLinkLayer::handleUpperPacket(Packet *packet) {
 }
 
 void IntAirNetLinkLayer::handleLowerPacket(Packet *packet) {
-    IntAirNetLinkLayerPacket* pkt = (IntAirNetLinkLayerPacket*)packet;
+    auto* pkt = (IntAirNetLinkLayerPacket*) packet;
     L2Packet* containedPacket = pkt->getContainedPacket();
     auto center_frequency = pkt->center_frequency;
     MacAddress address = interfaceEntry->getMacAddress();

@@ -16,13 +16,14 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 class LinkLayerLifecycleManager;
 
-
 /** 
  *    @author Konrad Fuger, TUHH ComNets
  *    @date August 2020
  */
 class IntAirNetLinkLayer : public LinkLayer {   
 public:
+    ~IntAirNetLinkLayer();    
+
     void sendToChannel(L2Packet* data, uint64_t center_frequency) override;
     void receiveFromChannel(L2Packet *packet, uint64_t center_frequency) override { };    
     void receiveFromLower(L3Packet* packet) override;
@@ -31,8 +32,7 @@ public:
     void onSlotStart();
     void onSlotEnd();
 
-protected:
-    ~IntAirNetLinkLayer();    
+protected:    
     void initialize(int stage) override;
     void finish() override;        
     void handleUpperPacket(Packet *packet) override;
@@ -120,7 +120,8 @@ protected:
             "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
             "mcsotdma_statistic_pp_link_missed_first_data_tx",
             "mcsotdma_statistic_num_pp_links_expired",
-            "mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots"
+            "mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots",
+            "mcsotdma_statistic_num_num_dme_packets_rcvd"
     };
 };
 
