@@ -1,4 +1,5 @@
 #include "LinkLayer.h"
+#include "LinkLayerLifecycleManager.h"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
@@ -15,7 +16,36 @@ void LinkLayer::receiveFromLower(L3Packet* packet) {
 }
 
 void LinkLayer::initialize(int stage) {
-	throw std::runtime_error("initialize not implemented");
+	if (stage == inet::INITSTAGE_LOCAL) {
+		upperLayerInGateId = findGate("upperLayerIn");
+        upperLayerOutGateId = findGate("upperLayerOut");
+        lowerLayerInGateId = findGate("lowerLayerIn");
+        lowerLayerOutGateId = findGate("lowerLayerOut");
+		host = inet::getContainingNode(this);
+        mobility = omnetpp::check_and_cast<inet::IMobility*>(host->getSubmodule("mobility"));
+        arp = inet::getModuleFromPar<inet::IArp>(par("arpModule"), this);
+	} else if (stage == INITSTAGE_LINK_LAYER) {
+		cModule *radioModule = gate("lowerLayerOut")->getPathEndGate()->getOwnerModule();
+        auto radio = check_and_cast<inet::physicallayer::IRadio *>(radioModule);
+        radio->setRadioMode(inet::physicallayer::IRadio::RADIO_MODE_TRANSCEIVER);
+	} else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {		
+		this->interfaceEntry = inet::getContainingNicModule(this);
+		// configure interface entry
+		inet::MacAddress address = inet::MacAddress::generateAutoAddress();
+		// data rate
+		this->interfaceEntry->setDatarate(10);
+		// generate a link-layer address to be used as interface token for IPv6
+		this->interfaceEntry->setMacAddress(address);
+		this->interfaceEntry->setInterfaceToken(address.formInterfaceIdentifier());
+		//TODO: set high enough so that IP does not fragment
+		this->interfaceEntry->setMtu(1500);
+		// capabilities
+		this->interfaceEntry->setMulticast(true);
+		this->interfaceEntry->setBroadcast(true);
+		// register with manager
+		this->lifecycleManager = getModuleFromPar<LinkLayerLifecycleManager>(par("lifecycleManager"), this);
+		this->lifecycleManager->registerClient(this);
+	}	
 }
 
 void LinkLayer::finish() {

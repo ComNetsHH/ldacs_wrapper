@@ -91,10 +91,7 @@ protected:
     };
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
 
-    double slotDuration;
-
-    /** Reference to the scheduler instance */
-    LinkLayerLifecycleManager* lifecycleManager = nullptr;
+    double slotDuration;    
 
     vector<pair<double, IOmnetPluggable*>> callbackTimes;
 
@@ -103,16 +100,9 @@ protected:
     IMac* macSubLayer;
     IPhy* phySubLayer;
 
-    Packet *tmp;
+    Packet *tmp;    
 
-    InterfaceEntry *interfaceEntry = nullptr;
-
-    ~IntAirNetLinkLayer();
-
-    int upperLayerInGateId = -1;
-    int upperLayerOutGateId = -1;
-    int lowerLayerInGateId = -1;
-    int lowerLayerOutGateId = -1;
+    ~IntAirNetLinkLayer();    
 
     void initialize(int stage) override;
     void finish() override;
@@ -135,8 +125,7 @@ protected:
     void handleLowerPacket(Packet *packet) override;
     void handleSelfMessage(cMessage *message) override;
 
-    void addCallback(IOmnetPluggable *layer, double time);
-    void configureInterfaceEntry();
+    void addCallback(IOmnetPluggable *layer, double time);    
 
     void emitStatistic(string statistic_name, double value);
 
@@ -146,11 +135,7 @@ protected:
     L2Packet* copyL2Packet(L2Packet* original);
     L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
 
-    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);
-
-    cModule *host = nullptr;
-    IMobility *mobility = nullptr;
-    IArp *arp = nullptr;
+    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);    
 
     bool gpsrIsUsed = false;
     bool arqIsUsed = false;

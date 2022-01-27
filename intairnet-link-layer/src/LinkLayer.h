@@ -17,6 +17,8 @@
 #include <L2Packet.hpp>
 #include <IOmnetPluggable.hpp>
 
+class LinkLayerLifecycleManager;
+
 /**
  * Link Layer interface.
  */
@@ -62,6 +64,18 @@ class LinkLayer : public inet::LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTD
 		void handleUpperPacket(inet::Packet *packet) override;
 		void handleLowerPacket(inet::Packet *packet) override;
 		void handleSelfMessage(inet::cMessage *message) override;
+
+	protected:
+		int upperLayerInGateId = -1;
+		int upperLayerOutGateId = -1;
+		int lowerLayerInGateId = -1;
+		int lowerLayerOutGateId = -1;	
+		inet::cModule *host = nullptr;
+		inet::IMobility *mobility = nullptr;
+		inet::IArp *arp = nullptr;
+		/** Pointer to the scheduler instance. */
+    	LinkLayerLifecycleManager *lifecycleManager = nullptr;
+		inet::InterfaceEntry *interfaceEntry = nullptr;
 };
 
 #endif // __INET_INT_AIR_NET_LINKLAYER_H
