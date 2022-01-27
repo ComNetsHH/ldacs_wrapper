@@ -19,6 +19,9 @@ package intairnet_link_layer;
 
 simple IntAirNetLinkLayer extends LinkLayer {
     parameters:
+        @display("i=block/rxtx");
+        @class(IntAirNetLinkLayer);
+        
         double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.626);
         double per = default(0);
@@ -38,10 +41,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         bool closeP2PLinksEarly = default(false);                
         bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
-        string gpsrModule = default("^.^.gpsr");
-        
-        @display("i=block/rxtx");
-        @class(IntAirNetLinkLayer);
+        string gpsrModule = default("^.^.gpsr");                
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
