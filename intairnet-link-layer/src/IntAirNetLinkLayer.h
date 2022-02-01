@@ -96,6 +96,8 @@ protected:
             "mcsotdma_statistic_num_beacons_sent",            
             "mcsotdma_statistic_num_cancelled_link_requests",
             "mcsotdma_statistic_num_packet_collisions",            
+            "mcsotdma_statistic_num_sh_packet_collisions",
+            "mcsotdma_statistic_num_pp_packet_collisions",
             "mcsotdma_statistic_num_channel_errors",
             "mcsotdma_statistic_contention",
             "mcsotdma_statistic_congestion",
