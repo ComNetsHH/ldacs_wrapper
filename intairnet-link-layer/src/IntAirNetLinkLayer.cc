@@ -54,7 +54,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
         slotDuration = par("slotDuration");
         gpsrIsUsed = par("gpsrIsUsed").boolValue();
         arqIsUsed = par("arqIsUsed").boolValue();        
-
+	
         mcsotdma_statistics_map.clear();
         for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
             const std::string& s = str_mcsotdma_statistics.at(i);
@@ -448,7 +448,8 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     beacon->setPosition(rcvdPosition);
 
     // Probably unused. Just setting it for completeness
-    beacon->setChunkLength(B(10));
+    // beacon->setChunkLength(B(getSelfAddress().getAddressType()->getAddressByteLength() + positionByteLength));
+    beacon->setChunkLength(B(12));
     packet->insertAtBack(beacon);
 
     // @Musab, this code snippet will pass the beacon up, replace "MyNewGpsr" with you actual class name and make processBeacon a public function :)
