@@ -9,6 +9,7 @@
 #include <L2Packet.hpp>
 #include <IOmnetPluggable.hpp>
 #include <map>
+#include "inet/networklayer/contract/IRoutingTable.h"
 
 using namespace inet;
 using namespace std;
