@@ -41,7 +41,8 @@ simple IntAirNetLinkLayer extends LinkLayer {
         bool closeP2PLinksEarly = default(false);                
         bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
-        string gpsrModule = default("^.^.gpsr");   
+        string gpsrModule = default("^.^.gpsr");
+        string routingTableModule = default("^.ipv4.routingTable");   
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
