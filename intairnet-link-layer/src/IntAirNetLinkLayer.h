@@ -56,6 +56,7 @@ protected:
     Packet *tmp;    
     bool gpsrIsUsed = false;
     bool arqIsUsed = false;    
+    IRoutingTable *routingTable = nullptr;    // TODO: delete when necessary functions are moved to interface table
     const std::vector<std::string> str_mcsotdma_statistics = {
             "rlc_bits_received_from_upper",
             "rlc_bits_received_from_lower",
