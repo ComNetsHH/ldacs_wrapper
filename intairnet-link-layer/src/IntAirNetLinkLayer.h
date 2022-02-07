@@ -10,6 +10,12 @@
 #include <IOmnetPluggable.hpp>
 #include <map>
 #include "inet/networklayer/contract/IRoutingTable.h"
+#include "inet/transportlayer/udp/UdpHeader_m.h"
+#include "inet/networklayer/contract/IL3AddressType.h"
+#include "inet/common/packet/Packet.h"
+#include "inet/networklayer/common/HopLimitTag_m.h"
+#include "inet/networklayer/common/L3AddressTag_m.h"
+
 
 using namespace inet;
 using namespace std;
