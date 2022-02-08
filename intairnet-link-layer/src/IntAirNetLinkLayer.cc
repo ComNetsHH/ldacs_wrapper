@@ -439,9 +439,9 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
         return;
     }
     auto encodedPosition = header.position.encodedPosition;
-    Coord rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);
+    auto rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);
     auto rcvdMacAddress = MacAddress(0x0AAA00000000ULL + (origin_id.getId() & 0xffffffffUL));
-    L3Address rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
+    auto rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
 
     const auto& beacon = makeShared<GpsrBeaconModified>();
     auto packet = new Packet();	
@@ -474,7 +474,8 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     //GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
     //gpsr->processBeacon(packet);
     GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
-    gpsr->processUdpPacket(udpPacket);
+    //gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition);
+    //gpsr->processUdpPacket(udpPacket);
    
 }
 
