@@ -123,7 +123,9 @@ protected:
             "mcsotdma_statistic_pp_link_missed_first_data_tx",
             "mcsotdma_statistic_num_pp_links_expired",
             "mcsotdma_statistic_num_pp_requests_rejected_due_to_unsufficient_tx_slots",
-            "mcsotdma_statistic_num_num_dme_packets_rcvd"
+            "mcsotdma_statistic_num_num_dme_packets_rcvd",
+            "mcsotdma_statistic_num_broadcast_collisions_detected",
+            "mcsotdma_statistic_num_beacon_collisions_detected"
     };
 };
 
