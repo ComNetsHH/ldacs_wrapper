@@ -9,6 +9,13 @@
 #include <L2Packet.hpp>
 #include <IOmnetPluggable.hpp>
 #include <map>
+#include "inet/networklayer/contract/IRoutingTable.h"
+#include "inet/transportlayer/udp/UdpHeader_m.h"
+#include "inet/networklayer/contract/IL3AddressType.h"
+#include "inet/common/packet/Packet.h"
+#include "inet/networklayer/common/HopLimitTag_m.h"
+#include "inet/networklayer/common/L3AddressTag_m.h"
+
 
 using namespace inet;
 using namespace std;
@@ -56,6 +63,7 @@ protected:
     Packet *tmp;    
     bool gpsrIsUsed = false;
     bool arqIsUsed = false;    
+    IRoutingTable *routingTable = nullptr;    // TODO: delete when necessary functions are moved to interface table
     const std::vector<std::string> str_mcsotdma_statistics = {
             "rlc_bits_received_from_upper",
             "rlc_bits_received_from_lower",
