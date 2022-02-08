@@ -439,9 +439,9 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
         return;
     }
     auto encodedPosition = header.position.encodedPosition;
-    auto rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);
+    Coord rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);
     auto rcvdMacAddress = MacAddress(0x0AAA00000000ULL + (origin_id.getId() & 0xffffffffUL));
-    auto rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
+    L3Address rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
 
     const auto& beacon = makeShared<GpsrBeaconModified>();
     auto packet = new Packet();	
@@ -451,30 +451,13 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     L3Address ret = routingTable->getRouterIdAsGeneric();
     // Probably unused. Just setting it for completeness
     beacon->setChunkLength(B(rcvdIpAddress.getAddressType()->getAddressByteLength() + 8));
-    //beacon->setChunkLength(B(12));
-    //packet->insertAtBack(beacon);
-    
-    EV_INFO << "Sending beacon: address = " << beacon->getAddress() << ", position = " << beacon->getPosition() << endl;
-    Packet *udpPacket = new Packet("GpsrBeaconModified");
-    udpPacket->insertAtBack(beacon);
-    auto udpHeader = makeShared<UdpHeader>();
-    udpHeader->setSourcePort(269);
-    udpHeader->setDestinationPort(269);
-    udpHeader->setCrcMode(CRC_DISABLED);
-    udpPacket->insertAtFront(udpHeader);
-    auto addresses = udpPacket->addTag<L3AddressReq>();
-    addresses->setSrcAddress(rcvdIpAddress);
-    addresses->setDestAddress(rcvdIpAddress.getAddressType()->getLinkLocalManetRoutersMulticastAddress());
-    udpPacket->addTag<HopLimitReq>()->setHopLimit(255);
-    udpPacket->addTag<PacketProtocolTag>()->setProtocol(&Protocol::manet);
-    udpPacket->addTag<DispatchProtocolReq>()->setProtocol(rcvdIpAddress.getAddressType()->getNetworkProtocol());
+
     
     // @Musab, this code snippet will pass the beacon up, replace "MyNewGpsr" with you actual class name and make processBeacon a public function :)
     // Pass up beacon directly to gpsr (skipping NW layer)
     //GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
-    //gpsr->processBeacon(packet);
     GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
-    //gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition);
+    gpsr->neighborPositionTable.setPosition(rcvdIpAddress, rcvdPosition);
     //gpsr->processUdpPacket(udpPacket);
    
 }
