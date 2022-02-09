@@ -457,7 +457,8 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     // Pass up beacon directly to gpsr (skipping NW layer)
     //GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
     GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
-    gpsr->neighborPositionTable.setPosition(rcvdIpAddress, rcvdPosition);
+    //gpsr->neighborPositionTable.setPosition(rcvdIpAddress, rcvdPosition);
+   gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition);
     //gpsr->processUdpPacket(udpPacket);
    
 }
