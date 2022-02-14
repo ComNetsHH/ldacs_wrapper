@@ -36,12 +36,13 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int planningHorizon = default(4096); // number of slots both into past and future
         int minBeaconInterval = default(80);
         int maxBeaconInterval = default(25000); // 24ms * 25000slots = 10min
-        bool forceBidirectionalP2PLinks = default(false);
+        bool forceBidirectionalP2PLinks = default(true);
         bool initializeBidirectionalP2PLinks = default(true);
         bool closeP2PLinksEarly = default(false);                
         bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
         string gpsrModule = default("^.^.routing");
+        int ppBurstOffset = default(20); // number of slots in-between transmission bursts for PP links
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);

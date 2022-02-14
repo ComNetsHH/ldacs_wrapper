@@ -86,6 +86,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
         macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
         macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));
         macSubLayer->setForceBidirectionalLinks(par("forceBidirectionalP2PLinks"));        
+        macSubLayer->setPPLinkBurstOffset(par("ppBurstOffset"));       
         
         // Report Beacon Callback
         function<void (MacId, L2HeaderBeacon)> reportBeaconCallback = [this](MacId origin_id, L2HeaderBeacon header){
