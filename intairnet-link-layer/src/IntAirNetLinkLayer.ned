@@ -43,7 +43,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         bool gpsrIsUsed = default(false);
         string gpsrModule = default("^.^.routing");
         int ppBurstOffset = default(20); // number of slots in-between transmission bursts for PP links
-        bool adaptivePPBurstOffset = default(true);
+        bool adaptivePPBurstOffset = default(false);
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
