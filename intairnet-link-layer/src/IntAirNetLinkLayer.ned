@@ -29,7 +29,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
         int broadcastSlotSelectionMaxNumCandidateSlots = default(10000); 
         string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'        
-        bool alwaysScheduleNextBroadcastSlot = default(true);
+        bool alwaysScheduleNextBroadcastSlot = default(false);
         bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
         bool enableBeacons = default(true);
         bool writeResourceUtilizationToBeaconPayload = default(true);
@@ -43,7 +43,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         bool gpsrIsUsed = default(false);
         string gpsrModule = default("^.^.routing");
         int ppBurstOffset = default(20); // number of slots in-between transmission bursts for PP links
-        bool adaptivePPBurstOffset = default(false);
+        bool adaptivePPBurstOffset = default(true);
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
