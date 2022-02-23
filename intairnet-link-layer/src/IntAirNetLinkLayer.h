@@ -132,7 +132,8 @@ protected:
             "mcsotdma_statistic_num_broadcast_collisions_detected",
             "mcsotdma_statistic_num_beacon_collisions_detected",
             "mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources",
-            "mcsotdma_statistic_unicast_mac_delay"
+            "mcsotdma_statistic_unicast_mac_delay",
+            "mcsotdma_statistic_burst_offset"
     };
 };
 
