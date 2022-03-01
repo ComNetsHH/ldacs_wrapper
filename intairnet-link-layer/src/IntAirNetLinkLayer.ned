@@ -44,6 +44,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         string gpsrModule = default("^.^.routing");
         int ppBurstOffset = default(20); // number of slots in-between transmission bursts for PP links
         bool adaptivePPBurstOffset = default(true);
+        int numPPChannels = default(3);
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);

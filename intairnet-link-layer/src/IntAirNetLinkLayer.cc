@@ -98,8 +98,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
 
     } else if (stage == INITSTAGE_NETWORK_INTERFACE_CONFIGURATION) {                
         MacAddress address = interfaceEntry->getMacAddress();
-        uint32_t planning_horizon = par("planningHorizon");
-        uint64_t center_frequency1 = 1000, center_frequency2 = 2000, center_frequency3 = 3000, bc_frequency = 4000, bandwidth = 500;
+        uint32_t planning_horizon = par("planningHorizon");        
 
 
         rlcSubLayer = new Rlc(1600);
@@ -119,11 +118,14 @@ void IntAirNetLinkLayer::initialize(int stage) {
         for (ReservationTable*& table : ((PhyLayer*)phySubLayer)->getReceiverReservationTables()) {
             reservation_manager->addReceiverReservationTable(table);
         }
-        reservation_manager->addFrequencyChannel(false, bc_frequency, bandwidth);
-        reservation_manager->addFrequencyChannel(true, center_frequency1, bandwidth);
-        reservation_manager->addFrequencyChannel(true, center_frequency2, bandwidth);
-        reservation_manager->addFrequencyChannel(true, center_frequency3, bandwidth);
 
+        uint64_t bc_frequency = 960, bandwidth = 500;
+        reservation_manager->addFrequencyChannel(false, bc_frequency, bandwidth);
+        int numPPChannels = par("numPPChannels");
+        for (int i = 0; i < numPPChannels; i++) {
+            uint64_t frequency = bc_frequency + (i+1);
+            reservation_manager->addFrequencyChannel(true, frequency, bandwidth);
+        }                
 
         rlcSubLayer->setLowerLayer(arqSubLayer);
         rlcSubLayer->setUpperLayer((INet*)this);
