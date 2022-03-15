@@ -36,7 +36,6 @@ int LinkLayerLifecycleManager::getRandomInt(int min, int max, int k) {
 void LinkLayerLifecycleManager::registerClient(LinkLayer *ll) {
     Enter_Method_Silent();
     linkLayers.push_back(ll);
-
 }
 
 void LinkLayerLifecycleManager::handleMessage(cMessage *message) {
@@ -68,6 +67,13 @@ void LinkLayerLifecycleManager::handleMessage(cMessage *message) {
     }
 }
 
-
+size_t LinkLayerLifecycleManager::isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const {
+    size_t num_transmissions_this_slot = 0;
+    for (const auto *ll : linkLayers) {
+        if (ll->isGoingToTransmitDuringCurrentSlot(center_frequecy))
+            num_transmissions_this_slot++;
+    }
+    return num_transmissions_this_slot;
+}
 
 

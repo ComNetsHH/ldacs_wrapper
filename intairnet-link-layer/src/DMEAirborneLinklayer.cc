@@ -55,3 +55,7 @@ void DMEAirborneLinkLayer::handleUpperPacket(inet::Packet *packet) {
 void DMEAirborneLinkLayer::handleLowerPacket(inet::Packet *packet) {
 	std::cout << "t=" << this->current_time_slot << " " << *this << " receives a packet." << std::endl;	
 }	
+
+bool DMEAirborneLinkLayer::isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const {
+	return false;
+}

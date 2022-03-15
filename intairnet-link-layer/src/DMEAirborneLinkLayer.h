@@ -19,6 +19,8 @@ class DMEAirborneLinkLayer : public LinkLayer {
 		/** Called at the end of each time slot. */
 		void onSlotEnd();
 
+		bool isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const override;
+
 	protected:
 		/** Called during simulation setup several times with the different init-stages. */
 		void initialize(int stage) override;
