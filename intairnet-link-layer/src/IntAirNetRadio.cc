@@ -16,6 +16,7 @@
 #include "IntAirNetRadio.h"
 #include "inet/physicallayer/common/packetlevel/RadioMedium.h"
 #include "IntAirNetLinkLayerPacket.h"
+#include "inet/common/ModuleAccess.h"
 #include <L2Packet.hpp>
 
 Register_Class(IntAirNetRadio);
@@ -65,13 +66,19 @@ void IntAirNetRadio::endReception(cMessage *timer)
         auto macFrame = medium->receivePacket(this, signal);
         // TODO: FIXME: see handling packets with incorrect PHY headers in the TODO file
         decapsulate(macFrame);
-        if(uniform(0, 1.0) > par("per").doubleValue()) {
-            sendUp(macFrame);
-        } else {
-            L2Packet * containedPkt =  ((IntAirNetLinkLayerPacket *)macFrame)->getContainedPacket();
+
+        Coord rx_pos = check_and_cast<IMobility *>(getContainingNode(this)->getSubmodule("mobility"))->getCurrentPosition();
+        Coord tx_pos = check_and_cast<const IReception *>(reception)->getTransmission()->getStartPosition();
+
+        //applying the formula sqrt((x_2-x_1)^2+(y_2-y_1)^2) to get the distance between Tx and Rx
+        double dist = rx_pos.distance(tx_pos);
+        L2Packet* containedPkt =  ((IntAirNetLinkLayerPacket *)macFrame)->getContainedPacket();
+        containedPkt->receptionDist = dist;
+
+        if(uniform(0, 1.0) <= par("per").doubleValue()) {
             containedPkt->hasChannelError = true;
-            sendUp(macFrame);
         }
+        sendUp(macFrame);
         receptionTimer = nullptr;
         emit(receptionEndedSignal, check_and_cast<const cObject *>(reception));
     //}
