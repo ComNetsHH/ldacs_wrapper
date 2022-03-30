@@ -39,6 +39,8 @@ public:
     void onSlotStart();
     void onSlotEnd();
 
+    bool isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const override;
+
 protected:    
     void initialize(int stage) override;
     void finish() override;        

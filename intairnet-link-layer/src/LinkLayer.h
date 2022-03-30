@@ -42,6 +42,7 @@ class LinkLayer : public inet::LayeredProtocolBase, public TUHH_INTAIRNET_MCSOTD
 		unsigned int getNumHopsToGroundStation() const override { return 0;};
 		/** TODO delete from interface */
     	void reportNumHopsToGS(const MacId& id, unsigned int num_hops) override {};
+		virtual bool isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const = 0;
 
 	protected:
 		virtual void initialize(int stage) override;

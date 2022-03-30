@@ -95,3 +95,7 @@ void DMEGroundStationLinkLayer::handleLowerPacket(inet::Packet *packet) {
 		std::cout << "discard, as my frequency is " << this->center_frequency << "." << std::endl;
 	}
 }	
+
+bool DMEGroundStationLinkLayer::isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const {
+	return false;
+}

@@ -30,7 +30,7 @@ class LinkLayerLifecycleManager: public cSimpleModule {
 
         void initialize(int stage) override;
         virtual void handleMessage(cMessage *message) override;
-
+        size_t isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const;
 
 
   public:
