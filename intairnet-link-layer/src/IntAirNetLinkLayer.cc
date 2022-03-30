@@ -41,7 +41,9 @@ IntAirNetLinkLayer::~IntAirNetLinkLayer() {}
 void IntAirNetLinkLayer::finish() {
     LinkLayer::finish();
     delete ((Rlc*)this->rlcSubLayer);
-    //delete this->macSubLayer;
+    delete this->macSubLayer;
+    delete this->arqSubLayer;
+    delete this->phySubLayer;
     //cancelAndDelete(subLayerTimerMessage);
 }
 
@@ -303,27 +305,32 @@ void IntAirNetLinkLayer::sendToChannel(L2Packet* data, uint64_t center_frequency
 }
 
 void IntAirNetLinkLayer::receiveFromLower(L3Packet* packet) {
-    if(packet->original == nullptr) {
+    if(packet == nullptr) {
         return;
     }
+
     Packet* original = (Packet*)packet->original;
 
-    if(original) {
-        auto macAddressReq = original->getTag<MacAddressReq>();
-        auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
-        macAddressInd->setSrcAddress(macAddressReq->getSrcAddress());
-        macAddressInd->setDestAddress(macAddressReq->getDestAddress());
-        original->addTagIfAbsent<InterfaceInd>()->setInterfaceId(interfaceEntry->getInterfaceId());
-        auto payloadProtocol = ProtocolGroup::ethertype.getProtocol(ProtocolGroup::ethertype.getProtocolNumber(original->getTag<PacketProtocolTag>()->getProtocol()));
-        original->addTagIfAbsent<DispatchProtocolReq>()->setProtocol(payloadProtocol);
-        original->addTagIfAbsent<PacketProtocolTag>()->setProtocol(payloadProtocol);
-        try {
-            sendUp(original);
-        } catch (const std::exception& e) {
-            std::cerr << "Exception in IntAirNetLinkLayer::receiveFromLower: " << e.what() << std::endl;
-            throw e;
-        }
+    if(original == nullptr) {
+        delete packet;
+        return;
     }
+
+    auto macAddressReq = original->getTag<MacAddressReq>();
+    auto macAddressInd = original->addTagIfAbsent<MacAddressInd>();
+    macAddressInd->setSrcAddress(macAddressReq->getSrcAddress());
+    macAddressInd->setDestAddress(macAddressReq->getDestAddress());
+    original->addTagIfAbsent<InterfaceInd>()->setInterfaceId(interfaceEntry->getInterfaceId());
+    auto payloadProtocol = ProtocolGroup::ethertype.getProtocol(ProtocolGroup::ethertype.getProtocolNumber(original->getTag<PacketProtocolTag>()->getProtocol()));
+    original->addTagIfAbsent<DispatchProtocolReq>()->setProtocol(payloadProtocol);
+    original->addTagIfAbsent<PacketProtocolTag>()->setProtocol(payloadProtocol);
+    try {
+        sendUp(original);
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in IntAirNetLinkLayer::receiveFromLower: " << e.what() << std::endl;
+        throw e;
+    }
+    delete packet;
 }
 
 void IntAirNetLinkLayer::emitStatistic(string statistic_name, double value) {
