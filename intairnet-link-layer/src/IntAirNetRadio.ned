@@ -20,5 +20,14 @@ package intairnet_link_layer;
 module IntAirNetRadio extends UnitDiskRadio {
 	parameters:
 	    double per = default(0);
+		double receiver_bandwidth = default(500); 
+        double tx_power = default(42); 
+        double tx_antenna_gain = default(3); 
+        double rx_antenna_gain = default(3); 
+        double tx_loss = default(4); 
+        double rx_loss = default(4); 
+        double noise_figure = default(6); 
+        double thermal_noise_density = default(-174);
+        double snr_margin= default(10);
 	    @class(IntAirNetRadio);
 }

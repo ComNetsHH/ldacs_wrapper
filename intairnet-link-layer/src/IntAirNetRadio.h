@@ -22,9 +22,22 @@ using namespace inet;
 using namespace inet::physicallayer;
 
 class IntAirNetRadio: public UnitDiskRadio {
+public:
+    void initialize(int stage) override;
+
 protected:
     void startReception(cMessage *timer, IRadioSignal::SignalPart part) override;
     void endReception(cMessage *timer) override;
+
+    double tx_power = 0;
+    double tx_antenna_gain = 0;
+    double tx_loss = 0;
+    double rx_antenna_gain = 0;
+    double rx_loss = 0;
+    double noise_figure = 0;
+    double thermal_noise_density = 0;
+    double receiver_bandwidth = 0;
+    double snr_margin = 0;
 
 };
 

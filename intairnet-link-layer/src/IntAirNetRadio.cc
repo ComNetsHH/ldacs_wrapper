@@ -17,9 +17,25 @@
 #include "inet/physicallayer/common/packetlevel/RadioMedium.h"
 #include "IntAirNetLinkLayerPacket.h"
 #include "inet/common/ModuleAccess.h"
+#include "inet/common/INETMath.h"
 #include <L2Packet.hpp>
 
 Register_Class(IntAirNetRadio);
+
+void IntAirNetRadio::initialize(int stage) {
+    if(stage == INITSTAGE_LOCAL) {
+        tx_power = par("tx_power").doubleValue();
+        tx_antenna_gain = par("tx_antenna_gain").doubleValue();
+        tx_loss = par("tx_loss").doubleValue();
+        rx_antenna_gain = par("rx_antenna_gain").doubleValue();
+        rx_loss = par("rx_loss").doubleValue();
+        noise_figure = par("noise_figure").doubleValue();
+        thermal_noise_density = par("thermal_noise_density").doubleValue();
+        receiver_bandwidth = par("receiver_bandwidth").doubleValue();
+        snr_margin = par("snr_margin").doubleValue();
+    }
+    UnitDiskRadio::initialize(stage);
+}
 
 void IntAirNetRadio::startReception(cMessage *timer, IRadioSignal::SignalPart part)
 {
@@ -67,13 +83,19 @@ void IntAirNetRadio::endReception(cMessage *timer)
         // TODO: FIXME: see handling packets with incorrect PHY headers in the TODO file
         decapsulate(macFrame);
 
+        // TODO: get frequence from packet
+        double frequency = 960; // MHz
+
         Coord rx_pos = check_and_cast<IMobility *>(getContainingNode(this)->getSubmodule("mobility"))->getCurrentPosition();
         Coord tx_pos = check_and_cast<const IReception *>(reception)->getTransmission()->getStartPosition();
-
-        //applying the formula sqrt((x_2-x_1)^2+(y_2-y_1)^2) to get the distance between Tx and Rx
         double dist = rx_pos.distance(tx_pos);
+        double path_loss = 2 * inet::math::fraction2dB((dist * frequency / 1000)) + 32.4478;
+        double rx_power = tx_power + tx_antenna_gain - tx_loss + rx_antenna_gain - rx_loss - path_loss;
+        double snr = rx_power - (noise_figure + thermal_noise_density + 10 * log10(receiver_bandwidth)) - snr_margin;
+
         L2Packet* containedPkt =  ((IntAirNetLinkLayerPacket *)macFrame)->getContainedPacket();
         containedPkt->receptionDist = dist;
+        containedPkt->snr = snr;
 
         if(uniform(0, 1.0) <= par("per").doubleValue()) {
             containedPkt->hasChannelError = true;
