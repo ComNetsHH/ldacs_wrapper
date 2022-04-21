@@ -109,9 +109,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_num_link_replies_sent](type=double);
         @signal[mcsotdma_statistic_num_beacons_sent](type=double);        
         @signal[mcsotdma_statistic_num_cancelled_link_requests](type=double);
-        @signal[mcsotdma_statistic_num_packet_collisions](type=double);
-        @signal[mcsotdma_statistic_num_sh_packet_collisions](type=double);
-        @signal[mcsotdma_statistic_num_pp_packet_collisions](type=double);
+        @signal[mcsotdma_statistic_num_packet_collisions](type=double);        
         @signal[mcsotdma_statistic_num_channel_errors](type=double);                
         @signal[mcsotdma_statistic_num_active_neighbors](type=double);
         @signal[mcsotdma_statistic_min_beacon_offset](type=double);        
@@ -157,9 +155,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[mcsotdma_statistic_num_link_replies_sent](title="mcsotdma_statistic_num_link_replies_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_beacons_sent](title="mcsotdma_statistic_num_beacons_sent(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_num_cancelled_link_requests](title="mcsotdma_statistic_num_cancelled_link_requests(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_packet_collisions](title="mcsotdma_statistic_num_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);        
-        @statistic[mcsotdma_statistic_num_sh_packet_collisions](title="mcsotdma_statistic_num_sh_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);                
-        @statistic[mcsotdma_statistic_num_pp_packet_collisions](title="mcsotdma_statistic_num_pp_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_num_packet_collisions](title="mcsotdma_statistic_num_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);                
         @statistic[mcsotdma_statistic_num_channel_errors](title="mcsotdma_statistic_num_channel_errors(num)"; record=vector,histogram,last; interpolationmode=none);                        
         @statistic[mcsotdma_statistic_num_active_neighbors](title="mcsotdma_statistic_num_active_neighbors"; record=vector,histogram,last,mean; interpolationmode=none);
         @statistic[mcsotdma_statistic_min_beacon_offset](title="mcsotdma_statistic_min_beacon_offset"; record=vector,histogram,last,mean; interpolationmode=none);
