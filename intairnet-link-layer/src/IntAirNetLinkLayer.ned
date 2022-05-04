@@ -139,6 +139,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources](type=double);   
         @signal[mcsotdma_statistic_unicast_mac_delay](type=double);
         @signal[mcsotdma_statistic_burst_offset](type=double);        
+        @signal[mcsotdma_statistic_duty_cycle](type=double);                
         
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -184,6 +185,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources](title="mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources"; record=vector,histogram,last,mean; interpolationmode=none);                                                                        
         @statistic[mcsotdma_statistic_unicast_mac_delay](title="mcsotdma_statistic_unicast_mac_delay"; record=vector,histogram,last,mean; interpolationmode=none);                                                                                
         @statistic[mcsotdma_statistic_burst_offset](title="mcsotdma_statistic_burst_offset"; record=vector,histogram,last,mean; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_duty_cycle](title="mcsotdma_statistic_duty_cycle"; record=vector,histogram,last,mean; interpolationmode=none);                
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
