@@ -45,6 +45,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int ppBurstOffset = default(20); // number of slots in-between transmission bursts for PP links
         bool adaptivePPBurstOffset = default(true);
         int numPPChannels = default(3);
+        bool learnDMEActivity = default(false); // whether to save observations of DME packets for to learn the pattern
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
