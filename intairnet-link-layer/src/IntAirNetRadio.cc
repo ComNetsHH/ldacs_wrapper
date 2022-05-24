@@ -100,7 +100,9 @@ void IntAirNetRadio::endReception(cMessage *timer)
         if(uniform(0, 1.0) <= par("per").doubleValue()) {
             containedPkt->hasChannelError = true;
         }
-        sendUp(macFrame);
+        if (isReceptionSuccessful) {
+            sendUp(macFrame);
+        }
         receptionTimer = nullptr;
         emit(receptionEndedSignal, check_and_cast<const cObject *>(reception));
     //}
