@@ -46,6 +46,9 @@ simple IntAirNetLinkLayer extends LinkLayer {
         bool adaptivePPBurstOffset = default(true);
         int numPPChannels = default(3);
         bool learnDMEActivity = default(false); // whether to save observations of DME packets for to learn the pattern
+        int duty_cycle_period = default(100); // no. of slots to consider when computing the duty cycle
+        double max_duty_cycle = default(0.1); // max. percentage of time spent transmitting
+        int duty_cycle_min_num_supported_pp_links = default(4); // used to leave duty cycle budget when computing the minimum slot offset 
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);

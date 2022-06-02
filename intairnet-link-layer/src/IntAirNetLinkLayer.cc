@@ -91,6 +91,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
         macSubLayer->setPPLinkBurstOffset(par("ppBurstOffset"));       
         macSubLayer->setPPLinkBurstOffsetAdaptive(par("adaptivePPBurstOffset"));         
         macSubLayer->setLearnDMEActivity(par("learnDMEActivity"));
+        macSubLayer->setDutyCycle(par("duty_cycle_period"), par("max_duty_cycle"), par("duty_cycle_min_num_supported_pp_links"));
         
         // Report Beacon Callback
         function<void (MacId, L2HeaderBeacon)> reportBeaconCallback = [this](MacId origin_id, L2HeaderBeacon header){
