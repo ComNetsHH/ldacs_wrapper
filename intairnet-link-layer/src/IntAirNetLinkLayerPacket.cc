@@ -65,6 +65,7 @@ IntAirNetLinkLayerPacket::~IntAirNetLinkLayerPacket() {
         }
         i++;
     }
+    delete containedPacket;
 
 }
 

@@ -102,6 +102,9 @@ void IntAirNetRadio::endReception(cMessage *timer)
         }
         if (isReceptionSuccessful) {
             sendUp(macFrame);
+        } 
+        else {
+            delete (IntAirNetLinkLayerPacket *)macFrame;
         }
         receptionTimer = nullptr;
         emit(receptionEndedSignal, check_and_cast<const cObject *>(reception));
