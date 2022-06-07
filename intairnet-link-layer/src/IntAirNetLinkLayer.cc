@@ -462,6 +462,12 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
    
 }
 
+std::vector<L3Address> IntAirNetLinkLayer::establishedLinks() {
+    std::vector<L3Address> links;
+    return links;
+
+}
+
 bool IntAirNetLinkLayer::isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const {
     return macSubLayer->isGoingToTransmitDuringCurrentSlot(center_frequecy);
 }
