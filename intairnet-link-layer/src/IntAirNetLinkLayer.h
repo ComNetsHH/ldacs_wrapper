@@ -40,7 +40,7 @@ public:
     void onSlotEnd();
 
     bool isGoingToTransmitDuringCurrentSlot(uint64_t center_frequecy) const override;
-    std::array<L3Address,4> establishedLinks();   
+    std::vector<L3Address> establishedLinks();   
 
 protected:    
     void initialize(int stage) override;
