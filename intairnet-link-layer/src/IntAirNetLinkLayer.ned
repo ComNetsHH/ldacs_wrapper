@@ -56,7 +56,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[rlc_packet_received_from_upper](type=double);
         @signal[rlc_packet_sent_down](type=double);                        
         @signal[rlc_packet_sent_up](type=double);
-        @signal[rlc_packets_to_send](type=double);
+        @signal[rlc_bits_to_send](type=double);
         @signal[rlc_packets_injected](type=double);
         @signal[rlc_awaiting_reassembly](type=double);
         @statistic[rlc_bits_received_from_upper](title="rlc_bits_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
@@ -65,7 +65,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[rlc_packet_received_from_upper](title="rlc_packet_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_packet_sent_down](title="rlc_packet_sent_down(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_packet_sent_up](title="rlc_packet_sent_up(bits)"; record=vector,histogram; interpolationmode=none);   
-        @statistic[rlc_packets_to_send](title="rlc_packets_to_send"; record=vector,histogram; interpolationmode=none);  
+        @statistic[rlc_bits_to_send](title="rlc_bits_to_send"; record=vector,histogram; interpolationmode=none);  
         @statistic[rlc_packets_injected](title="rlc_packets_injected"; record=vector,histogram; interpolationmode=none); 
         @statistic[rlc_awaiting_reassembly](title="rlc_awaiting_reassembly"; record=vector,histogram; interpolationmode=none); 
         
