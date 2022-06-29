@@ -74,6 +74,7 @@ protected:
             "rlc_packet_sent_down",
             "rlc_packet_sent_up",
             "rlc_bits_to_send",
+            "rlc_packets_to_send",
             "rlc_packets_injected",
             "rlc_awaiting_reassembly",
             "arq_bits_sent_down",
