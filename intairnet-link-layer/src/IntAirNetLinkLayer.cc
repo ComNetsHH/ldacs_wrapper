@@ -451,6 +451,8 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
         return;
     }
     auto encodedPosition = header.position.encodedPosition;
+    auto congestion = header.congestion_level;
+    int congestion_Level = congestion + 1;
     Coord rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);
     auto rcvdMacAddress = MacAddress(0x0AAA00000000ULL + (origin_id.getId() & 0xffffffffUL));
     L3Address rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
@@ -459,7 +461,16 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header)
     // Pass up beacon directly to gpsr (skipping NW layer)
     //GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
     GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
-    gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition);
+    //////////////////////////////////////////////////////////////////////////
+    // Cross-layer routing (Musab)
+    //////////////////////////////////////////////////////////////////////////
+    if (gpsr->enableCrossLayerRouting)
+        gpsr->processBeaconCongestionLevelMCSOTDMA(rcvdIpAddress, rcvdPosition, congestion_Level);
+    else
+        gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition);
+    EV_INFO << "The congestion level (musab) = " << congestion_Level << endl;
+    EV_INFO << "Cross-layer is enabled (musab) = " << gpsr->enableCrossLayerRouting << endl;
+    // gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition, congestion_Level);
    
 }
 
