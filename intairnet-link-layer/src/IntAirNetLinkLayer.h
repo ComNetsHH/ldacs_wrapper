@@ -53,7 +53,7 @@ protected:
     void onPayloadDelete(L2Packet::Payload* payload);
     L2Packet* copyL2Packet(L2Packet* original);
     L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
-    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);   
+    void onBeaconReceive(MacId origin_id, CPRPosition position);   
 
 protected:    
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
@@ -76,6 +76,7 @@ protected:
             "rlc_bits_to_send",
             "rlc_packets_injected",
             "rlc_awaiting_reassembly",
+            "rlc_packets_to_send",
             "arq_bits_sent_down",
             "arq_bits_sent_up",
             "arq_num_rtx",
@@ -127,7 +128,8 @@ protected:
             "mcsotdma_statistic_duty_cycle",
             "mcsotdma_statistic_num_own_proposals_sent",
             "mcsotdma_statistic_num_saved_proposals_sent",
-            "mcsotdma_statistic_num_link_utils_rcvd"
+            "mcsotdma_statistic_num_link_utils_rcvd",
+            "mcsotdma_statistic_pp_link_requests_accepted"
     };
 };
 

@@ -59,6 +59,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[rlc_bits_to_send](type=double);
         @signal[rlc_packets_injected](type=double);
         @signal[rlc_awaiting_reassembly](type=double);
+        @signal[rlc_packets_to_send](type=double);
         @statistic[rlc_bits_received_from_upper](title="rlc_bits_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_bits_received_from_lower](title="rlc_bits_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_bits_requested_from_lower](title="rlc_bits_requested_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
@@ -68,6 +69,8 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[rlc_bits_to_send](title="rlc_bits_to_send"; record=vector,histogram; interpolationmode=none);  
         @statistic[rlc_packets_injected](title="rlc_packets_injected"; record=vector,histogram; interpolationmode=none); 
         @statistic[rlc_awaiting_reassembly](title="rlc_awaiting_reassembly"; record=vector,histogram; interpolationmode=none); 
+        @statistic[rlc_packets_to_send](title="rlc_packets_to_send"; record=vector,histogram; interpolationmode=none);  
+        
         
         @signal[arq_bits_received_from_lower](type=double);   
         @signal[arq_bits_requested_from_lower](type=double); 
@@ -133,6 +136,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_num_own_proposals_sent](type=double);
         @signal[mcsotdma_statistic_num_saved_proposals_sent](type=double);
         @signal[mcsotdma_statistic_num_link_utils_rcvd](type=double);
+        @signal[mcsotdma_statistic_pp_link_requests_accepted](type=double);        
                 
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -169,6 +173,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[mcsotdma_statistic_num_own_proposals_sent](title="mcsotdma_statistic_num_own_proposals_sent"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_num_saved_proposals_sent](title="mcsotdma_statistic_num_saved_proposals_sent"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_num_link_utils_rcvd](title="mcsotdma_statistic_num_link_utils_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                
+        @statistic[mcsotdma_statistic_pp_link_requests_accepted](title="mcsotdma_statistic_pp_link_requests_accepted"; record=vector,histogram,last,mean; interpolationmode=none);                        
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  

@@ -51,10 +51,7 @@ string PacketFactory::getPacketName(L2Packet* packet) {
         }
     }
     auto header = headers[1];
-
-    if(header->frame_type == L2Header::FrameType::beacon) {
-        return "IAN-Beacon";
-    }
+    
     if(header->frame_type == L2Header::FrameType::broadcast) {
         return "IAN-Broadcast";
     }
