@@ -129,7 +129,8 @@ protected:
             "mcsotdma_statistic_num_own_proposals_sent",
             "mcsotdma_statistic_num_saved_proposals_sent",
             "mcsotdma_statistic_num_link_utils_rcvd",
-            "mcsotdma_statistic_pp_link_requests_accepted"
+            "mcsotdma_statistic_pp_link_requests_accepted",
+            "mcsotdma_statistic_pp_period"
     };
 };
 

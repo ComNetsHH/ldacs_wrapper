@@ -84,6 +84,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
         macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));                
         macSubLayer->setLearnDMEActivity(par("learnDMEActivity"));
         macSubLayer->setDutyCycle(par("duty_cycle_period"), par("max_duty_cycle"), par("duty_cycle_min_num_supported_pp_links"));
+        macSubLayer->setConsiderDutyCycle(par("consider_duty_cycle"));
         
         // Report Beacon Callback
         function<void (MacId, CPRPosition position)> reportBeaconCallback = [this](MacId origin_id, CPRPosition position){

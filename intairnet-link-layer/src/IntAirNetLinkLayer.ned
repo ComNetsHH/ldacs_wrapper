@@ -49,6 +49,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int duty_cycle_period = default(100); // no. of slots to consider when computing the duty cycle
         double max_duty_cycle = default(0.1); // max. percentage of time spent transmitting
         int duty_cycle_min_num_supported_pp_links = default(4); // used to leave duty cycle budget when computing the minimum slot offset 
+        bool consider_duty_cycle = default(true);
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
@@ -137,6 +138,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_num_saved_proposals_sent](type=double);
         @signal[mcsotdma_statistic_num_link_utils_rcvd](type=double);
         @signal[mcsotdma_statistic_pp_link_requests_accepted](type=double);        
+        @signal[mcsotdma_statistic_pp_period](type=double);
                 
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -173,7 +175,8 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[mcsotdma_statistic_num_own_proposals_sent](title="mcsotdma_statistic_num_own_proposals_sent"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_num_saved_proposals_sent](title="mcsotdma_statistic_num_saved_proposals_sent"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_num_link_utils_rcvd](title="mcsotdma_statistic_num_link_utils_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                
-        @statistic[mcsotdma_statistic_pp_link_requests_accepted](title="mcsotdma_statistic_pp_link_requests_accepted"; record=vector,histogram,last,mean; interpolationmode=none);                        
+        @statistic[mcsotdma_statistic_pp_link_requests_accepted](title="mcsotdma_statistic_pp_link_requests_accepted"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_pp_period](title="mcsotdma_statistic_pp_period"; record=vector,histogram,last,mean; interpolationmode=none);        
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
