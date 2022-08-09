@@ -50,6 +50,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         double max_duty_cycle = default(0.1); // max. percentage of time spent transmitting
         int duty_cycle_min_num_supported_pp_links = default(4); // used to leave duty cycle budget when computing the minimum slot offset 
         bool consider_duty_cycle = default(true);
+        int minNumSupportedPPLinks = default(4);
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
