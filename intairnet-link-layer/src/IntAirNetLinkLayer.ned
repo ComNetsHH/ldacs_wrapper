@@ -28,14 +28,9 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int numRtx = default(3);
         int broadcastSlotSelectionMinNumCandidateSlots = default(3);
         int broadcastSlotSelectionMaxNumCandidateSlots = default(10000); 
-        string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'        
-        bool alwaysScheduleNextBroadcastSlot = default(false);
-        bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
-        bool enableBeacons = default(true);
-        bool writeResourceUtilizationToBeaconPayload = default(true);
-        int planningHorizon = default(4096); // number of slots both into past and future
-        int minBeaconInterval = default(80);
-        int maxBeaconInterval = default(25000); // 24ms * 25000slots = 10min
+        string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'                
+        bool advertiseNextBroadcastSlotInCurrentHeader = default(true);        
+        int planningHorizon = default(8192); // number of slots both into past and future        
         bool forceBidirectionalP2PLinks = default(true);
         bool initializeBidirectionalP2PLinks = default(true);
         bool closeP2PLinksEarly = default(false);                
