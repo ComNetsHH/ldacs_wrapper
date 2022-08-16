@@ -26,9 +26,9 @@ simple IntAirNetLinkLayer extends LinkLayer {
         double broadcastTargetCollisionRate = default(0.626);
         double per = default(0);
         int numRtx = default(3);
-        int broadcastSlotSelectionMinNumCandidateSlots = default(3);
+        int broadcastSlotSelectionMinNumCandidateSlots = default(9);
         int broadcastSlotSelectionMaxNumCandidateSlots = default(10000); 
-        string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'                
+        string contentionMethod = default("randomized_slotted_aloha"); 
         bool advertiseNextBroadcastSlotInCurrentHeader = default(true);        
         int planningHorizon = default(8192); // number of slots both into past and future        
         bool forceBidirectionalP2PLinks = default(true);
