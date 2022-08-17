@@ -85,7 +85,8 @@ void IntAirNetLinkLayer::initialize(int stage) {
         macSubLayer->setLearnDMEActivity(par("learnDMEActivity"));
         macSubLayer->setDutyCycle(par("duty_cycle_period"), par("max_duty_cycle"), par("duty_cycle_min_num_supported_pp_links"));
         macSubLayer->setConsiderDutyCycle(par("consider_duty_cycle"));
-        macSubLayer->setMinNumSupportedPPLinks(par("minNumSupportedPPLinks"));        
+        macSubLayer->setMinNumSupportedPPLinks(par("minNumSupportedPPLinks"));                
+        macSubLayer->setForcePPPeriod(par("should_force_pp_period").boolValue(), par("forced_pp_period").intValue());
         
         // Report Beacon Callback
         function<void (MacId, CPRPosition position)> reportBeaconCallback = [this](MacId origin_id, CPRPosition position){

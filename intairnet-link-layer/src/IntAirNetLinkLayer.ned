@@ -46,6 +46,8 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int duty_cycle_min_num_supported_pp_links = default(4); // used to leave duty cycle budget when computing the minimum slot offset 
         bool consider_duty_cycle = default(true);
         int minNumSupportedPPLinks = default(4);
+        bool should_force_pp_period = default(false);
+        int forced_pp_period = default(0);
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
