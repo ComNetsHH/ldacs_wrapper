@@ -79,23 +79,18 @@ void IntAirNetLinkLayer::initialize(int stage) {
             throw std::invalid_argument("contentionMethod is invalid, it should be one of 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'.");
         macSubLayer->setContentionMethod(method);        
         macSubLayer->setBcSlotSelectionMinNumCandidateSlots(par("broadcastSlotSelectionMinNumCandidateSlots"));
-        macSubLayer->setBcSlotSelectionMaxNumCandidateSlots(par("broadcastSlotSelectionMaxNumCandidateSlots"));
-        macSubLayer->setAlwaysScheduleNextBroadcastSlot(par("alwaysScheduleNextBroadcastSlot"));        
+        macSubLayer->setBcSlotSelectionMaxNumCandidateSlots(par("broadcastSlotSelectionMaxNumCandidateSlots"));    
         macSubLayer->setAdvertiseNextBroadcastSlotInCurrentHeader(par("advertiseNextBroadcastSlotInCurrentHeader"));                
-        macSubLayer->setEnableBeacons(par("enableBeacons"));
-        macSubLayer->setWriteResourceUtilizationIntoBeacon(par("writeResourceUtilizationToBeaconPayload"));        
-        macSubLayer->setMinBeaconOffset(par("minBeaconInterval"));
-        macSubLayer->setMaxBeaconOffset(par("maxBeaconInterval"));
-        macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));
-        macSubLayer->setForceBidirectionalLinks(par("forceBidirectionalP2PLinks"));        
-        macSubLayer->setPPLinkBurstOffset(par("ppBurstOffset"));       
-        macSubLayer->setPPLinkBurstOffsetAdaptive(par("adaptivePPBurstOffset"));         
+        macSubLayer->setBroadcastTargetCollisionProb(par("broadcastTargetCollisionRate"));                
         macSubLayer->setLearnDMEActivity(par("learnDMEActivity"));
         macSubLayer->setDutyCycle(par("duty_cycle_period"), par("max_duty_cycle"), par("duty_cycle_min_num_supported_pp_links"));
+        macSubLayer->setConsiderDutyCycle(par("consider_duty_cycle"));
+        macSubLayer->setMinNumSupportedPPLinks(par("minNumSupportedPPLinks"));                
+        macSubLayer->setForcePPPeriod(par("should_force_pp_period").boolValue(), par("forced_pp_period").intValue());
         
         // Report Beacon Callback
-        function<void (MacId, L2HeaderBeacon)> reportBeaconCallback = [this](MacId origin_id, L2HeaderBeacon header){
-            return this->onBeaconReceive(origin_id, header);
+        function<void (MacId, CPRPosition position)> reportBeaconCallback = [this](MacId origin_id, CPRPosition position){
+            return this->onBeaconReceive(origin_id, position);
         };
 
         macSubLayer->setOmnetPassUpBeaconFct(reportBeaconCallback);
@@ -446,11 +441,11 @@ L2Packet::Payload* IntAirNetLinkLayer::copyL2PacketPayload(L2Packet::Payload* or
 
 }
 
-void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, L2HeaderBeacon header) {
+void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, CPRPosition position) {
     if(!gpsrIsUsed) {
         return;
     }
-    auto encodedPosition = header.position.encodedPosition;
+    auto encodedPosition = position.encodedPosition;
     auto congestion = header.congestion_level;
     int congestion_Level = congestion + 1;
     Coord rcvdPosition = Coord(encodedPosition.x, encodedPosition.y, encodedPosition.z);

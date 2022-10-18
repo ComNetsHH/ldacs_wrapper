@@ -26,16 +26,11 @@ simple IntAirNetLinkLayer extends LinkLayer {
         double broadcastTargetCollisionRate = default(0.626);
         double per = default(0);
         int numRtx = default(3);
-        int broadcastSlotSelectionMinNumCandidateSlots = default(3);
+        int broadcastSlotSelectionMinNumCandidateSlots = default(9);
         int broadcastSlotSelectionMaxNumCandidateSlots = default(10000); 
-        string contentionMethod = default("randomized_slotted_aloha"); // can be 'binomial_estimate', 'poisson_binomial_estimate', 'randomized_slotted_aloha', 'naive_random_access'        
-        bool alwaysScheduleNextBroadcastSlot = default(false);
-        bool advertiseNextBroadcastSlotInCurrentHeader = default(true);
-        bool enableBeacons = default(true);
-        bool writeResourceUtilizationToBeaconPayload = default(true);
-        int planningHorizon = default(4096); // number of slots both into past and future
-        int minBeaconInterval = default(80);
-        int maxBeaconInterval = default(25000); // 24ms * 25000slots = 10min
+        string contentionMethod = default("randomized_slotted_aloha"); 
+        bool advertiseNextBroadcastSlotInCurrentHeader = default(true);        
+        int planningHorizon = default(8192); // number of slots both into past and future        
         bool forceBidirectionalP2PLinks = default(true);
         bool initializeBidirectionalP2PLinks = default(true);
         bool closeP2PLinksEarly = default(false);                
@@ -49,6 +44,10 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int duty_cycle_period = default(100); // no. of slots to consider when computing the duty cycle
         double max_duty_cycle = default(0.1); // max. percentage of time spent transmitting
         int duty_cycle_min_num_supported_pp_links = default(4); // used to leave duty cycle budget when computing the minimum slot offset 
+        bool consider_duty_cycle = default(true);
+        int minNumSupportedPPLinks = default(4);
+        bool should_force_pp_period = default(false);
+        int forced_pp_period = default(0);
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
@@ -60,6 +59,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[rlc_packets_to_send](type=double);
         @signal[rlc_packets_injected](type=double);
         @signal[rlc_awaiting_reassembly](type=double);
+        @signal[rlc_packets_to_send](type=double);
         @statistic[rlc_bits_received_from_upper](title="rlc_bits_received_from_upper(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_bits_received_from_lower](title="rlc_bits_received_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
         @statistic[rlc_bits_requested_from_lower](title="rlc_bits_requested_from_lower(bits)"; record=vector,histogram; interpolationmode=none);
@@ -70,6 +70,8 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[rlc_packets_to_send](title="rlc_packets_to_send"; record=vector,histogram; interpolationmode=none);  
         @statistic[rlc_packets_injected](title="rlc_packets_injected"; record=vector,histogram; interpolationmode=none); 
         @statistic[rlc_awaiting_reassembly](title="rlc_awaiting_reassembly"; record=vector,histogram; interpolationmode=none); 
+        @statistic[rlc_packets_to_send](title="rlc_packets_to_send"; record=vector,histogram; interpolationmode=none);  
+        
         
         @signal[arq_bits_received_from_lower](type=double);   
         @signal[arq_bits_requested_from_lower](type=double); 
@@ -106,92 +108,75 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_num_unicasts_received](type=double);
         @signal[mcsotdma_statistic_num_unicast_message_processed](type=double);        
         @signal[mcsotdma_statistic_num_link_requests_received](type=double);
-        @signal[mcsotdma_statistic_num_link_replies_received](type=double);
-        @signal[mcsotdma_statistic_num_beacons_received](type=double);        
+        @signal[mcsotdma_statistic_num_link_replies_received](type=double);        
         @signal[mcsotdma_statistic_num_packets_sent](type=double);
         @signal[mcsotdma_statistic_num_broadcasts_sent](type=double);
         @signal[mcsotdma_statistic_num_unicasts_sent](type=double);
         @signal[mcsotdma_statistic_num_link_requests_sent](type=double);
-        @signal[mcsotdma_statistic_num_link_replies_sent](type=double);
-        @signal[mcsotdma_statistic_num_beacons_sent](type=double);        
+        @signal[mcsotdma_statistic_num_link_replies_sent](type=double);        
         @signal[mcsotdma_statistic_num_cancelled_link_requests](type=double);
         @signal[mcsotdma_statistic_num_packet_collisions](type=double);        
         @signal[mcsotdma_statistic_num_channel_errors](type=double);                
-        @signal[mcsotdma_statistic_num_active_neighbors](type=double);
-        @signal[mcsotdma_statistic_min_beacon_offset](type=double);        
-        @signal[mcsotdma_statistic_broadcast_candidate_slots](type=double);                              
-        @signal[mcsotdma_statistic_num_links_closed_early](type=double);   
+        @signal[mcsotdma_statistic_num_active_neighbors](type=double);        
+        @signal[mcsotdma_statistic_broadcast_candidate_slots](type=double);                                      
         @signal[mcsotdma_statistic_broadcast_mac_delay](type=double);          
-        @signal[mcsotdma_statistic_broadcast_selected_candidate_slot](type=double);                     
-        @signal[mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate](type=double);                
-        @signal[mcsotdma_statistic_broadcast_selected_candidate_slot](type=double);                  
-        @signal[mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate](type=double);  
-        @signal[mcsotdma_statistic_broadcast_wasted_tx_opportunities](type=double);  
-        @signal[mcsotdma_statistic_unicast_wasted_tx_opportunities](type=double);    
+        @signal[mcsotdma_statistic_broadcast_selected_candidate_slot](type=double);                                                              
         @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);     
         @signal[mcsotdma_statistic_pp_link_establishment_time](type=double);
         @signal[mcsotdma_statistic_num_pp_links_established](type=double);        
         @signal[mcsotdma_statistic_num_third_party_link_requests_received](type=double);
         @signal[mcsotdma_statistic_num_third_party_replies_rcvd](type=double);
         @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot](type=double);
-        @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals](type=double);
-        @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);
-        @signal[mcsotdma_statistic_pp_link_missed_first_data_tx](type=double);   
-        @signal[mcsotdma_statistic_num_pp_links_expired](type=double);   
-        @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_insufficient_tx_slots](type=double);           
+        @signal[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals](type=double);        
+        @signal[mcsotdma_statistic_num_pp_links_expired](type=double);           
         @signal[mcsotdma_statistic_num_num_dme_packets_rcvd](type=double);                   
-        @signal[mcsotdma_statistic_num_broadcast_collisions_detected](type=double);                   
-        @signal[mcsotdma_statistic_num_beacon_collisions_detected](type=double);                           
+        @signal[mcsotdma_statistic_num_broadcast_collisions_detected](type=double);                           
         @signal[mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources](type=double);   
-        @signal[mcsotdma_statistic_unicast_mac_delay](type=double);
-        @signal[mcsotdma_statistic_burst_offset](type=double);        
-        @signal[mcsotdma_statistic_duty_cycle](type=double);                
-        
+        @signal[mcsotdma_statistic_unicast_mac_delay](type=double);        
+        @signal[mcsotdma_statistic_duty_cycle](type=double);
+        @signal[mcsotdma_statistic_num_own_proposals_sent](type=double);
+        @signal[mcsotdma_statistic_num_saved_proposals_sent](type=double);
+        @signal[mcsotdma_statistic_num_link_utils_rcvd](type=double);
+        @signal[mcsotdma_statistic_pp_link_requests_accepted](type=double);        
+        @signal[mcsotdma_statistic_pp_period](type=double);
+                
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcast_message_processed](title="mcsotdma_statistic_num_broadcast_message_processed(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_unicasts_received](title="mcsotdma_statistic_num_unicasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_unicast_message_processed](title="mcsotdma_statistic_num_unicast_message_processed(num)"; record=vector,histogram,last; interpolationmode=none);               
         @statistic[mcsotdma_statistic_num_link_requests_received](title="mcsotdma_statistic_num_link_requests_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_link_replies_received](title="mcsotdma_statistic_num_link_replies_received(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_beacons_received](title="mcsotdma_statistic_num_beacons_received(num)"; record=vector,histogram,last; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_num_link_replies_received](title="mcsotdma_statistic_num_link_replies_received(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_num_packets_sent](title="mcsotdma_statistic_num_packets_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_sent](title="mcsotdma_statistic_num_broadcasts_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_unicasts_sent](title="mcsotdma_statistic_num_unicasts_sent(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_link_requests_sent](title="mcsotdma_statistic_num_link_requests_sent(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_link_replies_sent](title="mcsotdma_statistic_num_link_replies_sent(num)"; record=vector,histogram,last; interpolationmode=none);
-        @statistic[mcsotdma_statistic_num_beacons_sent](title="mcsotdma_statistic_num_beacons_sent(num)"; record=vector,histogram,last; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_num_link_replies_sent](title="mcsotdma_statistic_num_link_replies_sent(num)"; record=vector,histogram,last; interpolationmode=none);        
         @statistic[mcsotdma_statistic_num_cancelled_link_requests](title="mcsotdma_statistic_num_cancelled_link_requests(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_packet_collisions](title="mcsotdma_statistic_num_packet_collisions(num)"; record=vector,histogram,last; interpolationmode=none);                
         @statistic[mcsotdma_statistic_num_channel_errors](title="mcsotdma_statistic_num_channel_errors(num)"; record=vector,histogram,last; interpolationmode=none);                        
-        @statistic[mcsotdma_statistic_num_active_neighbors](title="mcsotdma_statistic_num_active_neighbors"; record=vector,histogram,last,mean; interpolationmode=none);
-        @statistic[mcsotdma_statistic_min_beacon_offset](title="mcsotdma_statistic_min_beacon_offset"; record=vector,histogram,last,mean; interpolationmode=none);
-        @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="mcsotdma_statistic_broadcast_candidate_slots"; record=vector,histogram,last,mean; interpolationmode=none);        
-        @statistic[mcsotdma_statistic_num_links_closed_early](title="mcsotdma_statistic_num_links_closed_early"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_num_active_neighbors](title="mcsotdma_statistic_num_active_neighbors"; record=vector,histogram,last,mean; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="mcsotdma_statistic_broadcast_candidate_slots"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_broadcast_mac_delay](title="mcsotdma_statistic_broadcast_mac_delay"; record=vector,histogram,last,mean; interpolationmode=none);
-        @statistic[mcsotdma_statistic_broadcast_selected_candidate_slot](title="mcsotdma_statistic_broadcast_selected_candidate_slot"; record=vector,histogram,last,mean; interpolationmode=none);
-        @statistic[mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate](title="mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate"; record=vector,histogram,last,mean; interpolationmode=none);
-        @statistic[mcsotdma_statistic_broadcast_selected_candidate_slot](title="mcsotdma_statistic_broadcast_selected_candidate_slot"; record=vector,histogram,last,mean; interpolationmode=none);        
-        @statistic[mcsotdma_statistic_broadcast_wasted_tx_opportunities](title="mcsotdma_statistic_broadcast_wasted_tx_opportunities"; record=vector,histogram,last,mean; interpolationmode=none);        
-        @statistic[mcsotdma_statistic_unicast_wasted_tx_opportunities](title="mcsotdma_statistic_unicast_wasted_tx_opportunities"; record=vector,histogram,last,mean; interpolationmode=none);        
-        @statistic[mcsotdma_statistic_unicast_wasted_tx_opportunities](title="mcsotdma_statistic_pp_link_missed_last_reply_opportunity"; record=vector,histogram,last,mean; interpolationmode=none);                
+        @statistic[mcsotdma_statistic_broadcast_selected_candidate_slot](title="mcsotdma_statistic_broadcast_selected_candidate_slot"; record=vector,histogram,last,mean; interpolationmode=none);                                    
         @statistic[mcsotdma_statistic_pp_link_establishment_time](title="mcsotdma_statistic_pp_link_establishment_time"; record=vector,histogram,last,mean; interpolationmode=none);                                
         @statistic[mcsotdma_statistic_num_pp_links_established](title="mcsotdma_statistic_num_pp_links_established"; record=vector,histogram,last,mean; interpolationmode=none);                        
         @statistic[mcsotdma_statistic_num_third_party_link_requests_received](title="mcsotdma_statistic_num_third_party_link_requests_received"; record=vector,histogram,last,mean; interpolationmode=none);                        
         @statistic[mcsotdma_statistic_num_third_party_replies_rcvd](title="mcsotdma_statistic_num_third_party_replies_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                        
         @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot"; record=vector,histogram,last,mean; interpolationmode=none);                        
         @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals"; record=vector,histogram,last,mean; interpolationmode=none);                        
-        @statistic[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](title="mcsotdma_statistic_pp_link_missed_last_reply_opportunity"; record=vector,histogram,last,mean; interpolationmode=none);                        
-        @statistic[mcsotdma_statistic_pp_link_missed_first_data_tx](title="mcsotdma_statistic_pp_link_missed_first_data_tx"; record=vector,histogram,last,mean; interpolationmode=none);                                
-        @statistic[mcsotdma_statistic_num_pp_links_expired](title="mcsotdma_statistic_num_pp_links_expired"; record=vector,histogram,last,mean; interpolationmode=none);                                        
-        @statistic[mcsotdma_statistic_num_pp_requests_rejected_due_to_insufficient_tx_slots](title="mcsotdma_statistic_num_pp_requests_rejected_due_to_insufficient_tx_slots"; record=vector,histogram,last,mean; interpolationmode=none);                                        
+        @statistic[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](title="mcsotdma_statistic_pp_link_missed_last_reply_opportunity"; record=vector,histogram,last,mean; interpolationmode=none);                                
+        @statistic[mcsotdma_statistic_num_pp_links_expired](title="mcsotdma_statistic_num_pp_links_expired"; record=vector,histogram,last,mean; interpolationmode=none);                                                
         @statistic[mcsotdma_statistic_num_num_dme_packets_rcvd](title="mcsotdma_statistic_num_num_dme_packets_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                                                
-        @statistic[mcsotdma_statistic_num_broadcast_collisions_detected](title="mcsotdma_statistic_num_broadcast_collisions_detected"; record=vector,histogram,last,mean; interpolationmode=none);                                                        
-        @statistic[mcsotdma_statistic_num_beacon_collisions_detected](title="mcsotdma_statistic_num_beacon_collisions_detected"; record=vector,histogram,last,mean; interpolationmode=none);                                                                
+        @statistic[mcsotdma_statistic_num_broadcast_collisions_detected](title="mcsotdma_statistic_num_broadcast_collisions_detected"; record=vector,histogram,last,mean; interpolationmode=none);                                                                
         @statistic[mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources](title="mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources"; record=vector,histogram,last,mean; interpolationmode=none);                                                                        
-        @statistic[mcsotdma_statistic_unicast_mac_delay](title="mcsotdma_statistic_unicast_mac_delay"; record=vector,histogram,last,mean; interpolationmode=none);                                                                                
-        @statistic[mcsotdma_statistic_burst_offset](title="mcsotdma_statistic_burst_offset"; record=vector,histogram,last,mean; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_unicast_mac_delay](title="mcsotdma_statistic_unicast_mac_delay"; record=vector,histogram,last,mean; interpolationmode=none);                                                                                        
         @statistic[mcsotdma_statistic_duty_cycle](title="mcsotdma_statistic_duty_cycle"; record=vector,histogram,last,mean; interpolationmode=none);                
+        @statistic[mcsotdma_statistic_num_own_proposals_sent](title="mcsotdma_statistic_num_own_proposals_sent"; record=vector,histogram,last,mean; interpolationmode=none);                
+        @statistic[mcsotdma_statistic_num_saved_proposals_sent](title="mcsotdma_statistic_num_saved_proposals_sent"; record=vector,histogram,last,mean; interpolationmode=none);                
+        @statistic[mcsotdma_statistic_num_link_utils_rcvd](title="mcsotdma_statistic_num_link_utils_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                
+        @statistic[mcsotdma_statistic_pp_link_requests_accepted](title="mcsotdma_statistic_pp_link_requests_accepted"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_pp_period](title="mcsotdma_statistic_pp_period"; record=vector,histogram,last,mean; interpolationmode=none);        
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  

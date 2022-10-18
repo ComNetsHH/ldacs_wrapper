@@ -53,7 +53,7 @@ protected:
     void onPayloadDelete(L2Packet::Payload* payload);
     L2Packet* copyL2Packet(L2Packet* original);
     L2Packet::Payload* copyL2PacketPayload(L2Packet::Payload* original);
-    void onBeaconReceive(MacId origin_id, L2HeaderBeacon header);   
+    void onBeaconReceive(MacId origin_id, CPRPosition position);   
 
 protected:    
     std::map<std::string, simsignal_t> mcsotdma_statistics_map;
@@ -77,6 +77,7 @@ protected:
             "rlc_packets_to_send",
             "rlc_packets_injected",
             "rlc_awaiting_reassembly",
+            "rlc_packets_to_send",
             "arq_bits_sent_down",
             "arq_bits_sent_up",
             "arq_num_rtx",
@@ -90,35 +91,28 @@ protected:
             "arq_bits_requested_from_lower",
             "arq_out_of_sequence_list",
             "arq_seq_no_passed_up",
+            "phy_statistic_num_packets_received",
+            "phy_statistic_num_packets_missed",                    
+            "mcsotdma_phy_statistic_num_missed_packets",                                        
             "mcsotdma_statistic_num_packets_received",
             "mcsotdma_statistic_num_broadcasts_received",
             "mcsotdma_statistic_num_broadcast_message_processed",
             "mcsotdma_statistic_num_unicasts_received",
             "mcsotdma_statistic_num_unicast_message_processed",
             "mcsotdma_statistic_num_link_requests_received",
-            "mcsotdma_statistic_num_link_replies_received",
-            "mcsotdma_statistic_num_links_closed_early",
-            "mcsotdma_statistic_num_beacons_received",            
+            "mcsotdma_statistic_num_link_replies_received",            
             "mcsotdma_statistic_num_packets_sent",
             "mcsotdma_statistic_num_broadcasts_sent",
             "mcsotdma_statistic_num_unicasts_sent",
             "mcsotdma_statistic_num_link_requests_sent",
-            "mcsotdma_statistic_num_link_replies_sent",
-            "mcsotdma_statistic_num_beacons_sent",            
+            "mcsotdma_statistic_num_link_replies_sent",                  
             "mcsotdma_statistic_num_cancelled_link_requests",
             "mcsotdma_statistic_num_packet_collisions",                        
             "mcsotdma_statistic_num_channel_errors",        
-            "mcsotdma_statistic_num_active_neighbors",
-            "mcsotdma_statistic_min_beacon_offset",
+            "mcsotdma_statistic_num_active_neighbors",            
             "mcsotdma_statistic_broadcast_candidate_slots",
             "mcsotdma_statistic_broadcast_mac_delay",
-            "mcsotdma_statistic_broadcast_selected_candidate_slot",
-            "mcsotdma_phy_statistic_num_missed_packets",            
-            "phy_statistic_num_packets_received",
-            "phy_statistic_num_packets_missed",
-            "mcsotdma_statistic_broadcast_avg_neighbor_transmission_rate",
-            "mcsotdma_statistic_broadcast_wasted_tx_opportunities",
-            "mcsotdma_statistic_unicast_wasted_tx_opportunities",
+            "mcsotdma_statistic_broadcast_selected_candidate_slot",            
             "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
             "mcsotdma_statistic_pp_link_establishment_time",
             "mcsotdma_statistic_num_pp_links_established",
@@ -126,17 +120,18 @@ protected:
             "mcsotdma_statistic_num_third_party_replies_rcvd",
             "mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_reply_slot",
             "mcsotdma_statistic_num_pp_requests_rejected_due_to_unacceptable_pp_resource_proposals",
-            "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
-            "mcsotdma_statistic_pp_link_missed_first_data_tx",
-            "mcsotdma_statistic_num_pp_links_expired",
-            "mcsotdma_statistic_num_pp_requests_rejected_due_to_insufficient_tx_slots",
+            "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",            
+            "mcsotdma_statistic_num_pp_links_expired",            
             "mcsotdma_statistic_num_num_dme_packets_rcvd",
-            "mcsotdma_statistic_num_broadcast_collisions_detected",
-            "mcsotdma_statistic_num_beacon_collisions_detected",
+            "mcsotdma_statistic_num_broadcast_collisions_detected",            
             "mcsotdma_statistic_num_pp_requests_canceled_due_to_insufficient_resources",
-            "mcsotdma_statistic_unicast_mac_delay",
-            "mcsotdma_statistic_burst_offset",
-            "mcsotdma_statistic_duty_cycle"
+            "mcsotdma_statistic_unicast_mac_delay",            
+            "mcsotdma_statistic_duty_cycle",
+            "mcsotdma_statistic_num_own_proposals_sent",
+            "mcsotdma_statistic_num_saved_proposals_sent",
+            "mcsotdma_statistic_num_link_utils_rcvd",
+            "mcsotdma_statistic_pp_link_requests_accepted",
+            "mcsotdma_statistic_pp_period"
     };
 };
 

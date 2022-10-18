@@ -40,8 +40,7 @@ void DMEGroundStationLinkLayer::onSlotStart() {
 	if (current_time_slot % 10 == 0) {
 		std::cout << "t=" << this->current_time_slot << " " << *this << " transmits a packet on f=" << this->center_frequency << " -> ";		
 		// create our packet
-		auto *packet = new L2Packet();
-		packet->addMessage(new L2HeaderBase(SYMBOLIC_LINK_ID_DME, 0, 0, 0, 0), nullptr);
+		auto *packet = new L2Packet();		
 		packet->addMessage(new L2HeaderDMEResponse(), nullptr);
 		// wrap it into an OMNeT++-understandable class
 		auto *inet_packet = PacketFactory::fromL2Packet(packet, this->center_frequency);

@@ -15,9 +15,8 @@
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 IntAirNetLinkLayerPacket* PacketFactory::fromL2Packet(L2Packet* source, uint64_t center_frequency) {
-    unsigned int size_bits = source->getBits();
-
-    unsigned int size_bytes = std::ceil(size_bits / 8);
+    float size_bits = (float)source->getBits();
+    unsigned int size_bytes = std::ceil(size_bits / 8.0);
     auto data = makeShared<ByteCountChunk>(B(size_bytes));
     IntAirNetLinkLayerPacket* pkt = new IntAirNetLinkLayerPacket(PacketFactory::getPacketName(source).c_str(), data);
     pkt->attachPacket(source);
@@ -51,10 +50,7 @@ string PacketFactory::getPacketName(L2Packet* packet) {
         }
     }
     auto header = headers[1];
-
-    if(header->frame_type == L2Header::FrameType::beacon) {
-        return "IAN-Beacon";
-    }
+    
     if(header->frame_type == L2Header::FrameType::broadcast) {
         return "IAN-Broadcast";
     }
