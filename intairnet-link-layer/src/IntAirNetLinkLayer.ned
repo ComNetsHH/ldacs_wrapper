@@ -36,18 +36,22 @@ simple IntAirNetLinkLayer extends LinkLayer {
         bool closeP2PLinksEarly = default(false);                
         bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
-        string gpsrModule = default("^.^.routing");
-        int ppBurstOffset = default(20); // number of slots in-between transmission bursts for PP links
-        bool adaptivePPBurstOffset = default(true);
-        int numPPChannels = default(3);
-        bool learnDMEActivity = default(false); // whether to save observations of DME packets for to learn the pattern
+        string gpsrModule = default("^.^.routing");        
+        int numPPChannels = default(3); // The number of PP channels that are locally available.
+        // Duty cycle parameters.
         int duty_cycle_period = default(100); // no. of slots to consider when computing the duty cycle
         double max_duty_cycle = default(0.1); // max. percentage of time spent transmitting
         int duty_cycle_min_num_supported_pp_links = default(4); // used to leave duty cycle budget when computing the minimum slot offset 
-        bool consider_duty_cycle = default(true);
-        int minNumSupportedPPLinks = default(4);
-        bool should_force_pp_period = default(false);
+        bool consider_duty_cycle = default(true);        
+        int duty_cycle_budget_computation_strategy = default(0); // 0=Statically assigns a fraction of the maximum duty cycle to each link. 1=Dynamically computes the available duty cycle based on the maximum duty cycle and the number of already established links.
+        // Usually the period in-between PP communication bursts is computed from the number of established links and the duty cycle,
+        // but if you'd like to force it (for demonstrative purposes), here's how:
+        bool should_force_pp_period = default(false); 
         int forced_pp_period = default(0);
+        // In one offshoot project, we have investigated how the coexisting DME system's channel access patterns
+        // could be learned through means of Machine Learning. This parameter stems from that. 
+        // Setting it to 'true' will cause undefined behavior because the implementation should probably adapt to the newest version first.
+        bool learnDMEActivity = default(false); // whether to save observations of DME packets for to learn the pattern
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
