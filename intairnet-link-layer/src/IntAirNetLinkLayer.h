@@ -112,6 +112,8 @@ protected:
             "mcsotdma_statistic_num_active_neighbors",            
             "mcsotdma_statistic_broadcast_candidate_slots",
             "mcsotdma_statistic_broadcast_mac_delay",
+            "mcsotdma_statistic_avg_beacon_rx_delay",
+            "mcsotdma_statistic_first_neighbor_beacon_rx_delay",
             "mcsotdma_statistic_broadcast_selected_candidate_slot",            
             "mcsotdma_statistic_pp_link_missed_last_reply_opportunity",
             "mcsotdma_statistic_pp_link_establishment_time",

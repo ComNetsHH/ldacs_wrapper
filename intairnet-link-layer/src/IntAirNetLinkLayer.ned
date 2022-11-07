@@ -124,6 +124,8 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_num_active_neighbors](type=double);        
         @signal[mcsotdma_statistic_broadcast_candidate_slots](type=double);                                      
         @signal[mcsotdma_statistic_broadcast_mac_delay](type=double);          
+        @signal[mcsotdma_statistic_avg_beacon_rx_delay](type=double);          
+        @signal[mcsotdma_statistic_first_neighbor_beacon_rx_delay](type=double);                  
         @signal[mcsotdma_statistic_broadcast_selected_candidate_slot](type=double);                                                              
         @signal[mcsotdma_statistic_pp_link_missed_last_reply_opportunity](type=double);     
         @signal[mcsotdma_statistic_pp_link_establishment_time](type=double);
@@ -162,6 +164,8 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[mcsotdma_statistic_num_active_neighbors](title="mcsotdma_statistic_num_active_neighbors"; record=vector,histogram,last,mean; interpolationmode=none);        
         @statistic[mcsotdma_statistic_broadcast_candidate_slots](title="mcsotdma_statistic_broadcast_candidate_slots"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_broadcast_mac_delay](title="mcsotdma_statistic_broadcast_mac_delay"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_avg_beacon_rx_delay](title="mcsotdma_statistic_avg_beacon_rx_delay"; record=vector,histogram,last,mean; interpolationmode=none);        
+        @statistic[mcsotdma_statistic_first_neighbor_beacon_rx_delay](title="mcsotdma_statistic_first_neighbor_beacon_rx_delay"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_broadcast_selected_candidate_slot](title="mcsotdma_statistic_broadcast_selected_candidate_slot"; record=vector,histogram,last,mean; interpolationmode=none);                                    
         @statistic[mcsotdma_statistic_pp_link_establishment_time](title="mcsotdma_statistic_pp_link_establishment_time"; record=vector,histogram,last,mean; interpolationmode=none);                                
         @statistic[mcsotdma_statistic_num_pp_links_established](title="mcsotdma_statistic_num_pp_links_established"; record=vector,histogram,last,mean; interpolationmode=none);                        
