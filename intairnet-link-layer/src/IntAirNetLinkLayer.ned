@@ -22,6 +22,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
         
+        int numPPChannels = default(3); // The number of PP channels that are locally available.
         double slotDuration @unit(s) = default(24ms);
         double broadcastTargetCollisionRate = default(0.626);
         double per = default(0);
@@ -30,14 +31,12 @@ simple IntAirNetLinkLayer extends LinkLayer {
         int broadcastSlotSelectionMaxNumCandidateSlots = default(10000); 
         string contentionMethod = default("randomized_slotted_aloha"); 
         bool advertiseNextBroadcastSlotInCurrentHeader = default(true);        
-        int planningHorizon = default(8192); // number of slots both into past and future        
-        bool forceBidirectionalP2PLinks = default(true);
-        bool initializeBidirectionalP2PLinks = default(true);
-        bool closeP2PLinksEarly = default(false);                
+        int planningHorizon = default(8192); // number of slots both into past and future                                
         bool arqIsUsed = default(false);
         bool gpsrIsUsed = default(false);
-        string gpsrModule = default("^.^.routing");        
-        int numPPChannels = default(3); // The number of PP channels that are locally available.
+        string gpsrModule = default("^.^.routing");
+        // A 'silent' user cannot transmit packets at all.
+        bool silent = default(false);
         // Duty cycle parameters.
         int duty_cycle_period = default(100); // no. of slots to consider when computing the duty cycle
         double max_duty_cycle = default(0.1); // max. percentage of time spent transmitting

@@ -95,6 +95,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
             default: {throw std::invalid_argument("duty_cycle_budget_computation_strategy is neither 0 nor 1."); break;}
         }
         macSubLayer->setDutyCycleBudgetComputationStrategy(strategy);
+        macSubLayer->setSilent(par("silent").boolValue());
         
         // Report Beacon Callback
         function<void (MacId, CPRPosition position)> reportBeaconCallback = [this](MacId origin_id, CPRPosition position){
