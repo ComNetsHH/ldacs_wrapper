@@ -134,7 +134,9 @@ protected:
             "mcsotdma_statistic_num_link_utils_rcvd",
             "mcsotdma_statistic_pp_link_requests_accepted",
             "mcsotdma_statistic_pp_period",
-            "mcsotdma_statistic_dropped_packets_over_last_ten_time_slots"
+            "mcsotdma_statistic_dropped_packets_this_slot",
+            "mcsotdma_statistic_sent_packets_this_slot",
+            "mcsotdma_statistic_rcvd_packets_this_slot"
     };
 };
 

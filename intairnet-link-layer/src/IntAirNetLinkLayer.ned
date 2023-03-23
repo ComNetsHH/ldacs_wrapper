@@ -144,7 +144,9 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @signal[mcsotdma_statistic_num_link_utils_rcvd](type=double);
         @signal[mcsotdma_statistic_pp_link_requests_accepted](type=double);        
         @signal[mcsotdma_statistic_pp_period](type=double);
-        @signal[mcsotdma_statistic_dropped_packets_over_last_ten_time_slots](type=double);        
+        @signal[mcsotdma_statistic_dropped_packets_this_slot](type=double);
+        @signal[mcsotdma_statistic_sent_packets_this_slot](type=double);
+        @signal[mcsotdma_statistic_rcvd_packets_this_slot](type=double);        
                 
         @statistic[mcsotdma_statistic_num_packets_received](title="mcsotdma_statistic_num_packets_received(num)"; record=vector,histogram,last; interpolationmode=none);
         @statistic[mcsotdma_statistic_num_broadcasts_received](title="mcsotdma_statistic_num_broadcasts_received(num)"; record=vector,histogram,last; interpolationmode=none);
@@ -185,7 +187,9 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @statistic[mcsotdma_statistic_num_link_utils_rcvd](title="mcsotdma_statistic_num_link_utils_rcvd"; record=vector,histogram,last,mean; interpolationmode=none);                
         @statistic[mcsotdma_statistic_pp_link_requests_accepted](title="mcsotdma_statistic_pp_link_requests_accepted"; record=vector,histogram,last,mean; interpolationmode=none);
         @statistic[mcsotdma_statistic_pp_period](title="mcsotdma_statistic_pp_period"; record=vector,histogram,last,mean; interpolationmode=none);
-        @statistic[mcsotdma_statistic_dropped_packets_over_last_ten_time_slots](title="mcsotdma_statistic_dropped_packets_over_last_ten_time_slots"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_dropped_packets_this_slot](title="mcsotdma_statistic_dropped_packets_this_slot"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_sent_packets_this_slot](title="mcsotdma_statistic_sent_packets_this_slot"; record=vector,histogram,last,mean; interpolationmode=none);
+        @statistic[mcsotdma_statistic_rcvd_packets_this_slot](title="mcsotdma_statistic_rcvd_packets_this_slot"; record=vector,histogram,last,mean; interpolationmode=none);        
                         
         @signal[phy_statistic_num_packets_received](type=double);
         @signal[phy_statistic_num_packets_missed](type=double);  
