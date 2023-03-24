@@ -51,9 +51,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
     LayeredProtocolBase::initialize(stage);
     LinkLayer::initialize(stage);
 
-    if (stage == INITSTAGE_LOCAL) {
-
-        slotDuration = par("slotDuration");
+    if (stage == INITSTAGE_LOCAL) {        
         gpsrIsUsed = par("gpsrIsUsed").boolValue();
         arqIsUsed = par("arqIsUsed").boolValue();        
 	

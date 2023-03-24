@@ -22,8 +22,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         @display("i=block/rxtx");
         @class(IntAirNetLinkLayer);
         
-        int numPPChannels = default(3); // The number of PP channels that are locally available.
-        double slotDuration @unit(s) = default(24ms);
+        int numPPChannels = default(3); // The number of PP channels that are locally available.        
         double broadcastTargetCollisionRate = default(0.626);
         double per = default(0);
         int numRtx = default(3);

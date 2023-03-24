@@ -56,8 +56,7 @@ protected:
     void onBeaconReceive(MacId origin_id, CPRPosition position);   
 
 protected:    
-    std::map<std::string, simsignal_t> mcsotdma_statistics_map;
-    double slotDuration;    
+    std::map<std::string, simsignal_t> mcsotdma_statistics_map;    
     vector<pair<double, IOmnetPluggable*>> callbackTimes;
     IRlc* rlcSubLayer;
     IArq* arqSubLayer;
