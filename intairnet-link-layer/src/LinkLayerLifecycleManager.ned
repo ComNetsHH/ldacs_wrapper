@@ -18,7 +18,7 @@ package intairnet_link_layer;
 module LinkLayerLifecycleManager
 {
 parameters:
-        double slotDuration @unit(s) = default(12ms);
+        double slotDuration @unit(s) = default(24ms);
         @class(LinkLayerLifecycleManager);
         @display("i=misc/node");
 }
