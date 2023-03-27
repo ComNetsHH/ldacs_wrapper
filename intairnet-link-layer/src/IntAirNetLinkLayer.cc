@@ -53,7 +53,7 @@ void IntAirNetLinkLayer::initialize(int stage) {
 
     if (stage == INITSTAGE_LOCAL) {        
         gpsrIsUsed = par("gpsrIsUsed").boolValue();
-        arqIsUsed = par("arqIsUsed").boolValue();        
+        arqIsUsed = par("arqIsUsed").boolValue();                
 	
         mcsotdma_statistics_map.clear();
         for (size_t i = 0; i < str_mcsotdma_statistics.size(); i++) {
@@ -85,6 +85,8 @@ void IntAirNetLinkLayer::initialize(int stage) {
         macSubLayer->setConsiderDutyCycle(par("consider_duty_cycle"));
         macSubLayer->setMinNumSupportedPPLinks(par("duty_cycle_min_num_supported_pp_links"));                
         macSubLayer->setForcePPPeriod(par("should_force_pp_period").boolValue(), par("forced_pp_period").intValue());
+        macSubLayer->shouldCapturePerSlotStatistics(par("shouldCapturePerSlotStatistics").boolValue());
+        
         int duty_cycle_budget_computation_strategy = par("duty_cycle_budget_computation_strategy").intValue();
         DutyCycleBudgetStrategy strategy;
         switch (duty_cycle_budget_computation_strategy) {

@@ -50,6 +50,7 @@ simple IntAirNetLinkLayer extends LinkLayer {
         // could be learned through means of Machine Learning. This parameter stems from that. 
         // Setting it to 'true' will cause undefined behavior because the implementation should probably adapt to the newest version first.
         bool learnDMEActivity = default(false); // whether to save observations of DME packets for to learn the pattern
+        bool shouldCapturePerSlotStatistics = default(false); // Per-slot statistics can take up a lot of memory. So enable these only if explicitly required by your evaluation.
         
         @signal[rlc_bits_received_from_upper](type=double);
         @signal[rlc_bits_received_from_lower](type=double);
