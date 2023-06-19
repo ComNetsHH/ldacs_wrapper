@@ -468,22 +468,21 @@ void IntAirNetLinkLayer::onBeaconReceive(MacId origin_id, CPRPosition position) 
     auto rcvdMacAddress = MacAddress(0x0AAA00000000ULL + (origin_id.getId() & 0xffffffffUL));
     L3Address rcvdIpAddress = arp->getL3AddressFor(rcvdMacAddress);
 
-    // @Musab, this code snippet will pass the beacon up, replace "MyNewGpsr" with you actual class name and make processBeacon a public function :)
+    // this code snippet will pass the beacon up, replace "MyNewGpsr" with you actual class name and make processBeacon a public function :)
     // Pass up beacon directly to gpsr (skipping NW layer)
     //GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
     GpsrModified* gpsr = getModuleFromPar<GpsrModified>(par("gpsrModule"), this);
     //////////////////////////////////////////////////////////////////////////
-    // Cross-layer routing (Musab)
+    // Cross-layer routing 
     //////////////////////////////////////////////////////////////////////////
     if (gpsr->enableCrossLayerRouting) {
         // auto congestion = header.congestion_level;
         // int congestion_Level = congestion + 1;
-        // EV_INFO << "The congestion level (musab) = " << congestion_Level << endl;
         // gpsr->processBeaconCongestionLevelMCSOTDMA(rcvdIpAddress, rcvdPosition, congestion_Level);
         throw std::runtime_error("congestion_level is currently removed from headers - gotta re-add!");
     } else
         gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition);    
-    EV_INFO << "Cross-layer is enabled (musab) = " << gpsr->enableCrossLayerRouting << endl;
+    EV_INFO << "Cross-layer is enabled = " << gpsr->enableCrossLayerRouting << endl;
     // gpsr->processBeaconMCSOTDMA(rcvdIpAddress, rcvdPosition, congestion_Level);
    
 }
