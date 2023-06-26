@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8082931.svg)](https://doi.org/10.5281/zenodo.8082931)
+
     The L-Band Digital Aeronautical Communications System (LDACS) Wrapper Library provides all wrappers necessary to integrate the LDACS Air-Air Medium Access Control simulator into OMNeT++.
     Copyright (C) 2023  Sebastian Lindner, Konrad Fuger, Musab Ahmed Eltayeb Ahmed, Andreas Timm-Giel, Institute of Communication Networks, Hamburg University of Technology, Hamburg, Germany
 
